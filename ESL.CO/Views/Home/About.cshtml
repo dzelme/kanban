@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>
+    @ViewData["js"]
+
+    @ViewData["js2"]
+
+    <table BORDER="5" WIDTH="50%" CELLPADDING="4" CELLSPACING="3">
+        <tr>
+            @foreach (var title in ViewBag.columns)
+            {
+            <th>@title</th>
+            }
+        </tr>
+        
+        @for (int row = 0; row < ViewBag.rowCount; row++)
+        {
+        <tr>
+            @for (int col = 0; col < ViewBag.columnCount; col++)
+            {
+                <td>@((row + 1 > ViewBag.columnLength[col]) ? "" : ViewBag.kanbanBoard[col][row].Summary)</td>
+            }
+        </tr>
+        }
+
+    </table>
+</p>
