@@ -25,7 +25,7 @@ namespace ESL.CO.Helpers
         
 
         //returns data from JIRA REST api
-        public JObject Connect(string url)
+        public static JObject Connect(string url)
         {
             // HttpClient
 
@@ -36,7 +36,7 @@ namespace ESL.CO.Helpers
             
             WebRequest myReq = WebRequest.Create(urlIssue);
             #region Credentials
-            string credentials = "user:pass";
+            string credentials = "adzelme:testTEST0";
             #endregion
             myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
             WebResponse wr = myReq.GetResponse();
