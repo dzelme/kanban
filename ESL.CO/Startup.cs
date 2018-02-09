@@ -44,7 +44,7 @@ namespace ESL.CO
             }
 
             // Initialise ReactJS.NET. Must be before static files.
-            app.UseReact(config =>
+            /*app.UseReact(config =>
             {
                 // If you want to use server-side rendering of React components,
                 // add all the necessary JavaScript files here. This includes
@@ -61,7 +61,7 @@ namespace ESL.CO
                 //config
                 //    .SetLoadBabel(false)
                 //    .AddScriptWithoutTransform("~/Scripts/bundle.server.js");
-            });
+            });*/
 
             app.UseStaticFiles();
 

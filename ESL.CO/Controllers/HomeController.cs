@@ -9,155 +9,21 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
 using System.Text;
-//using ESL.CO.Helpers;
+using ESL.CO.Helpers;
 
 namespace ESL.CO.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index2()
+        public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult OneBoard()
         {
-            ViewData["Message"] = "Your application description page.";
-
-
-            //string url2 = "http://localhost:50973/rest/api/2/issue";
-            //string url = "https://jira.returnonintelligence.com/rest/api/2/issue/1111407";
-            //https://jira.returnonintelligence.com/rest/api/2/search?jql=project="KP" & startAt="start" & maxResults="max"
-            //string url = "https://jira.returnonintelligence.com/rest/api/2/search?jql=project=\"KP\" & startAt=\"start\" & maxResults=\"max\"";
-
-            string board = "620";
-            string urlConfig = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + board + "/configuration";
-
-            WebRequest myReq = WebRequest.Create(urlConfig);
-            #region
-            string credentials = "user:pass!";
-            #endregion
-            //CredentialCache mycache = new CredentialCache();
-            myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
-            WebResponse wr = myReq.GetResponse();
-            Stream receiveStream = wr.GetResponseStream();
-            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            JObject j = JObject.Parse(content);
-
-            var efg = "";
-            var columnArray = j.SelectToken("columnConfig.columns");
-            var columnCount = columnArray.Count();  //4
-            string[] columns = new string[columnCount];
-            int counter = 0;
-            foreach (JObject column in columnArray)
-            {
-                string columnName = (string)column.GetValue("name");  //returns column names
-                columns[counter] = columnName;
-                counter++;
-                //efg += columnName;
-            }
-
-            for (int i = 0; i < columnCount; i++)
-            {
-                efg += columns[i];
-            }
-
-            ViewData["js2"] = efg;
-
-
-
-                //board = "961";
-                string urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + board + "/issue?startAt=0";
-
-                myReq = WebRequest.Create(urlIssue);
-                myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
-                wr = myReq.GetResponse();
-                receiveStream = wr.GetResponseStream();
-                reader = new StreamReader(receiveStream, Encoding.UTF8);
-                content = reader.ReadToEnd();
-                j = JObject.Parse(content);
-
-                int issueCount = (int)j.SelectToken("total"); //if larger than 50, multiple takes to read everything "startAt = 50"
-
-                //var asd = "";
-
-                List<Issue>[] kanbanBoard = new List<Issue>[columnCount];
-                for (int k = 0; k < columnCount; k++)
-                {
-                    List<Issue> iList = new List<Issue>();
-                    kanbanBoard[k] = iList;
-                }
-
-                for (int i = 0; i < 50; i++)  //(i < issueCount) - all issues, but max only 50 per request
-                {
-                    string id = (string)j.SelectToken("issues[" + i.ToString() + "].id");
-                    string status = (string)j.SelectToken("issues[" + i.ToString() + "].fields.status.name");//statusCategory.name");
-                    string priority = (string)j.SelectToken("issues[" + i.ToString() + "].fields.priority.name");
-                    string assignee = (string)j.SelectToken("issues[" + i.ToString() + "].fields.assignee.name");
-                    string summary = (string)j.SelectToken("issues[" + i.ToString() + "].fields.summary");
-                    string link = "https://jira.returnonintelligence.com/browse/" + (string)j.SelectToken("issues[" + i.ToString() + "].key");
-
-                    //required because status name that corresponds to column name can be in 2 different locations
-                    string status2 = (string)j.SelectToken("issues[" + i.ToString() + "].fields.status.statusCategory.name");
-
-                    int t = 1;
-                    int appropriateColumn = -1;
-                    for (int ii = 0; ii < columnCount; ii++)
-                    {
-                        if (String.Equals(status, columns[ii], StringComparison.OrdinalIgnoreCase)) { t = 1; appropriateColumn = ii; } 
-                        if (String.Equals(status2, columns[ii], StringComparison.OrdinalIgnoreCase)) { t = 2;  appropriateColumn = ii; }  //
-                    }
-                    if (t == 2) { status = status2; } //resolves status name location ambiguity
-
-
-                    /*
-
-                    //creates object adds to table
-                    Issue temp = new Issue(id, status, priority, assignee, summary, link);
-                    //if (appropriateColumn != -1) { kanbanBoard[appropriateColumn].Add(temp); }
-                    kanbanBoard[appropriateColumn].Add(temp);
-
-
-                    */
-                }
-
-            /*
-            var asd = "";
-            foreach (var item in kanbanBoard[2])
-            {
-                asd += " " + item.summary;
-            }
-            ViewData["js"] = asd;
-            */
-
-            //finds total # of rows in table
-            int rowCount = kanbanBoard[0].Count();  //max no of rows
-            for (int k = 1; k < columnCount; k++)
-            {
-                if (kanbanBoard[k].Count() > rowCount) { rowCount = kanbanBoard[k].Count(); }
-            }
-
-            //finds each column's length, needed for drawing the table
-            int[] columnLength = new int[columnCount];
-            for (int k = 0; k < columnCount; k++)
-            {
-                columnLength[k] = kanbanBoard[k].Count();
-            }
-
-            ViewBag.columnLength = columnLength;
-            ViewBag.columnCount = columnCount;
-            ViewBag.rowCount = rowCount;
-            ViewBag.columns = columns;
-            ViewBag.kanbanBoard = kanbanBoard;
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            /*
-            int boardId = 961;  //620, 880, 961, 963
+            
+            int boardId = 620;  //620, 880, 961, 963
             //Board kp = new Board(boardId);
             //kp.ReadBoard();
             //kp.UpdateBoard();
@@ -188,41 +54,29 @@ namespace ESL.CO.Controllers
             ViewBag.rowCount = rowCount;
             ViewBag.columns = kp.Columns;
 
-            */
+            
             return View();
         }
 
-        public IActionResult Index()
+        public IActionResult AllBoards()
         {
             ViewData["Message"] = "Nolasītā informācija:";
 
             string BoardId;
 
-            string credentials = "user:pass";
-
-
             //*************************************************************************************************************
             //Visi dēļi
 
-            string urlAllBoards = "https://jira.returnonintelligence.com/rest/agile/1.0/board";
-
-            WebRequest myReq = WebRequest.Create(urlAllBoards);
-            myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
-            WebResponse wr = myReq.GetResponse();
-            Stream receiveStream = wr.GetResponseStream();
-            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            JObject j = JObject.Parse(content);
-
+            JObject j = Helpers.Board.Connect("board/");
 
             var AllBoards = j.SelectToken("values");
             int BoardCount = AllBoards.Count();
 
-            List<Board> BoardList = new List<Board>();
+            List<Models.Board> BoardList = new List<Models.Board>();
 
             foreach (JObject board in AllBoards)
             {
-                Board B = new Board
+                Models.Board B = new Models.Board
                 {
                     ID = (string)board.SelectToken("id"),
                     Name = (string)board.SelectToken("name"),
@@ -239,28 +93,19 @@ namespace ESL.CO.Controllers
             //*******************************************************************************************************************
             //Dēļa konfigurācija          
 
-            string urlConfig;
-
             foreach (var board in BoardList)
             {
-                List<Column> ColumnList = new List<Column>();
+                List<Models.Column> ColumnList = new List<Models.Column>();
 
                 BoardId = board.ID;
-                urlConfig = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/configuration";
 
-                myReq = WebRequest.Create(urlConfig);
-                myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
-                wr = myReq.GetResponse();
-                receiveStream = wr.GetResponseStream();
-                reader = new StreamReader(receiveStream, Encoding.UTF8);
-                content = reader.ReadToEnd();
-                j = JObject.Parse(content);
+                j = Helpers.Board.Connect("board/" + BoardId.ToString() + "/configuration");
 
                 var AllColumns = j.SelectToken("columnConfig.columns");
 
                 foreach (JObject column in AllColumns)
                 {
-                    Column C = new Column
+                    Models.Column C = new Models.Column
                     {
                         Title = (string)column.SelectToken("name"),
                         ParentBoardId = BoardId
@@ -287,24 +132,15 @@ namespace ESL.CO.Controllers
             {
                 BoardId = board.ID;
 
-                List<Issue> IssueList = new List<Issue>();
+                List<Models.Issue> IssueList = new List<Models.Issue>();
 
-                urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue";
-
-                myReq = WebRequest.Create(urlIssue);
-                myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
-                wr = myReq.GetResponse();
-                receiveStream = wr.GetResponseStream();
-                reader = new StreamReader(receiveStream, Encoding.UTF8);
-                content = reader.ReadToEnd();
-                j = JObject.Parse(content);
-
+                j = Helpers.Board.Connect("board/" + BoardId.ToString() + "/issue");
 
                 var AllIssues = j.SelectToken("issues");
 
                 foreach (var issue in AllIssues)
                 {
-                    Issue I = new Issue
+                    Models.Issue I = new Models.Issue
                     {
                         ID = (string)issue.SelectToken("id"),
                         Priority = (string)issue.SelectToken("fields.priority.name"),
@@ -335,7 +171,7 @@ namespace ESL.CO.Controllers
 
                         foreach (var issue in AllIssues)
                         {
-                            Issue I = new Issue
+                            Models.Issue I = new Models.Issue
                             {
                                 ID = (string)issue.SelectToken("id"),
                                 Priority = (string)issue.SelectToken("fields.priority.name"),
@@ -365,7 +201,7 @@ namespace ESL.CO.Controllers
 
                     issueColumn = board.BoardColumns[i].Title;
 
-                    List<Issue> tmp = new List<Issue>();
+                    List<Models.Issue> tmp = new List<Models.Issue>();
 
                     foreach (var item in IssueList)
                     {

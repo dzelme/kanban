@@ -16,9 +16,11 @@ namespace ESL.CO.JiraIntegration
         {
             HttpClient client = new HttpClient();
 
+            #region Credentials
+            string credentials = "adzelme:testTEST0";
+            #endregion
 
-            // string credentials = "user:pass";
-            // client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+            client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
 
             var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/board/961/issue");
             if(response.IsSuccessStatusCode)

@@ -1,0 +1,47 @@
+﻿<html>
+<head>
+
+</head>
+<body>
+
+    @foreach (var board in ViewBag.BoardList)
+    {
+
+        <div>
+
+            <h1>      </h1>
+        </div>
+
+        <table BORDER="5px" WIDTH="75%" CELLPADDING="4" CELLSPACING="3">
+            <tr>
+                @foreach (var column in board.BoardColumns)
+                {
+                    <th>@column.Title</th>
+                }
+            </tr>
+
+
+            @for (int rindas = 0; rindas < board.MaxIssueCount; rindas++)
+            {
+                <tr>
+
+                    @for (int kolonnas = 0; kolonnas < board.ColumnCount; kolonnas++)
+                    {
+
+                        <td> @(rindas >= board.BoardColumns[kolonnas].IssueCount ? "" : board.BoardColumns[kolonnas].ColumnIssues[rindas].Summary + " " + "\n" + board.BoardColumns[kolonnas].ColumnIssues[rindas].Priority)</td>
+
+                    }
+                </tr>
+
+            }
+
+
+        </table>
+
+    }
+
+
+
+
+</body>
+</html>
