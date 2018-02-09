@@ -9,6 +9,12 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Net.Http;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Newtonsoft.Json;
+using System.Text.Encodings;
+using System.Net.Http.Headers;
+
 //using ESL.CO.Helpers;
 
 namespace ESL.CO.Controllers
@@ -198,11 +204,49 @@ namespace ESL.CO.Controllers
 
             string BoardId;
 
-            string credentials = "user:pass";
+            string credentials = "arumka:Dzukste22";
 
 
             //*************************************************************************************************************
             //Visi dēļi
+
+            HttpClient client = new HttpClient();           
+              
+             client.BaseAddress = new Uri("http://localhost:50973/");
+             client.DefaultRequestHeaders.Accept.Clear();
+             client.DefaultRequestHeaders.Accept.Add(           
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+            
+            async Task<BoardList> GetIssuesAsync()
+            {
+
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+
+                var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/board");
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var serializer = new Newtonsoft.Json.JsonSerializer();
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var reader = new StreamReader(stream))
+                    using (var jsonReader = new JsonTextReader(reader))
+                    {
+                        ViewData["xxx"] = serializer.Deserialize<BoardList>(jsonReader);
+
+                        return serializer.Deserialize<BoardList>(jsonReader);
+                    }
+                }
+
+                throw new InvalidOperationException();
+            }
+
+            
+
+
+
+/*
 
             string urlAllBoards = "https://jira.returnonintelligence.com/rest/agile/1.0/board";
 
@@ -214,13 +258,15 @@ namespace ESL.CO.Controllers
             string content = reader.ReadToEnd();
             JObject j = JObject.Parse(content);
 
+            BoardList BL = new BoardList
+            {
+                IsLast = (string)j.SelectToken("isLast")
+            };
 
-            var AllBoards = j.SelectToken("values");
-            int BoardCount = AllBoards.Count();
+            var AllBoardObjects = j.SelectToken("values");
+            List<Board> CurrentBoardList = new List<Board>();
 
-            List<Board> BoardList = new List<Board>();
-
-            foreach (JObject board in AllBoards)
+            foreach (JObject board in AllBoardObjects)
             {
                 Board B = new Board
                 {
@@ -230,20 +276,21 @@ namespace ESL.CO.Controllers
                     Link = (string)board.SelectToken("self")
                 };
 
-                BoardList.Add(B);
+                CurrentBoardList.Add(B);
             }
 
+            BL.AllBoards = CurrentBoardList;
+*/
 
             //*************************************************************************************************************
 
             //*******************************************************************************************************************
             //Dēļa konfigurācija          
-
+            /*
             string urlConfig;
 
-            foreach (var board in BoardList)
+            foreach (var board in BL.AllBoards)
             {
-                List<Column> ColumnList = new List<Column>();
 
                 BoardId = board.ID;
                 urlConfig = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/configuration";
@@ -256,22 +303,32 @@ namespace ESL.CO.Controllers
                 content = reader.ReadToEnd();
                 j = JObject.Parse(content);
 
-                var AllColumns = j.SelectToken("columnConfig.columns");
 
-                foreach (JObject column in AllColumns)
+                ColumnList CL = new ColumnList
+                {
+                    BoardId = (string)j.SelectToken("id"),
+                    BoardName = (string)j.SelectToken("name"),
+                    BoardType = (string)j.SelectToken("type")
+                };
+
+
+                var AllColumnObjects = j.SelectToken("columnConfig.columns");
+                List<Column> CurrentColumnList = new List<Column>();
+
+                foreach (JObject column in AllColumnObjects)
                 {
                     Column C = new Column
                     {
-                        Title = (string)column.SelectToken("name"),
-                        ParentBoardId = BoardId
+                        Name = (string)column.SelectToken("name"),
+                       // Max = (int)column.SelectToken("max")
                     };
 
-                    ColumnList.Add(C);
+                    CurrentColumnList.Add(C);
 
                 }
 
-                board.BoardColumns = ColumnList;
-                board.ColumnCount = ColumnList.Count();
+                CL.AllColumns = CurrentColumnList;
+                board.BoardColumns = CL;                
 
             }
             //*****************************************************************************************************************
@@ -281,14 +338,11 @@ namespace ESL.CO.Controllers
             //Dēļa ieraksti
 
             string urlIssue;
-            string issueColumn;
 
-            foreach (var board in BoardList)
+            foreach (var board in BL.AllBoards)
             {
+
                 BoardId = board.ID;
-
-                List<Issue> IssueList = new List<Issue>();
-
                 urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue";
 
                 myReq = WebRequest.Create(urlIssue);
@@ -299,14 +353,17 @@ namespace ESL.CO.Controllers
                 content = reader.ReadToEnd();
                 j = JObject.Parse(content);
 
+              
 
-                var AllIssues = j.SelectToken("issues");
+                var AllIssueObjects = j.SelectToken("issues");
+                List<Issue> CurrentIssueList = new List<Issue>();           
 
-                foreach (var issue in AllIssues)
+                foreach (var issue in AllIssueObjects)
                 {
                     Issue I = new Issue
                     {
                         ID = (string)issue.SelectToken("id"),
+                        Key = (string)issue.SelectToken("key"),
                         Priority = (string)issue.SelectToken("fields.priority.name"),
                         Assignee = (string)issue.SelectToken("fields.assignee.name"),
                         Summary = (string)issue.SelectToken("fields.summary"),
@@ -320,20 +377,32 @@ namespace ESL.CO.Controllers
                         I.Status = (string)issue.SelectToken("fields.status.name");
                     }
 
-                    IssueList.Add(I);
+                    CurrentIssueList.Add(I);
                 }
 
-                int TotalIssueCount = (int)j.SelectToken("total"); //if larger than 50, multiple takes to read everything "startAt = 50"
-
+                int TotalIssueCount = (int)j.SelectToken("total");
+                int StartAtCount = (int)j.SelectToken("startAt");
+                
                 if (TotalIssueCount > 50)
                 {
-                    while (TotalIssueCount > 50)
+                    while (TotalIssueCount > StartAtCount + 50)
                     {
-                        urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue";
+                        StartAtCount += 50;
+                        urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue?startAt=" + StartAtCount;
 
-                        AllIssues = j.SelectToken("issues");
 
-                        foreach (var issue in AllIssues)
+                        myReq = WebRequest.Create(urlIssue);
+                        myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
+                        wr = myReq.GetResponse();
+                        receiveStream = wr.GetResponseStream();
+                        reader = new StreamReader(receiveStream, Encoding.UTF8);
+                        content = reader.ReadToEnd();
+                        j = JObject.Parse(content);
+
+
+                        AllIssueObjects = j.SelectToken("issues");
+
+                        foreach (var issue in AllIssueObjects)
                         {
                             Issue I = new Issue
                             {
@@ -352,22 +421,30 @@ namespace ESL.CO.Controllers
                             }
 
 
-                            IssueList.Add(I);
+                            CurrentIssueList.Add(I);
                         }
-
-                        TotalIssueCount -= 50;
                     }
                 }
+                
+                string issueColumn;
+
+                string ExpandValue = (string)j.SelectToken("expand");
+                int TotalValue = (int)j.SelectToken("total");
 
 
-                for (int i = 0; i < board.BoardColumns.Count; i++)
+                for (int i = 0; i < board.BoardColumns.AllColumns.Count; i++)
                 {
+                    IssueList IL = new IssueList
+                    {
+                        Expand = ExpandValue,
+                        Total = TotalValue,
+                    };
 
-                    issueColumn = board.BoardColumns[i].Title;
+                    issueColumn = board.BoardColumns.AllColumns[i].Name;
 
                     List<Issue> tmp = new List<Issue>();
 
-                    foreach (var item in IssueList)
+                    foreach (var item in CurrentIssueList)
                     {
                         if (item.Status == issueColumn)
                         {
@@ -375,17 +452,18 @@ namespace ESL.CO.Controllers
                         }
                     }
 
-                    board.BoardColumns[i].ColumnIssues = tmp;
-                    board.BoardColumns[i].IssueCount = tmp.Count;
+                    IL.AllIssues = tmp;
+                    board.BoardColumns.AllColumns[i].ColumnIssues = IL;
+                 
                 }
 
 
                 int maxIssues = 0;
-                for (int i = 0; i < board.BoardColumns.Count(); i++)
+                for (int i = 0; i < board.BoardColumns.AllColumns.Count; i++)
                 {
-                    if (board.BoardColumns[i].ColumnIssues.Count() > maxIssues)
+                    if (board.BoardColumns.AllColumns[i].ColumnIssues.AllIssues.Count > maxIssues)
                     {
-                        maxIssues = board.BoardColumns[i].ColumnIssues.Count();
+                        maxIssues = board.BoardColumns.AllColumns[i].ColumnIssues.AllIssues.Count;
                     }
                 }
 
@@ -399,13 +477,13 @@ namespace ESL.CO.Controllers
             var asd = "";
 
 
-            foreach (var item in BoardList)
+            foreach (var item in BL.AllBoards)
             {
-                asd += item.ID + " | " + item.ColumnCount + " | " + item.MaxIssueCount + " ";
+                asd += item.ID + " | " + item.BoardColumns.AllColumns.Count + " | " + item.MaxIssueCount + " | ";
 
-                foreach (var n in item.BoardColumns)
+                foreach (var n in item.BoardColumns.AllColumns)
                 {
-                    asd += n.IssueCount + Environment.NewLine;
+                    asd += n.ColumnIssues.AllIssues.Count + Environment.NewLine;
                 }
                 asd += "||";
             }
@@ -414,8 +492,8 @@ namespace ESL.CO.Controllers
 
             //*************************************************************************************************************
 
-            ViewBag.BoardList = BoardList;
-
+            ViewBag.BoardList = BL.AllBoards;
+            */
 
             return View();
         }

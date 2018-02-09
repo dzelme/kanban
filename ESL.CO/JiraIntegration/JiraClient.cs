@@ -39,7 +39,7 @@ namespace ESL.CO.JiraIntegration
     public class IssueList
     {
         public string Expand { get; set; }
-        public Issue[] Issues { get; set; }
+        public List<Issue> AllIssues { get; set; }
         public int MaxResults { get; set; }
         public int StartAt { get; set; }
         public int Total { get; set; }

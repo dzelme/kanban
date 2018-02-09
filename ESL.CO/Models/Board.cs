@@ -11,8 +11,7 @@ namespace ESL.CO.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public string Link { get; set; }
-        public List<Column> BoardColumns { get; set; }
-        public int ColumnCount { get; set; }
+        public ColumnList BoardColumns { get; set; }
         public int MaxIssueCount { get; set; }
 
     }
