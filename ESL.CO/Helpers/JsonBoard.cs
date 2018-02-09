@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ESL.CO.Helpers
 {
-    public class JsonBoard : Board
+    public class JsonBoard : Models.Board
     {
         //private JObject j;
         private string json;
@@ -60,7 +60,7 @@ namespace ESL.CO.Helpers
         public void Initialize (int id)
         {
             json = String.Empty;
-            path = @".\data\" + BoardId.ToString() + ".json";
+            path = @".\data\" + Id.ToString() + ".json";
             ReadBoard();  //fills board
             AggregateJson();  //creates string to be saved in json file
             SaveToFile(path, true);  //writes the file
@@ -91,7 +91,7 @@ namespace ESL.CO.Helpers
 
             if (NeedsRedraw())
             {
-                Initialize(BoardId);
+                Initialize(Id);
                 return true;
                 //ReadBoard();
                 //Json = new JsonFile(BoardId, j.ToString(Newtonsoft.Json.Formatting.None), true);
@@ -116,12 +116,12 @@ namespace ESL.CO.Helpers
             if (IssueCount <= (startAt + maxResults))
             {
                 //ReadBoardPage(startAt);
-                JObject j = Connect("board/" + BoardId.ToString() + "/issue?startAt=" + startAt);
+                JObject j = Connect("board/" + Id.ToString() + "/issue?startAt=" + startAt);
                 json += j.ToString(Newtonsoft.Json.Formatting.None);
             }
             else
             {
-                JObject j = Connect("board/" + BoardId.ToString() + "/issue?startAt=" + startAt);
+                JObject j = Connect("board/" + Id.ToString() + "/issue?startAt=" + startAt);
                 json += j.ToString(Newtonsoft.Json.Formatting.None);
                 AggregateJsonIssues(startAt + maxResults);
             }
@@ -131,7 +131,7 @@ namespace ESL.CO.Helpers
         private void AggregateJson()
         {
             json = String.Empty;
-            JObject j = Connect("board/" + BoardId.ToString() + "/configuration");
+            JObject j = Connect("board/" + Id.ToString() + "/configuration");
             json += j.ToString(Newtonsoft.Json.Formatting.None);
             AggregateJsonIssues();
             return;
