@@ -10,7 +10,7 @@ using System.Text;
 namespace ESL.CO.Models
 {
     //obtained from https://jira.returnonintelligence.com/rest/agile/1.0/board
-    
+    /*
     public class Board
     {
         
@@ -27,7 +27,7 @@ namespace ESL.CO.Models
 
 
         public int IssueCount { get; set; }
-        public int ColumnCount { get; set; }
+        public int ColumnCount { get; set; }*/
         /*
         private int boardId;
         private int columnCount;
@@ -49,7 +49,7 @@ namespace ESL.CO.Models
 
             WebRequest myReq = WebRequest.Create(urlIssue);
             #region Credentials
-            string credentials = "adzelme:testTEST0";
+            string credentials = "adzelme:";
             #endregion
             myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
             WebResponse wr = myReq.GetResponse();
@@ -180,4 +180,4 @@ namespace ESL.CO.Models
     }
     */
 
-}
+//}

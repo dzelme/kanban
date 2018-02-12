@@ -21,7 +21,7 @@ namespace ESL.CO.Models
     {
         public string Name { get; set; }
         public List<ColumnStatus> Statuses { get; set; }  //which issues shown in this column
-        public int? Max { get; set; }  //max number of issues in one column
+        //public int? Max { get; set; }  //max number of issues in one column
     }
 
     public class ColumnConfig
@@ -41,4 +41,31 @@ namespace ESL.CO.Models
         public ColumnConfig ColumnConfig { get; set; }
         //public Ranking ranking { get; set; }
     }
+
+
+    public class Board
+    {
+        public int Id { get; set; }
+        public List<Col> Columns { get; set; }
+
+        public Board(int id)
+        {
+            Id = id;
+            Columns = new List<Col>();
+            //Columns.AddRange(ColumnConfig.Columns)
+        }
+    }
+
+    public class Col
+    {
+        public string Name { get; set; }
+        public List<Issue> Issues { get; set; }
+
+        public Col(string name)
+        {
+            Name = name;
+            Issues = new List<Issue>();
+        }
+    }
+
 }

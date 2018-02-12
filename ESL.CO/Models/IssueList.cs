@@ -250,6 +250,16 @@ namespace ESL.CO.Models
         public int Total { get; set; }
         public List<Issue> Issues { get; set; }
     }
+
+    public class FullIssueList //: IssueList
+    {
+        public List<Issue> AllIssues { get; set; }
+
+        public FullIssueList()
+        {
+            AllIssues = new List<Issue>();
+        }
+    }
 }
 
 

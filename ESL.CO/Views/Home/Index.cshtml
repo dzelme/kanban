@@ -1,3 +1,29 @@
 ﻿@ViewData["xxx"]
 
+@{
+    ViewData["Title"] = "Kanban Board";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+
+<table BORDER="5" WIDTH="50%" CELLPADDING="4" CELLSPACING="3">
+    <tr>
+        @foreach (var column in ViewBag.columns)
+        {
+            <th>@column.Name</th>
+        }
+    </tr>
+
+    @for (int row = 0; row < ViewBag.rowCount; row++)
+    {
+        <tr>
+            @for (int col = 0; col < ViewBag.columnCount; col++)
+            {
+                <td>@((row + 1 > ViewBag.columnLength[col]) ? "" : ViewBag.columns[col].Issues[row].Fields.Summary)</td>
+            }
+        </tr>
+    }
+
+</table>
 
