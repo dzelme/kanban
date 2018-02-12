@@ -56,7 +56,7 @@ namespace ESL.CO.Helpers
         */
 
         //gets board config
-        
+        /*
         public void Initialize (int id)
         {
             json = String.Empty;

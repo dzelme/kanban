@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using System.Text.Encodings;
 using System.Net.Http.Headers;
 
+using ESL.CO.JiraIntegration;
+
 //using ESL.CO.Helpers;
 
 namespace ESL.CO.Controllers
@@ -23,10 +25,15 @@ namespace ESL.CO.Controllers
     {
         public IActionResult Index()
         {
-            
+            //this.Id = id;
+            //JObject j = Connect("board/" + Id + "/issue");
+
+            var client = new JiraClient();
+            var xxx = client.GetIssuesAsync("board/").Result;
+            var asd = "";
             return View();
         }
-
+        /*
         public IActionResult OneBoard()
         {
             int boardId = 961;  //620, 880, 961, 963
@@ -62,9 +69,10 @@ namespace ESL.CO.Controllers
 
             return View();
         }
-
+        
         public IActionResult AllBoards()
         {
+            
             ViewData["Message"] = "Nolasītā informācija:";
 
             string BoardId;
@@ -107,7 +115,7 @@ namespace ESL.CO.Controllers
                 throw new InvalidOperationException();
             }
 
-            
+            */
 
 
 
@@ -359,9 +367,9 @@ namespace ESL.CO.Controllers
 
             ViewBag.BoardList = BL.AllBoards;
             */
-
+            /*
             return View();
-        }
+        }*/
 
         public IActionResult Error()
         {

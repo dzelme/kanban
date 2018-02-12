@@ -6,7 +6,29 @@ using System.Threading.Tasks;
 namespace ESL.CO.Models
 {
     //obtained from https://jira.returnonintelligence.com/rest/agile/1.0/board/963/issue
-    
+    /*
+    public class Issue
+    {
+        public string Id { get; set; }
+        public string Key { get; set; }
+        public string Status { get; set; }
+        public string Priority { get; set; }
+        public string Assignee { get; set; }
+        public string Summary { get; set; }
+        public string Link { get; set; }
+
+        public Issue(string i, string k, string stat, string p, string a, string sum, string l)
+        {
+            Id = i;
+            Key = k;
+            Status = stat;
+            Priority = p;
+            Assignee = a;
+            Summary = sum;
+            Link = l;
+        }
+    }
+    */
 /*
     public class Issuetype
     {
@@ -26,16 +48,16 @@ namespace ESL.CO.Models
         public string __invalid_name__16x16 { get; set; }
         public string __invalid_name__32x32 { get; set; }
     }
-*/
+
     public class Project
     {
         //public string self { get; set; }
-        public string Id { get; set; }  //e.g., 15786
-        public string Key { get; set; }  //e.g., KP
-        public string Name { get; set; }  //e.g., KOSMOSS Prakse
+        public string id { get; set; }  //e.g., 15786
+        public string key { get; set; }  //e.g., KP
+        public string name { get; set; }  //e.g., KOSMOSS Prakse
         //public AvatarUrls avatarUrls { get; set; }
     }
-/*
+
     public class Customfield10355
     {
         public string self { get; set; }
@@ -56,15 +78,15 @@ namespace ESL.CO.Models
         public int watchCount { get; set; }
         public bool isWatching { get; set; }
     }
-*/
+
     public class Priority
     {
         //public string self { get; set; }
         //public string iconUrl { get; set; }
-        public string Name { get; set; }  //e.g., critical
-        public string Id { get; set; }
+        public string name { get; set; }  //e.g., critical
+        public string id { get; set; }
     }
-/*
+
     public class AvatarUrls2
     {
         public string __invalid_name__48x48 { get; set; }
@@ -72,7 +94,7 @@ namespace ESL.CO.Models
         public string __invalid_name__16x16 { get; set; }
         public string __invalid_name__32x32 { get; set; }
     }
-*/
+
 
     public class Assignee
     {
@@ -81,7 +103,7 @@ namespace ESL.CO.Models
         //public string key { get; set; }
         //public string emailAddress { get; set; }
         //public AvatarUrls2 avatarUrls { get; set; }  //avatar image in 4 sizes (48x48, ..., 16x16)
-        public string DisplayName { get; set; }  //full name
+        public string displayName { get; set; }  //full name
         //public bool active { get; set; }
         //public string timeZone { get; set; }
     }
@@ -94,15 +116,15 @@ namespace ESL.CO.Models
         public string colorName { get; set; }
         public string name { get; set; }
     }
-*/
 
-    public class Status
+
+    public class Status3
     {
         //public string self { get; set; }
         //public string description { get; set; }
         //public string iconUrl { get; set; }
-        public string Name { get; set; }  //e.g., to do, backlog
-        public string Id { get; set; }  //which column belongs to
+        public string name { get; set; }  //e.g., to do, backlog
+        public string id { get; set; }  //which column belongs to
         //public StatusCategory statusCategory { get; set; }
     }
 /*
@@ -191,7 +213,7 @@ namespace ESL.CO.Models
         public int total { get; set; }
         public List<object> worklogs { get; set; }
     }
-*/
+
     public class Fields
     {
         //public Issuetype issuetype { get; set; }
@@ -205,22 +227,22 @@ namespace ESL.CO.Models
         //public DateTime? lastViewed { get; set; }
         //public Watches watches { get; set; }
         //public DateTime created { get; set; }
-        public Priority Priority { get; set; }
+        public Priority priority { get; set; }
         //public List<object> labels { get; set; }
         //public object aggregatetimeoriginalestimate { get; set; }
         //public object timeestimate { get; set; }
         //public List<object> versions { get; set; }
         //public List<object> issuelinks { get; set; }  //?
-        public Assignee Assignee { get; set; }
+        public Assignee assignee { get; set; }
         //public DateTime updated { get; set; }
-        public Status Status { get; set; }  //which column belongs to
+        public Status3 status { get; set; }  //which column belongs to
         //public List<Component> components { get; set; }
         //public object timeoriginalestimate { get; set; }
-        public string Description { get; set; }
+        public string description { get; set; }
         //public Timetracking timetracking { get; set; }
         //public object aggregatetimeestimate { get; set; }
         //public bool flagged { get; set; }
-        public string Summary { get; set; }
+        public string summary { get; set; }
         //public Creator creator { get; set; }
         //public List<object> subtasks { get; set; }
         //public Reporter reporter { get; set; }
@@ -238,18 +260,19 @@ namespace ESL.CO.Models
         //public string expand { get; set; }
         //public string id { get; set; }
         //public string self { get; set; }
-        public string Key { get; set; }  //used to generate link to the particular issue
-        public Fields Fields { get; set; }
+        public string key { get; set; }  //used to generate link to the particular issue
+        public Fields fields { get; set; }
     }
 
-    public class IssueList
+    public class RootObject3
     {
         //public string expand { get; set; }
-        public int StartAt { get; set; }
-        public int MaxResults { get; set; }
-        public int Total { get; set; }
-        public List<Issue> Issues { get; set; }
+        public int startAt { get; set; }
+        public int maxResults { get; set; }
+        public int total { get; set; }
+        public List<Issue> issues { get; set; }
     }
+    */
 }
 
 

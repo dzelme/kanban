@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ESL.CO.Models
 {
     //obtained from each https://jira.returnonintelligence.com/rest/agile/1.0/board/963/configuration
-    public class Column
+    public class Column2
     {
         public string Name { get; set; }
         public string[] Statuses { get; set; }  //possible list //ids that go into column
@@ -15,13 +15,13 @@ namespace ESL.CO.Models
 
         public List<Issue> Issues { get; set; }
 
-        /*
+        
         //not needed with httpClient?
-        public Column(string name)
+        public Column2(string name)
         {
             this.Name = name;
             Issues = new List<Issue>();
         }
-        */
+        
     }
 }
