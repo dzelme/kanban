@@ -72,7 +72,7 @@ namespace ESL.CO.Controllers
             var board = new Board(id);
             foreach (Column col in boardConfig.ColumnConfig.Columns)
             {
-                board.Columns.Add(new Col(col.Name));
+                board.Columns.Add(new BoardColumn(col.Name));
             }
 
 
@@ -96,7 +96,7 @@ namespace ESL.CO.Controllers
 
             //finds number of rows in table (maximum)
             int rowCount = 0;
-            foreach (Col c in board.Columns)
+            foreach (BoardColumn c in board.Columns)
             {
                 if (c.Issues.Count() > rowCount) { rowCount = c.Issues.Count(); }
             }
