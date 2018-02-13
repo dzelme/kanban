@@ -23,13 +23,13 @@ namespace ESL.CO.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //this.Id = id;
             //JObject j = Connect("board/" + Id + "/issue");
 
             var client = new JiraClient();
-            var boardList = client.GetBoardListAsync("board/").Result;
+            var boardList = await client.GetBoardListAsync("board/");
 
             BoardConfig boardConfig = null;
 
@@ -46,15 +46,15 @@ namespace ESL.CO.Controllers
             */
 
             //get full list of all issues
-            int id = 963;
-            boardConfig = client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration").Result;  //
+            int id = 620;
+            boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
             FullIssueList li = new FullIssueList();
-            IssueList issueList = client.GetIssueListAsync("board/" + id.ToString() + "/issue").Result;
+            IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString()).Result;
+                issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
                 li.AllIssues.AddRange(issueList.Issues);
             }
 
@@ -108,14 +108,23 @@ namespace ESL.CO.Controllers
                 columnLength[i] = board.Columns[i].Issues.Count();
             }
 
+
+            var ivm = new IndexViewModel();
+            ivm.ColumnLength = columnLength;
+            ivm.ColumnCount = board.Columns.Count();
+            ivm.RowCount = rowCount;
+            ivm.Columns = board.Columns;
+
+            /*
+            //viewbag no good
             ViewBag.columnLength = columnLength;  //boardConfig.ColumnConfig.Columns[].Issues.Count()
             ViewBag.columnCount = board.Columns.Count();
             ViewBag.rowCount = rowCount;
             ViewBag.columns = board.Columns; //boardConfig.ColumnConfig.Columns;
-
+            */
 
             var asd = "";
-            return View();
+            return View(ivm);
         }
         /*
         public IActionResult OneBoard()
