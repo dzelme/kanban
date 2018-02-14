@@ -3,7 +3,10 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 
 interface FetchDataExampleState {
-    forecasts: WeatherForecast[];
+    //forecasts: WeatherForecast[];
+    //loading: boolean;
+
+    forecasts: Value[];
     loading: boolean;
 }
 
@@ -13,7 +16,7 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
         this.state = { forecasts: [], loading: true };
 
         fetch('api/SampleData/WeatherForecasts')
-            .then(response => response.json() as Promise<WeatherForecast[]>)
+            .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ forecasts: data, loading: false });
             });
@@ -25,34 +28,29 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
             : Home.renderForecastsTable(this.state.forecasts);
 
         return <div>
-            <h1>Weather forecast</h1>
+            <h1>Board List</h1>
             <p>This component demonstrates fetching data from the server.</p>
             {contents}
         </div>;
     }
 
-    private static renderForecastsTable(forecasts: WeatherForecast[]) {
+    private static renderForecastsTable(forecasts: Value[]) {
         return <table className='table'>
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Type</th>
                 </tr>
             </thead>
             <tbody>
                 {forecasts.map(forecast =>
-                    <tr key={forecast.dateFormatted}>
-                        <td>{forecast.dateFormatted}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
+                    <tr key={forecast.id}>
+                        <td>{forecast.id}</td>
+                        <td>{forecast.name}</td>
+                        <td>{forecast.type}</td>
                     </tr>
                 )}
-                for (var i=0; i < objects.length; i++) {
-                <ObjectRow obj={objects[i]} key={i}/>
-                    } 
             </tbody>
         </table>;
     }
@@ -60,37 +58,11 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
 
 }
 
-
-function ObjectRow(props) {
-    return <h1>Hello, {props.name}</h1>;
+interface Value {
+    id: number;
+    name: string;
+    type: string;
 }
-
-function ListItem(props) {
-    // Correct! There is no need to specify the key here:
-    return <li>{props.value}</li>;
-}
-
-function NumberList(props) {
-    const numbers = props.numbers;
-    const listItems = numbers.map((number) =>
-        // Correct! Key should be specified inside the array.
-        <ListItem key={number.toString()}
-            value={number} />
-
-    );
-    return (
-        <ul>
-            {listItems}
-        </ul>
-    );
-}
-
-const numbers = [1, 2, 3, 4, 5];
-ReactDOM.render(
-    <NumberList numbers={numbers} />,
-    document.getElementById('root')
-);
-
 
 
 interface WeatherForecast {
