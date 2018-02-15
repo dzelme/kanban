@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
+import { BoardList } from './components/BoardList';
 import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import { KanbanBoard } from './components/KanbanBoard';
 
 export const routes = <Layout>
-    <Route exact path='/' component={ Home } />
-    <Route path='/counter' component={ Counter } />
+    <Route exact path='/' component={ BoardList } />
+    <Route path='/kanbanboard' component={ KanbanBoard } />
     <Route path='/fetchdata' component={ FetchData } />
 </Layout>;

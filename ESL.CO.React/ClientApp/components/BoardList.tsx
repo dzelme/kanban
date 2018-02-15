@@ -7,7 +7,7 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
-export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
         this.state = { boardlist: [], loading: true };
@@ -22,7 +22,7 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
     public render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Home.renderBoardList(this.state.boardlist);
+            : BoardList.renderBoardList(this.state.boardlist);
 
         return <div>
             <h1>Board List</h1>

@@ -7,7 +7,7 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
-export class Counter extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
         this.state = {
@@ -25,7 +25,7 @@ export class Counter extends React.Component<RouteComponentProps<{}>, FetchDataE
     public render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Counter.renderBoard(this.state.board);
+            : KanbanBoard.renderBoard(this.state.board);
 
         return <div>
             <h1>Kanban board</h1>
@@ -51,7 +51,10 @@ export class Counter extends React.Component<RouteComponentProps<{}>, FetchDataE
                                 {boardRow.issueRow.map(issue =>
                                     <td>
                                         <pre>
-                                            {issue.key}
+                                            <a href= {'https://jira.returnonintelligence.com/browse/' + issue.key}>{issue.key}</a>{"\n"}
+                                            {issue.fields.summary}{"\n"}
+                                            {(issue.fields.assignee) ? issue.fields.assignee.displayName : ""}{"\n"}
+                                            {issue.fields.priority.name}{"\n"}
                                         </pre>
                                     </td>
                                 )}
