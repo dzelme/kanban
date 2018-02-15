@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ESL.CO.Models
+namespace ESL.CO.React.Models
 {
     //obtained from https://jira.returnonintelligence.com/rest/agile/1.0/board/963/issue
     
@@ -34,6 +34,13 @@ namespace ESL.CO.Models
         public string Key { get; set; }  //e.g., KP
         public string Name { get; set; }  //e.g., KOSMOSS Prakse
         //public AvatarUrls avatarUrls { get; set; }
+
+        public Project()
+        {
+            Id = string.Empty;
+            Key = string.Empty;
+            Name = string.Empty;
+        }
     }
 /*
     public class Customfield10355
@@ -63,6 +70,12 @@ namespace ESL.CO.Models
         //public string iconUrl { get; set; }
         public string Name { get; set; }  //e.g., critical
         public string Id { get; set; }
+
+        public Priority()
+        {
+            Name = string.Empty;
+            Id = string.Empty;
+        }
     }
 /*
     public class AvatarUrls2
@@ -84,6 +97,11 @@ namespace ESL.CO.Models
         public string DisplayName { get; set; }  //full name
         //public bool active { get; set; }
         //public string timeZone { get; set; }
+
+        public Assignee()
+        {
+            DisplayName = string.Empty;
+        }
     }
 /*
     public class StatusCategory
@@ -104,6 +122,12 @@ namespace ESL.CO.Models
         public string Name { get; set; }  //e.g., to do, backlog
         public string Id { get; set; }  //which column belongs to
         //public StatusCategory statusCategory { get; set; }
+
+        public Status()
+        {
+            Name = string.Empty;
+            Id = string.Empty;
+        }
     }
 /*
     public class Component
@@ -231,6 +255,15 @@ namespace ESL.CO.Models
         //public Comment comment { get; set; }
         //public Votes votes { get; set; }
         //public Worklog worklog { get; set; }
+
+        public Fields()
+        {
+            Priority = new Priority();
+            Assignee = new Assignee();
+            Status = new Status();
+            Description = string.Empty;
+            Summary = string.Empty;
+        }
     }
 
     public class Issue
@@ -244,7 +277,7 @@ namespace ESL.CO.Models
         public Issue()
         {
             Key = string.Empty;
-            Fields = null;
+            Fields = new Fields();
         }
     }
 
@@ -255,6 +288,14 @@ namespace ESL.CO.Models
         public int MaxResults { get; set; }
         public int Total { get; set; }
         public List<Issue> Issues { get; set; }
+
+        public IssueList()
+        {
+            StartAt = 0;
+            MaxResults = 50;
+            Total = 0;
+            Issues = new List<Issue>();
+        }
     }
 
     public class FullIssueList //: IssueList

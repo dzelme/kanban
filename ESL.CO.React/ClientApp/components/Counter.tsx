@@ -3,60 +3,65 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 
 interface FetchDataExampleState {
-    //forecasts: WeatherForecast[];
-    //loading: boolean;
-
-    boardrows: BoardRow[];
+    board: Board;
     loading: boolean;
 }
 
 export class Counter extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        this.state = { boardrows: [], loading: true };
+        this.state = {
+            board: { id: 0, columns: [], rows: [] },
+            loading: true
+        };
 
         fetch('api/SampleData/BoardData')
-            .then(response => response.json() as Promise<BoardRow[]>)
+            .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ boardrows: data, loading: false });
+                this.setState({ board: data, loading: false });
             });
     }
 
     public render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Counter.renderBoard(this.state.boardrows);
+            : Counter.renderBoard(this.state.board);
 
         return <div>
             <h1>Kanban board</h1>
-            <p>This component demonstrates fetching data from the server.</p>
             {contents}
         </div>;
     }
 
-    private static renderBoard(boardrows: BoardRow[]) {
-        return <table className='table'>
-            <thead>
-                <tr>
-                    <td>Draft</td>
-                    <td>To do</td>
-                    <td>In progress</td>
-                    <td>Done</td>
-                </tr>
-            </thead>
-            <tbody>
-                {boardrows.map(boardrow =>
-                    <tr>
-                        {boardrow.issueRow.map(issue =>
-                            <td>{issue.key}</td>
+    private static renderBoard(board: Board) {
+        return (
+            <div>
+            <p>Board: #{board.id}</p>
+                <table className= 'table' >
+                    <thead>
+                        <tr>
+                            {board.columns.map(boardColumn =>
+                                <td>{boardColumn.name}</td>
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {board.rows.map(boardRow =>
+                            <tr>
+                                {boardRow.issueRow.map(issue =>
+                                    <td>
+                                        <pre>
+                                            {issue.key}
+                                        </pre>
+                                    </td>
+                                )}
+                            </tr>
                         )}
-                    </tr>
-                )}
-            </tbody>
-        </table>;
+                    </tbody>
+                </table >
+            </div>
+        )
     }
-
-
 }
 
 interface Value {
@@ -99,7 +104,7 @@ interface Status {
 }
 
 interface Assignee {
-    displayname: string;
+    displayName: string;
 }
 
 interface Priority {

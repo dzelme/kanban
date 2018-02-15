@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Encodings;
 using System.Text;
-using ESL.CO.Models;
+using ESL.CO.React.Models;
 
-namespace ESL.CO.JiraIntegration
+namespace ESL.CO.React.JiraIntegration
 {
     public class JiraClient
     {

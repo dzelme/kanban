@@ -7,7 +7,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 
-namespace ESL.CO.Models
+namespace ESL.CO.React.Models
 {
     //obtained from https://jira.returnonintelligence.com/rest/agile/1.0/board/963/configuration
 

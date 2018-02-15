@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ESL.CO.Models
+namespace ESL.CO.React.Models
 {
     //model that is passed to view from controller
     public class IndexViewModel

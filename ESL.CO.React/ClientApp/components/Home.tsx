@@ -26,7 +26,6 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
 
         return <div>
             <h1>Board List</h1>
-            <p>This component demonstrates fetching data from the server.</p>
             {contents}
         </div>;
     }

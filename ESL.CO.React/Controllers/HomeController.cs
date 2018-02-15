@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using ESL.CO.JiraIntegration;
-using ESL.CO.Models;
+using ESL.CO.React.JiraIntegration;
+using ESL.CO.React.Models;
 
 namespace ESL.CO.React.Controllers
 {

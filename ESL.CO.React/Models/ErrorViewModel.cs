@@ -1,6 +1,6 @@
 using System;
 
-namespace ESL.CO.Models
+namespace ESL.CO.React.Models
 {
     public class ErrorViewModel
     {

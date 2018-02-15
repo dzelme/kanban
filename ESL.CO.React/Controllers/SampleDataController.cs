@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using ESL.CO.JiraIntegration;
-using ESL.CO.Models;
+using ESL.CO.React.JiraIntegration;
+using ESL.CO.React.Models;
 
 namespace ESL.CO.React.Controllers
 {
@@ -24,9 +24,9 @@ namespace ESL.CO.React.Controllers
 
         //obtain a full kanban board
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Models.BoardRow>> BoardData()
+        public async Task<Models.Board> BoardData()
         {
-            int id = 620;
+            int id = 963;
             var client = new JiraClient();
             var boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
             FullIssueList li = new FullIssueList();
@@ -84,12 +84,13 @@ namespace ESL.CO.React.Controllers
                     }
                     else
                     {
+                        //if need to use this, make it so that new Issue cascades, creates new objects for property objects
                         board.Rows[i].IssueRow.Add(new Issue());  //creates empty issues, where there are none (can be removed)
                     }
                 }
             }
 
-            return board.Rows;
+            return board;
         }
     }
 }

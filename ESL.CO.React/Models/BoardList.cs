@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ESL.CO.Models
+namespace ESL.CO.React.Models
 {
     //obtained from https://jira.returnonintelligence.com/rest/agile/1.0/board
 
