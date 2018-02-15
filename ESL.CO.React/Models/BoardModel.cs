@@ -9,11 +9,13 @@ namespace ESL.CO.Models
     {
         public int Id { get; set; }
         public List<BoardColumn> Columns { get; set; }
+        public List<BoardRow> Rows { get; set; }  //
 
         public Board(int id)
         {
             Id = id;
             Columns = new List<BoardColumn>();
+            Rows = new List<BoardRow>();
         }
     }
 
@@ -26,6 +28,16 @@ namespace ESL.CO.Models
         {
             Name = name;
             Issues = new List<Issue>();
+        }
+    }
+
+    public class BoardRow  //
+    {
+        public List<Issue> IssueRow { get; set; }
+
+        public BoardRow()
+        {
+            IssueRow = new List<Issue>();
         }
     }
 }

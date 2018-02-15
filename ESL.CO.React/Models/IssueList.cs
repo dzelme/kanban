@@ -240,6 +240,12 @@ namespace ESL.CO.Models
         //public string self { get; set; }
         public string Key { get; set; }  //used to generate link to the particular issue
         public Fields Fields { get; set; }
+
+        public Issue()
+        {
+            Key = string.Empty;
+            Fields = null;
+        }
     }
 
     public class IssueList

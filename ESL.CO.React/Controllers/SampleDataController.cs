@@ -5,80 +5,91 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using ESL.CO.JiraIntegration;
+using ESL.CO.Models;
 
 namespace ESL.CO.React.Controllers
 {
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
-        private static string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        /*
+        //Obtain board list from Jira, passes to React
         [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts()
-        {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
-        }
-        */
-        
-        ///*
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<Models.Value>> WeatherForecasts()
+        public async Task<IEnumerable<Models.Value>> BoardList()
         {
             var client = new JiraClient();
             var boardList = await client.GetBoardListAsync("board/");
 
-            var asd = "";
             return boardList.Values;
         }
-        //*/
 
-        /*
+        //obtain a full kanban board
         [HttpGet("[action]")]
-        public Value WeatherForecasts()
+        public async Task<IEnumerable<Models.BoardRow>> BoardData()
         {
-            var rng = new Value
+            int id = 620;
+            var client = new JiraClient();
+            var boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
+            FullIssueList li = new FullIssueList();
+            IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
+            li.AllIssues.AddRange(issueList.Issues);
+            while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
-                Id = 620,
-                Name = "KP",
-                Type = "kanban"
-            };
-            return rng;
-        }
-        */
-        public class WeatherForecast
-        {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
+                issueList.StartAt += issueList.MaxResults;
+                issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                li.AllIssues.AddRange(issueList.Issues);
+            }
 
-            public int TemperatureF
+            //create a board model with issues assigned to appropriate column
+            var board = new Board(id);
+            foreach (Column col in boardConfig.ColumnConfig.Columns)
             {
-                get
+                board.Columns.Add(new BoardColumn(col.Name));
+            }
+
+
+            //find appropriate column for each issue
+            foreach (Issue issue in li.AllIssues)  //(Issue issue in issueList.Issues)
+            {
+                //foreach (Column col in boardConfig.ColumnConfig.Columns)
+                for (int i = 0; i < boardConfig.ColumnConfig.Columns.Count(); i++)
                 {
-                    return 32 + (int)(TemperatureC / 0.5556);
+                    //foreach (var status in col.Statuses)
+                    foreach (var status in boardConfig.ColumnConfig.Columns[i].Statuses)
+                    {
+                        if (status.Id == issue.Fields.Status.Id)
+                        {
+                            board.Columns[i].Issues.Add(issue);
+                            //add issue to this column
+                        }
+                    }
                 }
             }
-        }
 
-        /*
-        //DRY, use the one from the Models folder
-        public class Value
-        {
-            public int Id { get; set; }
-            //public string Self { get; set; }
-            public string Name { get; set; }
-            public string Type { get; set; }
+            //find number of rows in table (maximum)
+            int rowCount = 0;
+            foreach (BoardColumn c in board.Columns)
+            {
+                if (c.Issues.Count() > rowCount) { rowCount = c.Issues.Count(); }
+            }
+
+            //create a list of issues (for <td>) for each board row (<tr>) 
+            for (int i = 0; i < rowCount; i++)
+            {
+                board.Rows.Add(new BoardRow());
+                for (int j = 0; j < board.Columns.Count(); j++)
+                {
+                    if (board.Columns[j].Issues.ElementAtOrDefault(i) != null)  //checks if issue exists
+                    {
+                        board.Rows[i].IssueRow.Add(board.Columns[j].Issues[i]);  //adds issue to row
+                    }
+                    else
+                    {
+                        board.Rows[i].IssueRow.Add(new Issue());  //creates empty issues, where there are none (can be removed)
+                    }
+                }
+            }
+
+            return board.Rows;
         }
-        */
     }
 }
