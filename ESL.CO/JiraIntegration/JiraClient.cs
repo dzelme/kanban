@@ -13,17 +13,21 @@ namespace ESL.CO.JiraIntegration
 {
     public class JiraClient
     {
+
+        HttpClient client = new HttpClient();
+
+        #region Credentials
+        string credentials = "adzelme:testTEST0";
+        #endregion
+
+        string JiraLink = "https://jira.returnonintelligence.com/rest/agile/1.0/";
+
         public async Task<IssueList> GetIssueListAsync(string url)
         {
-            HttpClient client = new HttpClient();
-
-            #region Credentials
-            string credentials = "adzelme:testTEST0";
-            #endregion
 
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
 
-            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            var response = await client.GetAsync(JiraLink + url);
             if(response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();
@@ -31,7 +35,6 @@ namespace ESL.CO.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    //return serializer.Deserialize<IssueList>(jsonReader);
                     return serializer.Deserialize<IssueList>(jsonReader);
                 }
             }
@@ -41,15 +44,10 @@ namespace ESL.CO.JiraIntegration
 
         public async Task<BoardList> GetBoardListAsync(string url)
         {
-            HttpClient client = new HttpClient();
-
-            #region Credentials
-            string credentials = "adzelme:testTEST0";
-            #endregion
 
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
 
-            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            var response = await client.GetAsync(JiraLink + url);
             if(response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();
@@ -57,7 +55,6 @@ namespace ESL.CO.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    //return serializer.Deserialize<IssueList>(jsonReader);
                     return serializer.Deserialize<BoardList>(jsonReader);
                 }
             }
@@ -67,15 +64,9 @@ namespace ESL.CO.JiraIntegration
 
         public async Task<BoardConfig> GetBoardConfigAsync(string url)
         {
-            HttpClient client = new HttpClient();
-
-            #region Credentials
-            string credentials = "adzelme:testTEST0";
-            #endregion
-
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
 
-            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            var response = await client.GetAsync(JiraLink + url);
             if (response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();
@@ -83,7 +74,6 @@ namespace ESL.CO.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    //return serializer.Deserialize<IssueList>(jsonReader);
                     return serializer.Deserialize<BoardConfig>(jsonReader);
                 }
             }
