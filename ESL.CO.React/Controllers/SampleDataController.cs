@@ -7,6 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
 
+using Newtonsoft.Json;
+using System.IO;
+
+using System.Security.Cryptography;
+
+
+
 namespace ESL.CO.React.Controllers
 {
     [Route("api/[controller]")]
@@ -46,7 +53,6 @@ namespace ESL.CO.React.Controllers
                 board.Columns.Add(new BoardColumn(col.Name));
             }
 
-
             //find appropriate column for each issue
             foreach (Issue issue in li.AllIssues)  //(Issue issue in issueList.Issues)
             {
@@ -84,13 +90,72 @@ namespace ESL.CO.React.Controllers
                     }
                     else
                     {
-                        //if need to use this, make it so that new Issue cascades, creates new objects for property objects
-                        board.Rows[i].IssueRow.Add(new Issue());  //creates empty issues, where there are none (can be removed)
+                        //creates empty issues, where there are none (without this issues allign to left in wrong columns)
+                        board.Rows[i].IssueRow.Add(new Issue());
                     }
                 }
             }
 
-            return board;
+            /////////
+
+            // read cached file
+            // read from JSON to object, if file exists
+            var filePath = @".\data\" + id.ToString() + ".json";  //use path.combine...
+            var cachedHash = string.Empty;
+            Board cachedBoard = new Board();
+            if (System.IO.File.Exists(filePath))
+            {
+                using (StreamReader r = new StreamReader(filePath))
+                {
+                    string json = r.ReadToEnd();
+                    cachedBoard = JsonConvert.DeserializeObject<Board>(json);
+                }
+                cachedHash = GetHashCode(filePath, new MD5CryptoServiceProvider());
+            }
+            else
+            { }
+            
+            // save info read from JIRA in a temp file
+            // serialize JSON directly to a file
+            var tempPath = @".\data\temp.json";
+            using (StreamWriter file = System.IO.File.CreateText(tempPath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, board);
+            }
+            var hash = GetHashCode(tempPath, new MD5CryptoServiceProvider());
+
+
+            // overwrite cached file if new file is different
+            if (!String.Equals(cachedHash, hash))
+            {
+                System.IO.File.Copy(tempPath, filePath, true);
+                System.IO.File.Delete(tempPath);
+                return board;
+            }
+
+            System.IO.File.Delete(tempPath);
+            return cachedBoard;  //shouldn't redraw from cache. should do nothing instead.....
+        }
+
+
+        internal static string GetHashCode(string filePath, HashAlgorithm cryptoService)
+        {
+            // create or use the instance of the crypto service provider
+            // this can be either MD5, SHA1, SHA256, SHA384 or SHA512
+            using (cryptoService)
+            {
+                using (var fileStream = new FileStream(filePath,
+                                                       FileMode.Open,
+                                                       FileAccess.Read,
+                                                       FileShare.ReadWrite))
+                {
+                    //fileStream.Position = 0;
+                    var hash = cryptoService.ComputeHash(fileStream);
+                    var hashString = Convert.ToBase64String(hash);
+                    return hashString.TrimEnd('=');
+                }
+            }
         }
     }
 }

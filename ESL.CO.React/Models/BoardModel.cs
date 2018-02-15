@@ -11,7 +11,7 @@ namespace ESL.CO.React.Models
         public List<BoardColumn> Columns { get; set; }
         public List<BoardRow> Rows { get; set; }  //
 
-        public Board(int id)
+        public Board(int id = 0)
         {
             Id = id;
             Columns = new List<BoardColumn>();
