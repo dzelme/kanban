@@ -1,45 +1,36 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 
-
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-}
-
-
 interface FetchDataExampleState {
-    forecasts: Value[];
+    boardlist: Value[];
     loading: boolean;
 }
 
-export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        this.state = { forecasts: [], loading: true };
+        this.state = { boardlist: [], loading: true };
 
-        fetch('api/SampleData/AllBoards')
+        fetch('api/SampleData/BoardList')
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
-                this.setState({ forecasts: data, loading: false });
+                this.setState({ boardlist: data, loading: false });
             });
     }
 
     public render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Home.renderForecastsTable(this.state.forecasts);
+            : BoardList.renderBoardList(this.state.boardlist);
 
         return <div>
             <h1>Board List</h1>
-            <p>This component demonstrates fetching data from the server.</p>
             {contents}
         </div>;
     }
 
-    private static renderForecastsTable(forecasts: Value[]) {
+    private static renderBoardList(boardlist: Value[]) {
         return <table className='table'>
             <thead>
                 <tr>
@@ -49,11 +40,11 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
                 </tr>
             </thead>
             <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.id}>
-                        <td>{forecast.id}</td>
-                        <td>{forecast.name}</td>
-                        <td>{forecast.type}</td>
+                {boardlist.map(board =>
+                    <tr key={board.id}>
+                        <td>{board.id}</td>
+                        <td>{board.name}</td>
+                        <td>{board.type}</td>
                     </tr>
                 )}
             </tbody>
@@ -63,3 +54,8 @@ export class Home extends React.Component<RouteComponentProps<{}>, FetchDataExam
 
 }
 
+interface Value {
+    id: number;
+    name: string;
+    type: string;
+}
