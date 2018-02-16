@@ -23,13 +23,13 @@ namespace ESL.CO.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //this.Id = id;
             //JObject j = Connect("board/" + Id + "/issue");
 
             var client = new JiraClient();
-            var boardList = client.GetBoardListAsync("board/").Result;
+            var boardList = await client.GetBoardListAsync("board/");
 
             BoardConfig boardConfig = null;
 
@@ -46,15 +46,15 @@ namespace ESL.CO.Controllers
             */
 
             //get full list of all issues
-            int id = 963;
-            boardConfig = client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration").Result;
+            int id = 620;
+            boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
             FullIssueList li = new FullIssueList();
-            IssueList issueList = client.GetIssueListAsync("board/" + id.ToString() + "/issue").Result;
+            IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString()).Result;
+                issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
                 li.AllIssues.AddRange(issueList.Issues);
             }
 
@@ -108,14 +108,23 @@ namespace ESL.CO.Controllers
                 columnLength[i] = board.Columns[i].Issues.Count();
             }
 
+
+            var ivm = new IndexViewModel();
+            ivm.ColumnLength = columnLength;
+            ivm.ColumnCount = board.Columns.Count();
+            ivm.RowCount = rowCount;
+            ivm.Columns = board.Columns;
+
+            /*
+            //viewbag no good
             ViewBag.columnLength = columnLength;  //boardConfig.ColumnConfig.Columns[].Issues.Count()
             ViewBag.columnCount = board.Columns.Count();
             ViewBag.rowCount = rowCount;
             ViewBag.columns = board.Columns; //boardConfig.ColumnConfig.Columns;
-
+            */
 
             var asd = "";
-            return View();
+            return View(ivm);
         }
         /*
         public IActionResult OneBoard()
@@ -154,7 +163,306 @@ namespace ESL.CO.Controllers
             return View();
         }
         
-       */
+        public IActionResult AllBoards()
+        {
+            
+            ViewData["Message"] = "Nolasītā informācija:";
+
+            string BoardId;
+
+            string credentials = "arumka:Dzukste22";
+
+
+            //*************************************************************************************************************
+            //Visi dēļi
+
+            HttpClient client = new HttpClient();           
+              
+             client.BaseAddress = new Uri("http://localhost:50973/");
+             client.DefaultRequestHeaders.Accept.Clear();
+             client.DefaultRequestHeaders.Accept.Add(           
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+            
+            async Task<BoardList> GetIssuesAsync()
+            {
+
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+
+                var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/board");
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var serializer = new Newtonsoft.Json.JsonSerializer();
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var reader = new StreamReader(stream))
+                    using (var jsonReader = new JsonTextReader(reader))
+                    {
+                        ViewData["xxx"] = serializer.Deserialize<BoardList>(jsonReader);
+
+                        return serializer.Deserialize<BoardList>(jsonReader);
+                    }
+                }
+
+                throw new InvalidOperationException();
+            }
+
+            */
+
+
+
+/*
+
+            string urlAllBoards = "https://jira.returnonintelligence.com/rest/agile/1.0/board";
+
+            WebRequest myReq = WebRequest.Create(urlAllBoards);
+            myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
+            WebResponse wr = myReq.GetResponse();
+            Stream receiveStream = wr.GetResponseStream();
+            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+            string content = reader.ReadToEnd();
+            JObject j = JObject.Parse(content);
+
+            BoardList BL = new BoardList
+            {
+                IsLast = (string)j.SelectToken("isLast")
+            };
+
+            var AllBoardObjects = j.SelectToken("values");
+            List<Board> CurrentBoardList = new List<Board>();
+
+            foreach (JObject board in AllBoardObjects)
+            {
+                Board B = new Board
+                {
+                    ID = (string)board.SelectToken("id"),
+                    Name = (string)board.SelectToken("name"),
+                    Type = (string)board.SelectToken("type"),
+                    Link = (string)board.SelectToken("self")
+                };
+
+                CurrentBoardList.Add(B);
+            }
+
+            BL.AllBoards = CurrentBoardList;
+*/
+
+            //*************************************************************************************************************
+
+            //*******************************************************************************************************************
+            //Dēļa konfigurācija          
+            /*
+            string urlConfig;
+
+            foreach (var board in BL.AllBoards)
+            {
+
+                BoardId = board.ID;
+                urlConfig = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/configuration";
+
+                myReq = WebRequest.Create(urlConfig);
+                myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
+                wr = myReq.GetResponse();
+                receiveStream = wr.GetResponseStream();
+                reader = new StreamReader(receiveStream, Encoding.UTF8);
+                content = reader.ReadToEnd();
+                j = JObject.Parse(content);
+
+
+                ColumnList CL = new ColumnList
+                {
+                    BoardId = (string)j.SelectToken("id"),
+                    BoardName = (string)j.SelectToken("name"),
+                    BoardType = (string)j.SelectToken("type")
+                };
+
+
+                var AllColumnObjects = j.SelectToken("columnConfig.columns");
+                List<Column> CurrentColumnList = new List<Column>();
+
+                foreach (JObject column in AllColumnObjects)
+                {
+                    Column C = new Column
+                    {
+                        Name = (string)column.SelectToken("name"),
+                       // Max = (int)column.SelectToken("max")
+                    };
+
+                    CurrentColumnList.Add(C);
+
+                }
+
+                CL.AllColumns = CurrentColumnList;
+                board.BoardColumns = CL;                
+
+            }
+            //*****************************************************************************************************************
+
+
+            //****************************************************************************************************************
+            //Dēļa ieraksti
+
+            string urlIssue;
+
+            foreach (var board in BL.AllBoards)
+            {
+
+                BoardId = board.ID;
+                urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue";
+
+                myReq = WebRequest.Create(urlIssue);
+                myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
+                wr = myReq.GetResponse();
+                receiveStream = wr.GetResponseStream();
+                reader = new StreamReader(receiveStream, Encoding.UTF8);
+                content = reader.ReadToEnd();
+                j = JObject.Parse(content);
+
+              
+
+                var AllIssueObjects = j.SelectToken("issues");
+                List<Issue> CurrentIssueList = new List<Issue>();           
+
+                foreach (var issue in AllIssueObjects)
+                {
+                    Issue I = new Issue
+                    {
+                        ID = (string)issue.SelectToken("id"),
+                        Key = (string)issue.SelectToken("key"),
+                        Priority = (string)issue.SelectToken("fields.priority.name"),
+                        Assignee = (string)issue.SelectToken("fields.assignee.name"),
+                        Summary = (string)issue.SelectToken("fields.summary"),
+                        Link = (string)issue.SelectToken("self")
+                    };
+
+                    I.Status = (string)issue.SelectToken("fields.status.statusCategory.name");
+
+                    if (I.Status == "No Category")
+                    {
+                        I.Status = (string)issue.SelectToken("fields.status.name");
+                    }
+
+                    CurrentIssueList.Add(I);
+                }
+
+                int TotalIssueCount = (int)j.SelectToken("total");
+                int StartAtCount = (int)j.SelectToken("startAt");
+                
+                if (TotalIssueCount > 50)
+                {
+                    while (TotalIssueCount > StartAtCount + 50)
+                    {
+                        StartAtCount += 50;
+                        urlIssue = "https://jira.returnonintelligence.com/rest/agile/1.0/board/" + BoardId + "/issue?startAt=" + StartAtCount;
+
+
+                        myReq = WebRequest.Create(urlIssue);
+                        myReq.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials));
+                        wr = myReq.GetResponse();
+                        receiveStream = wr.GetResponseStream();
+                        reader = new StreamReader(receiveStream, Encoding.UTF8);
+                        content = reader.ReadToEnd();
+                        j = JObject.Parse(content);
+
+
+                        AllIssueObjects = j.SelectToken("issues");
+
+                        foreach (var issue in AllIssueObjects)
+                        {
+                            Issue I = new Issue
+                            {
+                                ID = (string)issue.SelectToken("id"),
+                                Priority = (string)issue.SelectToken("fields.priority.name"),
+                                Assignee = (string)issue.SelectToken("fields.assignee.name"),
+                                Summary = (string)issue.SelectToken("fields.summary"),
+                                Link = (string)issue.SelectToken("self")
+                            };
+
+                            I.Status = (string)issue.SelectToken("fields.status.statusCategory.name");
+
+                            if (I.Status == "No Category")
+                            {
+                                I.Status = (string)issue.SelectToken("fields.status.name");
+                            }
+
+
+                            CurrentIssueList.Add(I);
+                        }
+                    }
+                }
+                
+                string issueColumn;
+
+                string ExpandValue = (string)j.SelectToken("expand");
+                int TotalValue = (int)j.SelectToken("total");
+
+
+                for (int i = 0; i < board.BoardColumns.AllColumns.Count; i++)
+                {
+                    IssueList IL = new IssueList
+                    {
+                        Expand = ExpandValue,
+                        Total = TotalValue,
+                    };
+
+                    issueColumn = board.BoardColumns.AllColumns[i].Name;
+
+                    List<Issue> tmp = new List<Issue>();
+
+                    foreach (var item in CurrentIssueList)
+                    {
+                        if (item.Status == issueColumn)
+                        {
+                            tmp.Add(item);
+                        }
+                    }
+
+                    IL.AllIssues = tmp;
+                    board.BoardColumns.AllColumns[i].ColumnIssues = IL;
+                 
+                }
+
+
+                int maxIssues = 0;
+                for (int i = 0; i < board.BoardColumns.AllColumns.Count; i++)
+                {
+                    if (board.BoardColumns.AllColumns[i].ColumnIssues.AllIssues.Count > maxIssues)
+                    {
+                        maxIssues = board.BoardColumns.AllColumns[i].ColumnIssues.AllIssues.Count;
+                    }
+                }
+
+
+                board.MaxIssueCount = maxIssues;
+
+            }
+
+
+
+            var asd = "";
+
+
+            foreach (var item in BL.AllBoards)
+            {
+                asd += item.ID + " | " + item.BoardColumns.AllColumns.Count + " | " + item.MaxIssueCount + " | ";
+
+                foreach (var n in item.BoardColumns.AllColumns)
+                {
+                    asd += n.ColumnIssues.AllIssues.Count + Environment.NewLine;
+                }
+                asd += "||";
+            }
+
+            ViewData["js"] = asd;
+
+            //*************************************************************************************************************
+
+            ViewBag.BoardList = BL.AllBoards;
+            */
+            /*
+            return View();
+        }*/
 
         public IActionResult Error()
         {

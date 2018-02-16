@@ -14,4 +14,13 @@ namespace ESL.CO.Models
         public List<Value> Values { get; set; }
     }
 
+    public class FullBoardList //: BoardList
+    {
+        public List<Value> AllValues { get; set; }
+
+        public FullBoardList()
+        {
+            AllValues = new List<Value>();
+        }
+    }
 }

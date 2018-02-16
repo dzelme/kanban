@@ -10,7 +10,7 @@ namespace ESL.CO.Tests
         public void Test1()
         {
             var client = new JiraClient();
-            var xxx = client.GetIssueListAsync("").Result;
+            var xxx = client.GetIssueListAsync("board/" + "620" + "/issue").Result;
             Assert.NotNull(xxx);
         }
     }

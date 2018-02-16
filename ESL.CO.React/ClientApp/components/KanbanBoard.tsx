@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 
@@ -11,7 +11,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     constructor() {
         super();
         this.state = {
-            board: { id: 0, columns: [], rows: [] },
+            board: { id: 0, fromCache: false, message: "", columns: [], rows: [] },
             loading: true
         };
 
@@ -36,8 +36,8 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     private static renderBoard(board: Board) {
         return (
             <div>
-                <p>Board: #{board.id}</p>
-                <table className='table' >
+                <p>Board: #{board.id}{board.fromCache ? " (from cache)" : " "} {board.message}</p>
+                <table className= 'table' >
                     <thead>
                         <tr>
                             {board.columns.map(boardColumn =>
@@ -51,7 +51,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
                                 {boardRow.issueRow.map(issue =>
                                     <td>
                                         <pre>
-                                            <a href={'https://jira.returnonintelligence.com/browse/' + issue.key}>{issue.key}</a>{"\n"}
+                                            <a href= {'https://jira.returnonintelligence.com/browse/' + issue.key}>{issue.key}</a>{"\n"}
                                             {issue.fields.summary}{"\n"}
                                             {(issue.fields.assignee) ? issue.fields.assignee.displayName : ""}{"\n"}
                                             {issue.fields.priority.name}{"\n"}
@@ -75,6 +75,8 @@ interface Value {
 
 interface Board {
     id: number;
+    fromCache: boolean;
+    message: string;
     columns: BoardColumn[];
     rows: BoardRow[];
 }

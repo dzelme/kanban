@@ -1,5 +1,8 @@
 ﻿@ViewData["xxx"]
 
+@model IndexViewModel
+
+
 @{
     ViewData["Title"] = "Kanban Board";
 }
@@ -9,18 +12,18 @@
 
 <table BORDER="5" WIDTH="50%" CELLPADDING="4" CELLSPACING="3">
     <tr>
-        @foreach (var column in ViewBag.columns)
+        @foreach (var column in Model.Columns)
         {
             <th>@column.Name</th>
         }
     </tr>
 
-    @for (int row = 0; row < ViewBag.rowCount; row++)
+    @for (int row = 0; row < Model.RowCount; row++)
     {
         <tr>
-            @for (int col = 0; col < ViewBag.columnCount; col++)
+            @for (int col = 0; col < Model.ColumnCount; col++)
             {
-                <td>@((row + 1 > ViewBag.columnLength[col]) ? "" : ViewBag.columns[col].Issues[row].Fields.Summary)</td>
+                <td>@((row + 1 > Model.ColumnLength[col]) ? "" : Model.Columns[col].Issues[row].Fields.Summary)</td>
             }
         </tr>
     }
