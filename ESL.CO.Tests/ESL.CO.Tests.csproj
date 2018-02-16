@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ESL.CO\ESL.CO.csproj" />
+    <ProjectReference Include="..\ESL.CO.React\ESL.CO.React.csproj" />
   </ItemGroup>
 
 </Project>

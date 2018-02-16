@@ -39,6 +39,7 @@ namespace ESL.CO.React.JiraIntegration
                 return cachedBoard;
             }
             cachedBoard.FromCache = true; //
+            cachedBoard.Message = File.GetLastWriteTime(filePath).ToString();
             return cachedBoard;
         }
 

@@ -1,4 +1,4 @@
-using ESL.CO.JiraIntegration;
+using ESL.CO.React.JiraIntegration;
 using System;
 using Xunit;
 

@@ -1,5 +1,4 @@
-using ESL.CO.JiraIntegration;
-using ESL.CO.Controllers;
+using ESL.CO.React.Controllers;
 using System;
 using Xunit;
 
