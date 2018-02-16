@@ -37,6 +37,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                     <th>Id</th>
                     <th>Name</th>
                     <th>Type</th>
+                    <th>Time shown</th>
+                    <th>Refresh rate</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +47,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                         <td>{board.id}</td>
                         <td>{board.name}</td>
                         <td>{board.type}</td>
+                        <td><input type="number"></input></td>
+                        <td><input type="number"></input></td>
                     </tr>
                 )}
             </tbody>

@@ -11,7 +11,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     constructor() {
         super();
         this.state = {
-            board: { id: 0, columns: [], rows: [] },
+            board: { id: 0, fromCache: false, message: "", columns: [], rows: [] },
             loading: true
         };
 
@@ -36,7 +36,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     private static renderBoard(board: Board) {
         return (
             <div>
-            <p>Board: #{board.id}</p>
+                <p>Board: #{board.id}{board.fromCache ? " (from cache)" : " "} {board.message}</p>
                 <table className= 'table' >
                     <thead>
                         <tr>
@@ -75,6 +75,8 @@ interface Value {
 
 interface Board {
     id: number;
+    fromCache: boolean;
+    message: string;
     columns: BoardColumn[];
     rows: BoardRow[];
 }

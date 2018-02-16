@@ -12,8 +12,9 @@ namespace ESL.CO.React.Controllers
 {
     public class HomeController : Controller
     {
+       
         public async Task<IActionResult> Index()
-        {
+        { /*
             //this.Id = id;
             //JObject j = Connect("board/" + Id + "/issue");
 
@@ -22,17 +23,15 @@ namespace ESL.CO.React.Controllers
 
             BoardConfig boardConfig = null;
 
-            /*
             //loops thorough all kanban boards
-            foreach (Value board in boardList.Values)
-            {
-                if (String.Equals(board.Type, "kanban", StringComparison.OrdinalIgnoreCase))
-                {
-                    //
-                    boardConfig = client.GetBoardConfigAsync("board/" + board.Id + "/configuration").Result;
-                }
+            //foreach (Value board in boardList.Values)
+            //{
+            //    if (String.Equals(board.Type, "kanban", StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        //
+            //        boardConfig = client.GetBoardConfigAsync("board/" + board.Id + "/configuration").Result;
+            //    }
             }
-            */
 
             //get full list of all issues
             int id = 963;
@@ -47,15 +46,6 @@ namespace ESL.CO.React.Controllers
                 li.AllIssues.AddRange(issueList.Issues);
             }
 
-
-            /*
-            var board = new List<List<Issue>>();
-            for (int i = 0; i < boardConfig.ColumnConfig.Columns.Count(); i++)
-            {
-                var temp = new List<Issue>();
-                board.Add(temp);
-            }
-            */
 
             //create a board model with issues assigned to appropriate column
             var board = new Board(id);
@@ -104,16 +94,10 @@ namespace ESL.CO.React.Controllers
             ivm.RowCount = rowCount;
             ivm.Columns = board.Columns;
 
-            /*
-            //viewbag no good
-            ViewBag.columnLength = columnLength;  //boardConfig.ColumnConfig.Columns[].Issues.Count()
-            ViewBag.columnCount = board.Columns.Count();
-            ViewBag.rowCount = rowCount;
-            ViewBag.columns = board.Columns; //boardConfig.ColumnConfig.Columns;
-            */
-
             var asd = "";
-            return View(ivm);
+            return View(ivm);*/
+            return View();
+
         }
 
         public IActionResult Error()

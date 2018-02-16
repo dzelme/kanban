@@ -13,6 +13,28 @@ namespace ESL.CO.React.JiraIntegration
 {
     public class JiraClient
     {
+        /*
+        public async Task<Board> GetBoardAsync()
+        {
+            HttpClient client = new HttpClient();
+
+            #region Credentials
+            string credentials = "adzelme:testTEST0";
+            #endregion
+
+            client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+
+            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            if (response.IsSuccessStatusCode)
+
+
+            
+        }
+        */
+
+
+
+
         public async Task<IssueList> GetIssueListAsync(string url)
         {
             HttpClient client = new HttpClient();
@@ -36,7 +58,8 @@ namespace ESL.CO.React.JiraIntegration
                 }
             }
 
-            throw new InvalidOperationException();
+            return null;
+            //throw new InvalidOperationException();
         }
 
         public async Task<BoardList> GetBoardListAsync(string url)
@@ -88,7 +111,8 @@ namespace ESL.CO.React.JiraIntegration
                 }
             }
 
-            throw new InvalidOperationException();
+            return null;
+            //throw new InvalidOperationException();
         }
     }
 }

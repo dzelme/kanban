@@ -1,67 +1,39 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
 
-using Newtonsoft.Json;
-using System.IO;
-
-using System.Security.Cryptography;
-
-
-
-namespace ESL.CO.React.Controllers
+namespace ESL.CO.React.JiraIntegration
 {
-    [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class BoardCreator
     {
-        //Obtain board list from Jira, passes to React
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<Models.Value>> BoardList()
+
+        public async Task<Board> CreateBoardModel()
         {
-            var client = new JiraClient();
-            var boardList = await client.GetBoardListAsync("board/");
-
-            return boardList.Values;
-        }
-
-        //obtain a full kanban board
-        [HttpGet("[action]")]
-        public async Task<Models.Board> BoardData()
-        {
-            var creator = new BoardCreator();
-            var b = creator.CreateBoardModel();
-            var board = await b;
-
-            if (board.FromCache == true) { return board; }  // in case of failed connection. currently draws. should do nothing instead...
-
-            var cache = new CacheMethods();
-            if (cache.NeedsRedraw(board)) { return board; }  // new board different. draws.
-
-            return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
-            
-
-            #region
-            /*
             int id = 963;
+            var board = new Board(id);
+            var cache = new CacheMethods();
             var client = new JiraClient();
             var boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
+            if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
+
             FullIssueList li = new FullIssueList();
             IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
+            if (issueList == null) { return cache.GetCachedBoard(id); }  //
+
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
                 issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                if (issueList == null) { return cache.GetCachedBoard(id); }  //
                 li.AllIssues.AddRange(issueList.Issues);
             }
 
             //create a board model with issues assigned to appropriate column
-            var board = new Board(id);
             foreach (Column col in boardConfig.ColumnConfig.Columns)
             {
                 board.Columns.Add(new BoardColumn(col.Name));
@@ -109,52 +81,8 @@ namespace ESL.CO.React.Controllers
                     }
                 }
             }
-            */
 
-            /////////
-            /*
-            // read cached file
-            // read from JSON to object, if file exists
-            var filePath = @".\data\" + id.ToString() + ".json";  //use path.combine...
-            var cachedHash = string.Empty;
-            Board cachedBoard = new Board();
-            if (System.IO.File.Exists(filePath))
-            {
-                using (StreamReader r = new StreamReader(filePath))
-                {
-                    string json = r.ReadToEnd();
-                    cachedBoard = JsonConvert.DeserializeObject<Board>(json);
-                }
-                cachedHash = GetHashCode(filePath, new MD5CryptoServiceProvider());
-            }
-            else
-            { }
-            
-            // save info read from JIRA in a temp file
-            // serialize JSON directly to a file
-            var tempPath = @".\data\temp.json";
-            using (StreamWriter file = System.IO.File.CreateText(tempPath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, board);
-            }
-            var hash = GetHashCode(tempPath, new MD5CryptoServiceProvider());
-
-
-            // overwrite cached file if new file is different
-            if (!String.Equals(cachedHash, hash))
-            {
-                System.IO.File.Copy(tempPath, filePath, true);
-                System.IO.File.Delete(tempPath);
-                return board;
-            }
-
-            System.IO.File.Delete(tempPath);
-            return cachedBoard;  //shouldn't redraw from cache. should do nothing instead.....
-            */
-            #endregion
-
-
+            return board;
         }
     }
 }
