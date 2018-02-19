@@ -17,18 +17,18 @@ namespace ESL.CO.React.JiraIntegration
             var board = new Board(id);
             var cache = new CacheMethods();
             var client = new JiraClient();
-            var boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
+            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration");
             if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
+            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue");
             if (issueList == null) { return cache.GetCachedBoard(id); }  //
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
                 if (issueList == null) { return cache.GetCachedBoard(id); }  //
                 li.AllIssues.AddRange(issueList.Issues);
             }

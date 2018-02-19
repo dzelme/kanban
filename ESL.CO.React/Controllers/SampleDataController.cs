@@ -24,7 +24,7 @@ namespace ESL.CO.React.Controllers
         public async Task<IEnumerable<Models.Value>> BoardList()
         {
             var client = new JiraClient();
-            var boardList = await client.GetBoardListAsync("board/");
+            var boardList = await client.GetBoardDataAsync<BoardList>("board/");
 
             return boardList.Values;
         }
@@ -42,8 +42,8 @@ namespace ESL.CO.React.Controllers
             var cache = new CacheMethods();
             if (cache.NeedsRedraw(board)) { return board; }  // new board different. draws.
 
-            return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
-            
+            //return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
+            return board;
 
             #region
             /*

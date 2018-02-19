@@ -8,6 +8,7 @@ interface FetchDataExampleState {
 }
 
 export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+    timerID: number;                         //
     constructor() {
         super();
         this.state = {
@@ -15,6 +16,25 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
             loading: true
         };
 
+        fetch('api/SampleData/BoardData')
+            .then(response => response.json() as Promise<Board>)
+            .then(data => {
+                this.setState({ board: data, loading: false });
+            });
+    }
+
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),
+            10000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+    tick() {
         fetch('api/SampleData/BoardData')
             .then(response => response.json() as Promise<Board>)
             .then(data => {

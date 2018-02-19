@@ -1,6 +1,7 @@
 using ESL.CO.React.JiraIntegration;
 using System;
 using Xunit;
+using ESL.CO.React.Models;
 
 namespace ESL.CO.Tests
 {
@@ -10,7 +11,7 @@ namespace ESL.CO.Tests
         public void Test1()
         {
             var client = new JiraClient();
-            var xxx = client.GetIssueListAsync("board/" + "620" + "/issue").Result;
+            var xxx = client.GetBoardDataAsync<IssueList>("board/" + "620" + "/issue").Result;
             Assert.NotNull(xxx);
         }
     }
