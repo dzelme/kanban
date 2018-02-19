@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class IssueProject
+    public class Project
     {
+        //public string self { get; set; }
         public string Id { get; set; }  //e.g., 15786
         public string Key { get; set; }  //e.g., KP
         public string Name { get; set; }  //e.g., KOSMOSS Prakse
+        //public AvatarUrls avatarUrls { get; set; }
 
-        public IssueProject()
+        public Project()
         {
             Id = string.Empty;
             Key = string.Empty;

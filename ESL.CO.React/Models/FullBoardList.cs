@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class FullBoardList
+    public class FullBoardList //: BoardList
     {
         public List<Value> AllValues { get; set; }
 

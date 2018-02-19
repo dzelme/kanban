@@ -1,16 +1,17 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 
+const styleColumn = {
+    border: 'solid',
+};
 
 const styleColumnTitle = {
     borderBottom: 'solid'
 };
 
-
-const styleColumn = {
-    border: 'solid',
+const styleColumnTitleText = {
+    textAlign: 'center'
 };
-
 
 const styleColumnNext = {
     borderBottom: 'solid',
@@ -21,16 +22,13 @@ const styleColumnNext = {
 
 const styleTicket = {
     background: 'yellow',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
-
 };
 
 const styleTicketBlocker = {
     background: 'red',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -39,7 +37,6 @@ const styleTicketBlocker = {
 
 const styleTicketCritical = {
     background: 'orange',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -48,7 +45,6 @@ const styleTicketCritical = {
 
 const styleTicketMajor = {
     background: 'lightyellow',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -57,7 +53,6 @@ const styleTicketMajor = {
 
 const styleTicketMinor = {
     background: 'lightgreen',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -66,17 +61,15 @@ const styleTicketMinor = {
 
 const styleTicketTrivial = {
     background: 'lightgray',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
 
 };
 
-const styleBoard = {
-    background: 'AliceBlue'
-}
-
+const styleLink = {
+    color: 'black'
+};
 
 interface Value {
     id: number;
@@ -86,6 +79,7 @@ interface Value {
 
 interface Board {
     id: number;
+    name: string;
     columns: BoardColumn[];
     rows: BoardRow[];
 }
@@ -137,7 +131,7 @@ export class ColumnReader extends React.Component<RouteComponentProps<{}>, Fetch
     constructor(props) {
         super(props);
         this.state = {
-            board: { id: 0, columns: [], rows: [] },
+            board: { id: 0, name: "", columns: [], rows: [] },
             loading: true
         };
 
@@ -152,18 +146,18 @@ public render() {
 
     return <div>
 
-        <div>  <BoardName id={this.state.board.id} />   </div>
-        <div>   <BoardTable board={this.state.board} /> </div>
+        <BoardName name={this.state.board.name} />
+        <BoardTable board={this.state.board} />
 
         </div>;
     }
 }
 
-class BoardName extends React.Component<{ id: number }> {
+class BoardName extends React.Component<{ name: string }> {
 
     public render() {
         return <div>
-            <h1>Board: #{this.props.id}</h1>
+            <h1><strong>{this.props.name}</strong></h1>
         </div>
     }
 }
@@ -172,14 +166,13 @@ class BoardName extends React.Component<{ id: number }> {
 export class BoardTable extends React.Component<{ board: Board }> {
 
     public render() {
-        
-        return <div>
-            <tr>
+
+        return <tr>
             {this.props.board.columns.map((column, i) =>
                     <td style={styleColumn}><Column column={column} board={this.props.board} /></td>
                 )}
-            </tr>
-            </div>
+        </tr>
+        
     }
 
 }
@@ -192,8 +185,8 @@ class Column extends React.Component<{ column: BoardColumn , board: Board}> {
 
 
         return <div>
-            <div style={styleColumnTitle}>   <ColumnTitle name = {currentColumn.name} />   </div>
-            <div>   <ColumnFill column = {currentColumn} />   </div>
+            <div style={styleColumnTitle}>   <ColumnTitle name={currentColumn.name} />   </div>
+            <div>   <ColumnFill column={currentColumn} />   </div>
 
         </div>
     }
@@ -202,11 +195,8 @@ class Column extends React.Component<{ column: BoardColumn , board: Board}> {
 class ColumnTitle extends React.Component<{name: string}> {
     public render() {
 
-        return <tr>
-            <th>
-                {this.props.name}
-            </th>
-        </tr>
+        return <h2 style={styleColumnTitleText}><strong>{this.props.name}</strong></h2>
+
     }
 }
 
@@ -214,14 +204,22 @@ class ColumnTitle extends React.Component<{name: string}> {
 class ColumnFill extends React.Component<{ column: BoardColumn }> {
     public render() {        
 
+        let SortedIssues = ColumnFill.IssuePriority(this.props.column);
+    
+       
         return <div>
-            
-            {this.props.column.issues.map((issue, i) =>
 
-                <tr> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
-                )}
+
+            {
+                SortedIssues.map((issue, i) =>
+
+                    <tr> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+            )
+        }
+
+        </div> 
             
-        </div>
+      
     }
 
     private static PriorityColor(issue: Issue) {
@@ -252,6 +250,45 @@ class ColumnFill extends React.Component<{ column: BoardColumn }> {
 
     }
 
+    private static IssuePriority(column: BoardColumn) {
+
+        const issueByPriority = [];
+        let allIssues = column.issues;
+      
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Blocker') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Critical') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Major') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Minor') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Trivial') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        return issueByPriority;
+
+    }
+
 }
 
 
@@ -259,39 +296,42 @@ class Ticket extends React.Component<{ issue: Issue }> {
     public render() {
 
         let currentIssue = this.props.issue;
+        let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
         return (
             <div>
 
-                <div> <TicketKey keyName={currentIssue.key} /></div>
+                <div><a href={linkToIssue} style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
                 <div ><TicketSummary desc={currentIssue.fields.summary} /></div>
-                <div ><TicketPriority priority={currentIssue.fields.priority.name} /></div>
+                <div ><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
                 
 
             </div>
         );
     }
 
+    private static AssigneeCheck(assignee: Assignee) {
+        let AssigneeName;
+     
+
+        if (assignee == null) {
+            AssigneeName = "None";
+        }
+        else {
+            AssigneeName = assignee.displayName;
+        }
+
+        return AssigneeName;
+
+    }
+
 }
-/*
-<div ><TicketAssignee assigneeName={Assignee} /></div>
 
-
-
-let Assignee = "";
-
-if (currentIssue.fields.assignee = null) {
-    Assignee = "None";
-}
-else {
-    Assignee = currentIssue.fields.assignee.displayName;
-}
-*/
 
 class TicketKey extends React.Component<{ keyName: string }> {
     public render() {
         return <div>
-            <h5><strong>{this.props.keyName}</strong></h5>
+            <h3><strong>{this.props.keyName}</strong></h3>
         </div>
 
     }
@@ -300,11 +340,14 @@ class TicketKey extends React.Component<{ keyName: string }> {
 class TicketSummary extends React.Component<{ desc: string }> {
     public render() {
         return <div>
-            <h5><strong>{this.props.desc}</strong></h5>
+            <h4><strong>{this.props.desc}</strong></h4>
         </div>
 
     }
 }
+/*
+
+  <div ><TicketPriority priority={currentIssue.fields.priority.name} /></div>
 
 class TicketPriority extends React.Component<{ priority: string }> {
     public render() {
@@ -315,14 +358,14 @@ class TicketPriority extends React.Component<{ priority: string }> {
 
     }
 }
-/*
+*/
 class TicketAssignee extends React.Component<{ assigneeName: string }> {
     public render() {
 
         return <div>
-            <h5>Assignee: <strong>{this.props.assigneeName}</strong></h5>
+            <h4>Assignee: <strong>{this.props.assigneeName}</strong></h4>
         </div>
 
     }
 }
-*/
+

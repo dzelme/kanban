@@ -7,8 +7,9 @@ namespace ESL.CO.React.Models
 {
     public class Priority
     {
-        public string Name { get; set; }
-        public string Self { get; set; }
+        //public string self { get; set; }
+        //public string iconUrl { get; set; }
+        public string Name { get; set; }  //e.g., critical
         public string Id { get; set; }
 
         public Priority()

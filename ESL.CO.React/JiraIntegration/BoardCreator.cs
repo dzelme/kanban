@@ -13,12 +13,14 @@ namespace ESL.CO.React.JiraIntegration
 
         public async Task<Board> CreateBoardModel()
         {
-            int id = 963;
+            int id = 620;
             var board = new Board(id);
             var cache = new CacheMethods();
             var client = new JiraClient();
             var boardConfig = await client.GetBoardConfigAsync("board/" + id.ToString() + "/configuration");
             if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
+
+            board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
             IssueList issueList = await client.GetIssueListAsync("board/" + id.ToString() + "/issue");
@@ -56,6 +58,7 @@ namespace ESL.CO.React.JiraIntegration
                     }
                 }
             }
+
 
             //find number of rows in table (maximum)
             int rowCount = 0;

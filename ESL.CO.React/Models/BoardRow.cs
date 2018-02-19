@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class BoardRow
+    public class BoardRow  //
     {
         public List<Issue> IssueRow { get; set; }
 

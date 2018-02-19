@@ -7,10 +7,12 @@ namespace ESL.CO.React.Models
 {
     public class Status
     {
-        public string Self { get; set; }
-        public string Name { get; set; }
-        public string Id { get; set; }
-        public IssueStatusCategory StatusCategory { get; set; }
+        //public string self { get; set; }
+        //public string description { get; set; }
+        //public string iconUrl { get; set; }
+        public string Name { get; set; }  //e.g., to do, backlog
+        public string Id { get; set; }  //which column belongs to
+        //public StatusCategory statusCategory { get; set; }
 
         public Status()
         {
