@@ -14,7 +14,7 @@ namespace ESL.CO.React.JiraIntegration
 {
     public class CacheMethods
     {
-        public string GetPath(int boardId)
+        public string GetBoardPath(int boardId)
         {
             var filePath = Path.Combine(@".\data\", boardId.ToString() + ".json");
             return filePath;
@@ -23,7 +23,7 @@ namespace ESL.CO.React.JiraIntegration
         public Board GetCachedBoard(int boardId)
         {
             // read from JSON to object, if file exists
-            var filePath = GetPath(boardId);
+            var filePath = GetBoardPath(boardId);
             Board cachedBoard = new Board();
             if (System.IO.File.Exists(filePath))
             {
@@ -58,7 +58,7 @@ namespace ESL.CO.React.JiraIntegration
 
         public bool NeedsRedraw(Board board)
         {
-            var filePath = GetPath(board.Id);
+            var filePath = GetBoardPath(board.Id);
             var cachedHash = string.Empty;
             if (System.IO.File.Exists(filePath)) { cachedHash = GetHashCode(filePath, new MD5CryptoServiceProvider()); }
 

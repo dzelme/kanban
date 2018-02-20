@@ -13,7 +13,7 @@ namespace ESL.CO.React.JiraIntegration
 
         public async Task<Board> CreateBoardModel()
         {
-            int id = 963;
+            int id = 963;  //963 961 620 748
             var board = new Board(id);
             var cache = new CacheMethods();
             var client = new JiraClient();
@@ -81,6 +81,11 @@ namespace ESL.CO.React.JiraIntegration
                     }
                 }
             }
+
+
+            // add board settings
+
+
 
             return board;
         }

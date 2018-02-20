@@ -23,10 +23,42 @@ namespace ESL.CO.React.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<Models.Value>> BoardList()
         {
+            /*
             var client = new JiraClient();
             var boardList = await client.GetBoardDataAsync<BoardList>("board/");
 
             return boardList.Values;
+            */
+
+
+            var client = new JiraClient();
+            var a = new AppSettings();
+            var boardList = await client.GetBoardDataAsync<BoardList>("board/");
+            if (boardList == null)
+            {
+                return a.GetSavedAppSettings()?.AllValues;
+            }  //
+
+            
+            FullBoardList appSettings = new FullBoardList();
+            appSettings.AllValues.AddRange(boardList.Values);
+            while (!boardList.IsLast)
+            {
+                boardList.StartAt += boardList.MaxResults;
+                boardList = await client.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
+                //if (boardList == null) { return null; }  //
+                if (boardList == null)
+                {
+                    appSettings = a.MergeSettings(a.GetSavedAppSettings(), appSettings);
+                    a.SaveAppSettings(appSettings);
+                    return appSettings.AllValues;
+                }
+                appSettings.AllValues.AddRange(boardList.Values);
+            }
+            
+            appSettings = a.MergeSettings(a.GetSavedAppSettings(), appSettings);
+            a.SaveAppSettings(appSettings);
+            return appSettings.AllValues;
         }
 
         //obtain a full kanban board
