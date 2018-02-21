@@ -4,6 +4,7 @@ import 'isomorphic-fetch';
 
 interface FetchDataExampleState {
     board: Board;
+    boardConfig: Value;
     loading: boolean;
 }
 
@@ -13,20 +14,32 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
         super();
         this.state = {
             board: { id: 0, fromCache: false, message: "", columns: [], rows: [] },
+            boardConfig: { id: 0, name: "", type: "", visibility: false, timeShown: 0, refreshRate: 10000},  //
             loading: true
         };
 
         fetch('api/SampleData/BoardData')
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false });
+                this.setState({ board: data }, this.WillMount); // callback when setState is done
+                //, loading: false });
+            });
+
+        //fetch to send board id and receive boardConfig
+    }
+
+    WillMount() {
+        fetch('api/SampleData/BoardConfig?id=' + this.state.board.id.toString())
+            .then(response => response.json() as Promise<Value>)
+            .then(data => {
+                this.setState({ boardConfig: data, loading: false }, this.DidMount);
             });
     }
 
-    componentDidMount() {
+    DidMount() {
         this.timerID = setInterval(
             () => this.tick(),
-            10000
+            this.state.boardConfig.refreshRate
         );
     }
 
@@ -38,11 +51,13 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
         fetch('api/SampleData/BoardData')
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false });
+                this.setState({ board: data });  //, loading: false });
             });
     }
 
     public render() {
+        //clearInterval(this.timerID);  /////
+        //this.componentDidMount();  /////
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : KanbanBoard.renderBoard(this.state.board);
@@ -91,6 +106,10 @@ interface Value {
     id: number;
     name: string;
     type: string;
+
+    visibility: boolean;
+    refreshRate: number;
+    timeShown: number;
 }
 
 interface Board {

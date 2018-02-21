@@ -82,11 +82,6 @@ namespace ESL.CO.React.JiraIntegration
                 }
             }
 
-
-            // add board settings
-
-
-
             return board;
         }
     }

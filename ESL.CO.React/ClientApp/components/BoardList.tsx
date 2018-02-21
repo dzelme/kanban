@@ -82,18 +82,18 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                 </thead>
                 <tbody>
                     {boardlist.map(board =>
-                        <tr key={board.id}>
-                            <td>{board.id}</td>
-                            <td>{board.name}</td>
-                            <td>{board.type}</td>
-                            <td><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
-                            <td><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
-                            <td><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
+                        <tr key={board.id + "row"}>
+                            <td key={board.id + ""}>{board.id}</td>
+                            <td key={board.id + "name"}>{board.name}</td>
+                            <td key={board.id + "type"}>{board.type}</td>
+                            <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
+                            <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
+                            <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
                         </tr>
                     )}
                 </tbody>
-                <button>Submit</button>
             </table>
+            <p><button>Submit</button></p>
         </form>;
     }
 

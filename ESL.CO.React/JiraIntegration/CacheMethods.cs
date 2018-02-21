@@ -25,7 +25,7 @@ namespace ESL.CO.React.JiraIntegration
             // read from JSON to object, if file exists
             var filePath = GetBoardPath(boardId);
             Board cachedBoard = new Board();
-            if (System.IO.File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 using (StreamReader r = new StreamReader(filePath))
                 {
@@ -47,7 +47,7 @@ namespace ESL.CO.React.JiraIntegration
         {
             // save info read from JIRA in a temp file
             // serialize JSON directly to a file
-            using (StreamWriter file = System.IO.File.CreateText(tempPath))
+            using (StreamWriter file = File.CreateText(tempPath))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, board);
@@ -60,20 +60,20 @@ namespace ESL.CO.React.JiraIntegration
         {
             var filePath = GetBoardPath(board.Id);
             var cachedHash = string.Empty;
-            if (System.IO.File.Exists(filePath)) { cachedHash = GetHashCode(filePath, new MD5CryptoServiceProvider()); }
+            if (File.Exists(filePath)) { cachedHash = GetHashCode(filePath, new MD5CryptoServiceProvider()); }
 
             var tempPath = SaveBoardAsTempFile(board);
             var hash = GetHashCode(tempPath, new MD5CryptoServiceProvider());
 
             // overwrite cached file if new file is different
-            if (!String.Equals(cachedHash, hash))
+            if (!(String.Equals(cachedHash, hash)) && (cachedHash != string.Empty))
             {
-                System.IO.File.Copy(tempPath, filePath, true);
-                System.IO.File.Delete(tempPath);
+                File.Copy(tempPath, filePath, true);
+                File.Delete(tempPath);
                 return true;
             }
 
-            System.IO.File.Delete(tempPath);
+            File.Delete(tempPath);
             return false;
         }
 

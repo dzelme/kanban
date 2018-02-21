@@ -39,7 +39,7 @@ namespace ESL.CO.React.Controllers
                 return a.GetSavedAppSettings()?.AllValues;
             }  //
 
-            
+
             FullBoardList appSettings = new FullBoardList();
             appSettings.AllValues.AddRange(boardList.Values);
             while (!boardList.IsLast)
@@ -55,7 +55,7 @@ namespace ESL.CO.React.Controllers
                 }
                 appSettings.AllValues.AddRange(boardList.Values);
             }
-            
+
             appSettings = a.MergeSettings(a.GetSavedAppSettings(), appSettings);
             a.SaveAppSettings(appSettings);
             return appSettings.AllValues;
@@ -185,8 +185,21 @@ namespace ESL.CO.React.Controllers
             return cachedBoard;  //shouldn't redraw from cache. should do nothing instead.....
             */
             #endregion
+        }
 
-
+        [HttpGet("[action]/{id?}")]
+        public async Task<Models.Value> BoardConfig(int id)
+        {
+            //var id = int.Parse(Request.QueryString.ToString());
+            //var id = RouteParameter.Optional;
+            var a = new AppSettings();
+            var appSettings = a.GetSavedAppSettings();
+            var boardConfig = new Value();
+            foreach (var val in appSettings.AllValues)
+            {
+                if (val.Id == id) { boardConfig = val; }
+            }
+            return boardConfig;
         }
     }
 }
