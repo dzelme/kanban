@@ -11,9 +11,8 @@ namespace ESL.CO.React.JiraIntegration
     public class BoardCreator
     {
 
-        public async Task<Board> CreateBoardModel()
+        public async Task<Board> CreateBoardModel(int id)
         {
-            int id = 620;
             var board = new Board(id);
             var cache = new CacheMethods();
             var client = new JiraClient();

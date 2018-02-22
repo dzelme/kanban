@@ -27,10 +27,10 @@ namespace ESL.CO.React.Controllers
 
         //obtain a full kanban board
         [HttpGet("[action]")]
-        public async Task<Models.Board> BoardData()
+        public async Task<Models.Board> BoardData(int ID)
         {
             var creator = new BoardCreator();
-            var b = creator.CreateBoardModel();
+            var b = creator.CreateBoardModel(ID);
             var board = await b;
 
             if (board.FromCache == true) { return board; }  // in case of failed connection. currently draws. should do nothing instead...

@@ -10,8 +10,9 @@ namespace ESL.CO.React.Models
         //public string self { get; set; }
         //public string description { get; set; }
         //public string iconUrl { get; set; }
-        public string Name { get; set; }  //e.g., to do, backlog
         public string Id { get; set; }  //which column belongs to
+        public string Name { get; set; }  //e.g., to do, backlog
+      
         //public StatusCategory statusCategory { get; set; }
 
         public Status()

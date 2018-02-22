@@ -9,8 +9,9 @@ namespace ESL.CO.React.Models
     {
         //public string self { get; set; }
         //public string iconUrl { get; set; }
-        public string Name { get; set; }  //e.g., critical
         public string Id { get; set; }
+        public string Name { get; set; }  //e.g., critical
+        
 
         public Priority()
         {
