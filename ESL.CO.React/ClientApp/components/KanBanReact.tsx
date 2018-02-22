@@ -87,11 +87,15 @@ interface Value {
     id: number;
     name: string;
     type: string;
+    visibility: boolean;
+    timeShown: number;
+    refreshRate: number;
 }
 
 interface Board {
     id: number;
     name: string;
+    fromCache: boolean;
     columns: BoardColumn[];
     rows: BoardRow[];
 }
@@ -176,7 +180,6 @@ class SwipeRight extends React.Component<{ index: number, onClick: any }> {
 }
 
 
-
 export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchDataBoardList> {     //Get all boards in list
 
     constructor() {
@@ -189,8 +192,23 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchD
         fetch('api/SampleData/BoardList')
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
-                this.setState({ boardlist: data, loading: false});
+                this.setState({ boardlist: data }, this.checkVisibility);
             });
+    }
+
+    checkVisibility() {
+        var allBoards = this.state.boardlist;
+        const visibleBoardList = [];
+
+        allBoards.map((board) => {
+            if (board.visibility) {
+                visibleBoardList.push(board);
+            }
+
+        })
+
+        this.setState({ boardlist: visibleBoardList, loading: false });
+
     }
 
 
@@ -224,21 +242,36 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 
     }
 
+    slideShow(timeShown: number) {
+
+        setTimeout(this.clickNext, timeShown);
+    }
 
     public render() {
         
 
         var boardID = this.state.boardlist[this.state.currentIndex].id;
+        var boardRefreshRate = this.state.boardlist[this.state.currentIndex].refreshRate;
+
 
         return <div>
-            <div>
-            <SwipeLeft onClick={this.clickPrev} index={this.state.currentIndex} />
-            <SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
-            </div>
+           
+            
+    
 
-            <ColumnReader boardId={boardID} />
-        </div>
-    }      
+            <h1>BoardID: {boardID}</h1>
+
+            <ColumnReader boardId={boardID} boardRefresh={boardRefreshRate} />
+
+            {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
+           
+        </div>      
+
+    }   
+
+
+   // <SwipeLeft onClick={this.clickPrev} index={this.state.currentIndex} />
+    //<SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
 
     clickNext() {
 
@@ -280,45 +313,59 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 }
 
 
-class ColumnReader extends React.Component<{ boardId: number }, FetchDataColumns> {
-
+class ColumnReader extends React.Component<{ boardId: number, boardRefresh: number }, FetchDataColumns> {
+    timer: number;
 
     constructor(props) {
         super(props);
         this.state = {
             board: {
-                id: 0, name: "", columns: [], rows: []
+                id: 0, name: "", fromCache: false, columns: [], rows: []
             },
             loading: true,
-            boardId: this.props.boardId
+            boardId: this.props.boardId,
         };
-
+  
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false });
+                this.setState({ board: data, loading: false }, this.RefreshRate);
             });
-       
+     
 
     }
 
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.boardId !== this.state.boardId) {
-            this.setState({ boardId: nextProps.boardId, loading: true }, this.boardIdChanged);
+            this.setState({ boardId: nextProps.boardId, loading: true }, this.boardLoad);
         }
     }
 
 
-    boardIdChanged() {
+    boardLoad() {
+
+        clearInterval(this.timer);
 
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false });
+                this.setState({ board: data, loading: false }, this.RefreshRate);
             });
-
     }
+
+
+    RefreshRate() {
+        this.timer = setInterval(
+            () => this.boardLoad(),
+            this.props.boardRefresh
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
 
     public render() {
 
@@ -326,91 +373,27 @@ class ColumnReader extends React.Component<{ boardId: number }, FetchDataColumns
             return <h1>Loading...</h1>
         }
         else {
+        }
 
-            if (this.state.board.rows.length != 0) {
-
-                return <div>
-                    <BoardName name={this.state.board.name} />
-                    <BoardTable board={this.state.board} />
-                </div>;
-            }
-            else if (this.state.board.columns.length === 0) {
-                return <h1>Error loading!</h1>
-            }
-            else {
-                return <div>
-                    <BoardName name={this.state.board.name} />
-                    <BoardTable board={this.state.board} />
-                </div>;
-            }
+        if (this.state.board.columns.length === 0) {
+            return <h1>Error loading!</h1>
+        }
+        else {
+            return <div>
+                <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} />
+                <BoardTable board={this.state.board} />
+            </div>;
         }
     }
 
-
-    /*
-
-    constructor() {
-        super();
-        this.state = {
-            board: { id: 0, name: "", columns: [], rows: [] },
-            loading: true
-        };
-
-        this.props.boardlist.map((item) =>
-
-            fetch('api/SampleData/BoardData?ID=' + item.id)
-                .then(response => response.json() as Promise<Board>)
-                .then(data => {
-                    this.setState({ board: data, loading: false });
-                })
-
-
-        );
-
-    }
-
-    public render() {
-
-        return <div>
-
-            <BoardName name={this.state.board.name} />
-            <BoardTable board={this.state.board} />
-
-        </div>;
-    }
-    */
 }
-/*
-export class ColumnReader extends React.Component<RouteComponentProps<{}>, FetchDataColumns> {
 
-    constructor() {
-        super();
-        this.state = {
-            board: { id: 0, name: "", columns: [], rows: [] },
-            loading: true
-        };
 
-        fetch('api/SampleData/BoardData')
-            .then(response => response.json() as Promise<Board>)
-            .then(data => { this.setState ({ board: data, loading: false }); });
-    }
-
-public render() {
-
-    return <div>
-
-        <BoardName name={this.state.board.name} />
-        <BoardTable board={this.state.board} />
-
-        </div>;
-    }
-}
-*/
-class BoardName extends React.Component<{ name: string }> {
+class BoardName extends React.Component<{ name: string, fromCache: boolean }> {
 
     public render() {
         return <div>
-            <h1><strong>{this.props.name}</strong></h1>
+            <h1><strong>{this.props.name}{this.props.fromCache ? <h2>Dati no keša</h2> : ""}</strong></h1>
         </div>
     }
 }
@@ -422,7 +405,7 @@ class BoardTable extends React.Component<{ board: Board }> {
 
         return <tr>
             {this.props.board.columns.map((column, index) =>
-                <td style={styleColumn}><Column column={column} board={this.props.board}/></td>
+                <td key={index} style={styleColumn}><Column column={column} board={this.props.board} /></td>
                 )}
         </tr>
         
