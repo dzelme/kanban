@@ -19,10 +19,42 @@ namespace ESL.CO.React.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<Models.Value>> BoardList()
         {
+            /*
             var client = new JiraClient();
-            var boardList = await client.GetBoardListAsync("board/");
+            var boardList = await client.GetBoardDataAsync<BoardList>("board/");
 
             return boardList.Values;
+            */
+
+
+            var client = new JiraClient();
+            var a = new AppSettings();
+            var boardList = await client.GetBoardDataAsync<BoardList>("board/");
+            if (boardList == null)
+            {
+                return a.GetSavedAppSettings()?.AllValues;
+            }  //
+
+
+            FullBoardList appSettings = new FullBoardList();
+            appSettings.AllValues.AddRange(boardList.Values);
+            while (!boardList.IsLast)
+            {
+                boardList.StartAt += boardList.MaxResults;
+                boardList = await client.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
+                //if (boardList == null) { return null; }  //
+                if (boardList == null)
+                {
+                    appSettings = a.MergeSettings(a.GetSavedAppSettings(), appSettings);
+                    a.SaveAppSettings(appSettings);
+                    return appSettings.AllValues;
+                }
+                appSettings.AllValues.AddRange(boardList.Values);
+            }
+
+            appSettings = a.MergeSettings(a.GetSavedAppSettings(), appSettings);
+            a.SaveAppSettings(appSettings);
+            return appSettings.AllValues;
         }
 
         //obtain a full kanban board
@@ -38,8 +70,8 @@ namespace ESL.CO.React.Controllers
             var cache = new CacheMethods();
             if (cache.NeedsRedraw(board)) { return board; }  // new board different. draws.
 
-            return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
-            
+            //return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
+            return board;
 
             #region
             /*
@@ -149,8 +181,21 @@ namespace ESL.CO.React.Controllers
             return cachedBoard;  //shouldn't redraw from cache. should do nothing instead.....
             */
             #endregion
+        }
 
-
+        [HttpGet("[action]/{id?}")]
+        public async Task<Models.Value> BoardConfig(int id)
+        {
+            //var id = int.Parse(Request.QueryString.ToString());
+            //var id = RouteParameter.Optional;
+            var a = new AppSettings();
+            var appSettings = a.GetSavedAppSettings();
+            var boardConfig = new Value();
+            foreach (var val in appSettings.AllValues)
+            {
+                if (val.Id == id) { boardConfig = val; }
+            }
+            return boardConfig;
         }
     }
 }
