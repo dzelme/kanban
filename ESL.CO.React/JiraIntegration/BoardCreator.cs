@@ -11,26 +11,26 @@ namespace ESL.CO.React.JiraIntegration
     public class BoardCreator
     {
 
-        public async Task<Board> CreateBoardModel(int ID)
+        public async Task<Board> CreateBoardModel(int id)
         {
-            var board = new Board(ID);
+            var board = new Board(id);
             var cache = new CacheMethods();
             var client = new JiraClient();
-            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + ID.ToString() + "/configuration");
-            if (boardConfig == null) { return cache.GetCachedBoard(ID); }  //
+            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration");
+            if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
 
             board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + ID.ToString() + "/issue");
-            if (issueList == null) { return cache.GetCachedBoard(ID); }  //
+            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue");
+            if (issueList == null) { return cache.GetCachedBoard(id); }  //
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await client.GetBoardDataAsync<IssueList>("board/" + ID.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
-                if (issueList == null) { return cache.GetCachedBoard(ID); }  //
+                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                if (issueList == null) { return cache.GetCachedBoard(id); }  //
                 li.AllIssues.AddRange(issueList.Issues);
             }
 

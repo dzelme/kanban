@@ -13,12 +13,12 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     constructor() {
         super();
         this.state = {
-            board: { id: 0, fromCache: false, message: "", columns: [], rows: [] },
+            board: { id: 963, fromCache: false, message: "", columns: [], rows: [] },
             boardConfig: { id: 0, name: "", type: "", visibility: false, timeShown: 0, refreshRate: 10000},  //
             loading: true
         };
 
-        fetch('api/SampleData/BoardData')
+        fetch('api/SampleData/BoardData?id=' + this.state.board.id.toString())
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 this.setState({ board: data }, this.WillMount); // callback when setState is done
@@ -48,7 +48,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
     }
 
     tick() {
-        fetch('api/SampleData/BoardData')
+        fetch('api/SampleData/BoardData?id=' + this.state.board.id.toString())
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 this.setState({ board: data });  //, loading: false });

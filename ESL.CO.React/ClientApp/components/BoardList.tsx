@@ -93,7 +93,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                     )}
                 </tbody>
             </table>
-            <p><button>Submit</button></p>
+            <p><input type="submit" name="Submit" /></p>
         </form>;
     }
 

@@ -8,7 +8,7 @@ namespace ESL.CO.React.Models
     public class Board
     {
         public int Id { get; set; }
-        public string Name{ get;set; }
+        public string Name { get;set; }
         public bool FromCache { get; set; }  //
         public string Message { get; set; }  //
         public List<BoardColumn> Columns { get; set; }

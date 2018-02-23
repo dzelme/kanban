@@ -24,7 +24,7 @@ namespace ESL.CO.React.JiraIntegration
         {
             // read from JSON to object, if file exists
             var filePath = GetBoardPath(boardId);
-            Board cachedBoard = new Board();
+            Board cachedBoard = new Board(boardId);  // needed to keep requesting same board after no connection (not 0)
             if (File.Exists(filePath))
             {
                 using (StreamReader r = new StreamReader(filePath))
@@ -35,7 +35,7 @@ namespace ESL.CO.React.JiraIntegration
             }
             else
             {
-                cachedBoard.Message = "No connection. No cache.";
+                cachedBoard.Message = "No connection. No cache.";  //cachedBoard.Message += " No cache.";
                 return cachedBoard;
             }
             cachedBoard.FromCache = true; //
@@ -66,7 +66,7 @@ namespace ESL.CO.React.JiraIntegration
             var hash = GetHashCode(tempPath, new MD5CryptoServiceProvider());
 
             // overwrite cached file if new file is different
-            if (!(String.Equals(cachedHash, hash)) && (cachedHash != string.Empty))
+            if (!(String.Equals(cachedHash, hash)) && (board.Name != ""))  //turn it into a bool flag...
             {
                 File.Copy(tempPath, filePath, true);
                 File.Delete(tempPath);

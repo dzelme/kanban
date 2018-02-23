@@ -62,7 +62,7 @@ namespace ESL.CO.React.JiraIntegration
                         currentBoard.Name = savedBoard.Name;
                         currentBoard.Type = savedBoard.Type;
                         currentBoard.RefreshRate = Math.Max(savedBoard.RefreshRate, 1000);  //should be same as range minimum in class BoardList
-                        currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, 1000);  //should be same as range minimum in class BoardList
+                        currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, 5000);  //should be same as range minimum in class BoardList
                         currentBoard.Visibility = savedBoard.Visibility;
                     }
                 }
