@@ -18,7 +18,7 @@ namespace ESL.CO.React.Models
         {
             Id = id;
             Name = string.Empty;
-            FromCache = false; //
+            FromCache = false; 
             Message = string.Empty;
             Columns = new List<BoardColumn>();
             Rows = new List<BoardRow>();
