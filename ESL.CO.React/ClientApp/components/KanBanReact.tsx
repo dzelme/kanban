@@ -220,11 +220,9 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchD
             ? <p><em>Loading...</em></p>
             : <BoardDraw boardlist={this.state.boardlist} />
 
-        return <div>{boardInfo}</div>
-            
+        return <div>{boardInfo}</div>          
            
     }
-
   
 }
 
@@ -257,7 +255,6 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 
 
         return <div>
-
             <ColumnReader boardId={boardID} boardRefresh={boardRefreshRate} />
 
             {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
@@ -268,7 +265,7 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 
 
    // <SwipeLeft onClick={this.clickPrev} index={this.state.currentIndex} />
-    //<SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
+   //<SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
 
     clickNext() {
 
@@ -335,7 +332,7 @@ class ColumnReader extends React.Component<{ boardId: number, boardRefresh: numb
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.boardId !== this.state.boardId) {
-            this.setState({ boardId: nextProps.boardId, loading: true }, this.boardLoad);
+            this.setState({ boardId: nextProps.boardId}, this.boardLoad);
         }
     }
 
@@ -347,7 +344,7 @@ class ColumnReader extends React.Component<{ boardId: number, boardRefresh: numb
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false }, this.RefreshRate);
+                this.setState({ board: data}, this.RefreshRate);
             });
     }
 
@@ -375,7 +372,7 @@ class ColumnReader extends React.Component<{ boardId: number, boardRefresh: numb
                 return <h1>Error loading!</h1>
             }
             else {
-                return <div>
+                return <div>  
                     <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
                     <BoardTable board={this.state.board} />
                 </div>;
@@ -535,7 +532,7 @@ class Ticket extends React.Component<{ issue: Issue }> {
         return (
             <div>
 
-                <div><a href={linkToIssue} style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
+                <div><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
                 <div ><TicketSummary desc={currentIssue.fields.summary} /></div>
                 <div ><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
                 
