@@ -96,6 +96,7 @@ interface Board {
     id: number;
     name: string;
     fromCache: boolean;
+    message: string;
     columns: BoardColumn[];
     rows: BoardRow[];
 }
@@ -254,12 +255,8 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
         var boardRefreshRate = this.state.boardlist[this.state.currentIndex].refreshRate;
 
 
-        return <div>
-           
-            
-    
 
-            <h1>BoardID: {boardID}</h1>
+        return <div>
 
             <ColumnReader boardId={boardID} boardRefresh={boardRefreshRate} />
 
@@ -314,24 +311,24 @@ class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 
 
 class ColumnReader extends React.Component<{ boardId: number, boardRefresh: number }, FetchDataColumns> {
-    timer: number;
+    refreshTimer: number;
 
     constructor(props) {
         super(props);
         this.state = {
             board: {
-                id: 0, name: "", fromCache: false, columns: [], rows: []
+                id: 0, name: "", fromCache: false, message: "", columns: [], rows: []
             },
             loading: true,
             boardId: this.props.boardId,
         };
-  
+
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 this.setState({ board: data, loading: false }, this.RefreshRate);
             });
-     
+
 
     }
 
@@ -345,7 +342,7 @@ class ColumnReader extends React.Component<{ boardId: number, boardRefresh: numb
 
     boardLoad() {
 
-        clearInterval(this.timer);
+        clearInterval(this.refreshTimer);
 
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
@@ -356,44 +353,45 @@ class ColumnReader extends React.Component<{ boardId: number, boardRefresh: numb
 
 
     RefreshRate() {
-        this.timer = setInterval(
+        this.refreshTimer = setInterval(
             () => this.boardLoad(),
             this.props.boardRefresh
         );
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+        clearInterval(this.refreshTimer);
     }
-
 
     public render() {
 
+       
         if (this.state.loading) {
             return <h1>Loading...</h1>
         }
         else {
+
+            if (this.state.board.columns.length === 0) {
+                return <h1>Error loading!</h1>
+            }
+            else {
+                return <div>
+                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
+                    <BoardTable board={this.state.board} />
+                </div>;
+            }
         }
 
-        if (this.state.board.columns.length === 0) {
-            return <h1>Error loading!</h1>
-        }
-        else {
-            return <div>
-                <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} />
-                <BoardTable board={this.state.board} />
-            </div>;
-        }
     }
-
 }
 
 
-class BoardName extends React.Component<{ name: string, fromCache: boolean }> {
+class BoardName extends React.Component<{ name: string, fromCache: boolean, message: string }> {
 
     public render() {
         return <div>
-            <h1><strong>{this.props.name}{this.props.fromCache ? <h2>Dati no keša</h2> : ""}</strong></h1>
+            <h1><strong>{this.props.name}</strong></h1>
+            {this.props.fromCache ? <h2>Dati no keša</h2> : ""}<h2>{this.props.message}</h2>
         </div>
     }
 }
