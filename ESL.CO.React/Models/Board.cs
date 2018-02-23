@@ -8,6 +8,7 @@ namespace ESL.CO.React.Models
     public class Board
     {
         public int Id { get; set; }
+        public string Name{ get;set; }
         public bool FromCache { get; set; }  //
         public string Message { get; set; }  //
         public List<BoardColumn> Columns { get; set; }
@@ -16,32 +17,11 @@ namespace ESL.CO.React.Models
         public Board(int id = 0)
         {
             Id = id;
+            Name = string.Empty;
             FromCache = false; //
             Message = string.Empty;
             Columns = new List<BoardColumn>();
             Rows = new List<BoardRow>();
-        }
-    }
-
-    public class BoardColumn
-    {
-        public string Name { get; set; }
-        public List<Issue> Issues { get; set; }
-
-        public BoardColumn(string name)
-        {
-            Name = name;
-            Issues = new List<Issue>();
-        }
-    }
-
-    public class BoardRow  //
-    {
-        public List<Issue> IssueRow { get; set; }
-
-        public BoardRow()
-        {
-            IssueRow = new List<Issue>();
         }
     }
 }

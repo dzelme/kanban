@@ -17,7 +17,7 @@ namespace ESL.CO.React.JiraIntegration
         {
             HttpClient client = new HttpClient();
 
-            #region Credentials
+              #region Credentials
             string credentials = "adzelme:testTEST0";
             #endregion
 

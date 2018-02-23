@@ -11,25 +11,26 @@ namespace ESL.CO.React.JiraIntegration
     public class BoardCreator
     {
 
-        public async Task<Board> CreateBoardModel()
+        public async Task<Board> CreateBoardModel(int ID)
         {
-            int id = 963;  //963 961 620 748
-            var board = new Board(id);
+            var board = new Board(ID);
             var cache = new CacheMethods();
             var client = new JiraClient();
-            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration");
-            if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
+            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + ID.ToString() + "/configuration");
+            if (boardConfig == null) { return cache.GetCachedBoard(ID); }  //
+
+            board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue");
-            if (issueList == null) { return cache.GetCachedBoard(id); }  //
+            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + ID.ToString() + "/issue");
+            if (issueList == null) { return cache.GetCachedBoard(ID); }  //
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
-                if (issueList == null) { return cache.GetCachedBoard(id); }  //
+                issueList = await client.GetBoardDataAsync<IssueList>("board/" + ID.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                if (issueList == null) { return cache.GetCachedBoard(ID); }  //
                 li.AllIssues.AddRange(issueList.Issues);
             }
 

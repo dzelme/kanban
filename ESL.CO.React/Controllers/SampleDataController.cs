@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-
 using Newtonsoft.Json;
 using System.IO;
-
 using System.Security.Cryptography;
-
 
 
 namespace ESL.CO.React.Controllers
@@ -63,10 +59,10 @@ namespace ESL.CO.React.Controllers
 
         //obtain a full kanban board
         [HttpGet("[action]")]
-        public async Task<Models.Board> BoardData()
+        public async Task<Models.Board> BoardData(int ID)
         {
             var creator = new BoardCreator();
-            var b = creator.CreateBoardModel();
+            var b = creator.CreateBoardModel(ID);
             var board = await b;
 
             if (board.FromCache == true) { return board; }  // in case of failed connection. currently draws. should do nothing instead...

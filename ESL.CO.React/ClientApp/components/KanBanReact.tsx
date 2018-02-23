@@ -1,16 +1,17 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 
+const styleColumn = {
+    border: 'solid',
+};
 
 const styleColumnTitle = {
     borderBottom: 'solid'
 };
 
-
-const styleColumn = {
-    border: 'solid',
+const styleColumnTitleText = {
+    textAlign: 'center'
 };
-
 
 const styleColumnNext = {
     borderBottom: 'solid',
@@ -21,16 +22,13 @@ const styleColumnNext = {
 
 const styleTicket = {
     background: 'yellow',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
-
 };
 
 const styleTicketBlocker = {
     background: 'red',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -39,7 +37,6 @@ const styleTicketBlocker = {
 
 const styleTicketCritical = {
     background: 'orange',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -48,7 +45,6 @@ const styleTicketCritical = {
 
 const styleTicketMajor = {
     background: 'lightyellow',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -57,7 +53,6 @@ const styleTicketMajor = {
 
 const styleTicketMinor = {
     background: 'lightgreen',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
@@ -66,15 +61,25 @@ const styleTicketMinor = {
 
 const styleTicketTrivial = {
     background: 'lightgray',
-    marginLeft: '30',
     borderRadius: '10',
     paddingLeft: '10',
     border: 'solid'
 
 };
 
-const styleBoard = {
-    background: 'AliceBlue'
+const styleLink = {
+    color: 'black'
+};
+
+const styleNextButton = {
+    width: '20%',
+    float: 'right',
+    marginTop:'20'
+}
+
+const stylePrevButton = {
+    width: '20%',
+    marginTop:'20'
 }
 
 
@@ -82,10 +87,15 @@ interface Value {
     id: number;
     name: string;
     type: string;
+    visibility: boolean;
+    timeShown: number;
+    refreshRate: number;
 }
 
 interface Board {
     id: number;
+    name: string;
+    fromCache: boolean;
     columns: BoardColumn[];
     rows: BoardRow[];
 }
@@ -126,60 +136,279 @@ interface Priority {
     id: string;
 }
 
-interface FetchDataBoard {
-    board: Board;
+interface FetchDataBoardList {
+    boardlist: Value[];
     loading: boolean;
 }
 
+interface IBoardDraw {
+    boardlist: Value[];
+    currentIndex: number;
+}
 
-export class ColumnReader extends React.Component<RouteComponentProps<{}>, FetchDataBoard> {
+interface FetchDataBoards {
+    boardlist: Value[];
+    currentIndex: number;
+    boardId: number;
+    loading: boolean;
+}
+
+interface FetchDataColumns {
+    board: Board;
+    loading: boolean;
+    boardId: number;
+}
+
+
+class SwipeLeft extends React.Component<{ index: number, onClick: any }> {
+
+    public render() {
+
+        return <button style={stylePrevButton} onClick={this.props.onClick}>Previous</button>
+    }
+
+}
+
+
+class SwipeRight extends React.Component<{ index: number, onClick: any }> {
+
+    public render() {
+
+        return <button style={styleNextButton} onClick={this.props.onClick}>Next</button>
+    }
+
+}
+
+
+export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchDataBoardList> {     //Get all boards in list
+
+    constructor() {
+        super();
+        this.state = {
+            boardlist: [],
+            loading: true
+        };
+
+        fetch('api/SampleData/BoardList')
+            .then(response => response.json() as Promise<Value[]>)
+            .then(data => {
+                this.setState({ boardlist: data }, this.checkVisibility);
+            });
+    }
+
+    checkVisibility() {
+        var allBoards = this.state.boardlist;
+        const visibleBoardList = [];
+
+        allBoards.map((board) => {
+            if (board.visibility) {
+                visibleBoardList.push(board);
+            }
+
+        })
+
+        this.setState({ boardlist: visibleBoardList, loading: false });
+
+    }
+
+
+    public render() {
+        
+
+        let boardInfo = this.state.loading
+            ? <p><em>Loading...</em></p>
+            : <BoardDraw boardlist={this.state.boardlist} />
+
+        return <div>{boardInfo}</div>
+            
+           
+    }
+
+  
+}
+
+
+class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
 
     constructor(props) {
         super(props);
         this.state = {
-            board: { id: 0, columns: [], rows: [] },
-            loading: true
+            boardlist: this.props.boardlist,
+            currentIndex: 0
         };
 
-        fetch('api/SampleData/BoardData')
-            .then(response => response.json() as Promise<Board>)
-            .then(data => {
-                this.setState({ board: data, loading: false });
-            });
+        this.clickPrev = this.clickPrev.bind(this);
+        this.clickNext = this.clickNext.bind(this);
+
     }
 
-public render() {
+    slideShow(timeShown: number) {
 
-    return <div>
+        setTimeout(this.clickNext, timeShown);
+    }
 
-        <div>  <BoardName id={this.state.board.id} />   </div>
-        <div>   <BoardTable board={this.state.board} /> </div>
+    public render() {
+        
 
-        </div>;
+        var boardID = this.state.boardlist[this.state.currentIndex].id;
+        var boardRefreshRate = this.state.boardlist[this.state.currentIndex].refreshRate;
+
+
+        return <div>
+           
+            
+    
+
+            <h1>BoardID: {boardID}</h1>
+
+            <ColumnReader boardId={boardID} boardRefresh={boardRefreshRate} />
+
+            {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
+           
+        </div>      
+
+    }   
+
+
+   // <SwipeLeft onClick={this.clickPrev} index={this.state.currentIndex} />
+    //<SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
+
+    clickNext() {
+
+        var index;
+
+        if (this.state.currentIndex == (this.state.boardlist.length - 1)) {
+            index = 0;
+        }
+        else {
+            index = this.state.currentIndex + 1;
+        }
+
+
+        const newState = {
+            currentIndex: index
+        }
+
+        this.setState(newState);
+    }
+
+    clickPrev() {
+
+        var index;
+
+
+        if (this.state.currentIndex == 0) {
+            index = this.state.boardlist.length - 1;
+        }
+        else {
+            index = this.state.currentIndex - 1;
+        }
+
+        const newState = {
+            currentIndex: index
+        }
+
+        this.setState(newState);
     }
 }
 
-class BoardName extends React.Component<{ id: number }> {
+
+class ColumnReader extends React.Component<{ boardId: number, boardRefresh: number }, FetchDataColumns> {
+    timer: number;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            board: {
+                id: 0, name: "", fromCache: false, columns: [], rows: []
+            },
+            loading: true,
+            boardId: this.props.boardId,
+        };
+  
+        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
+            .then(response => response.json() as Promise<Board>)
+            .then(data => {
+                this.setState({ board: data, loading: false }, this.RefreshRate);
+            });
+     
+
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.boardId !== this.state.boardId) {
+            this.setState({ boardId: nextProps.boardId, loading: true }, this.boardLoad);
+        }
+    }
+
+
+    boardLoad() {
+
+        clearInterval(this.timer);
+
+        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
+            .then(response => response.json() as Promise<Board>)
+            .then(data => {
+                this.setState({ board: data, loading: false }, this.RefreshRate);
+            });
+    }
+
+
+    RefreshRate() {
+        this.timer = setInterval(
+            () => this.boardLoad(),
+            this.props.boardRefresh
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
+
+    public render() {
+
+        if (this.state.loading) {
+            return <h1>Loading...</h1>
+        }
+        else {
+        }
+
+        if (this.state.board.columns.length === 0) {
+            return <h1>Error loading!</h1>
+        }
+        else {
+            return <div>
+                <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} />
+                <BoardTable board={this.state.board} />
+            </div>;
+        }
+    }
+
+}
+
+
+class BoardName extends React.Component<{ name: string, fromCache: boolean }> {
 
     public render() {
         return <div>
-            <h1>Board: #{this.props.id}</h1>
+            <h1><strong>{this.props.name}{this.props.fromCache ? <h2>Dati no keša</h2> : ""}</strong></h1>
         </div>
     }
 }
 
 
-export class BoardTable extends React.Component<{ board: Board }> {
+class BoardTable extends React.Component<{ board: Board }> {
 
     public render() {
-        
-        return <div>
-            <tr>
-            {this.props.board.columns.map((column, i) =>
-                    <td style={styleColumn}><Column column={column} board={this.props.board} /></td>
+
+        return <tr>
+            {this.props.board.columns.map((column, index) =>
+                <td key={index} style={styleColumn}><Column column={column} board={this.props.board} /></td>
                 )}
-            </tr>
-            </div>
+        </tr>
+        
     }
 
 }
@@ -192,8 +421,8 @@ class Column extends React.Component<{ column: BoardColumn , board: Board}> {
 
 
         return <div>
-            <div style={styleColumnTitle}>   <ColumnTitle name = {currentColumn.name} />   </div>
-            <div>   <ColumnFill column = {currentColumn} />   </div>
+            <div style={styleColumnTitle}>   <ColumnTitle name={currentColumn.name} />   </div>
+            <div>   <ColumnFill column={currentColumn} />   </div>
 
         </div>
     }
@@ -202,11 +431,8 @@ class Column extends React.Component<{ column: BoardColumn , board: Board}> {
 class ColumnTitle extends React.Component<{name: string}> {
     public render() {
 
-        return <tr>
-            <th>
-                {this.props.name}
-            </th>
-        </tr>
+        return <h2 style={styleColumnTitleText}><strong>{this.props.name}</strong></h2>
+
     }
 }
 
@@ -214,14 +440,22 @@ class ColumnTitle extends React.Component<{name: string}> {
 class ColumnFill extends React.Component<{ column: BoardColumn }> {
     public render() {        
 
+        let SortedIssues = ColumnFill.IssuePriority(this.props.column);
+    
+       
         return <div>
-            
-            {this.props.column.issues.map((issue, i) =>
 
-                <tr> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
-                )}
+
+            {
+                SortedIssues.map((issue, i) =>
+
+                    <tr> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+            )
+        }
+
+        </div> 
             
-        </div>
+      
     }
 
     private static PriorityColor(issue: Issue) {
@@ -252,6 +486,45 @@ class ColumnFill extends React.Component<{ column: BoardColumn }> {
 
     }
 
+    private static IssuePriority(column: BoardColumn) {
+
+        const issueByPriority = [];
+        let allIssues = column.issues;
+      
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Blocker') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Critical') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Major') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Minor') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        allIssues.forEach((issue) => {
+            if (issue.fields.priority.name == 'Trivial') {
+                issueByPriority.push(issue);
+            }
+        })
+
+        return issueByPriority;
+
+    }
+
 }
 
 
@@ -259,39 +532,44 @@ class Ticket extends React.Component<{ issue: Issue }> {
     public render() {
 
         let currentIssue = this.props.issue;
+        let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
         return (
             <div>
 
-                <div> <TicketKey keyName={currentIssue.key} /></div>
+                <div><a href={linkToIssue} style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
                 <div ><TicketSummary desc={currentIssue.fields.summary} /></div>
-                <div ><TicketPriority priority={currentIssue.fields.priority.name} /></div>
+                <div ><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
                 
 
             </div>
         );
     }
 
+
+
+    private static AssigneeCheck(assignee: Assignee) {
+        let AssigneeName;
+     
+
+        if (assignee == null) {
+            AssigneeName = "None";
+        }
+        else {
+            AssigneeName = assignee.displayName;
+        }
+
+        return AssigneeName;
+
+    }
+
 }
-/*
-<div ><TicketAssignee assigneeName={Assignee} /></div>
 
-
-
-let Assignee = "";
-
-if (currentIssue.fields.assignee = null) {
-    Assignee = "None";
-}
-else {
-    Assignee = currentIssue.fields.assignee.displayName;
-}
-*/
 
 class TicketKey extends React.Component<{ keyName: string }> {
     public render() {
         return <div>
-            <h5><strong>{this.props.keyName}</strong></h5>
+            <h4><strong>{this.props.keyName}</strong></h4>
         </div>
 
     }
@@ -300,22 +578,12 @@ class TicketKey extends React.Component<{ keyName: string }> {
 class TicketSummary extends React.Component<{ desc: string }> {
     public render() {
         return <div>
-            <h5><strong>{this.props.desc}</strong></h5>
+            <h5>{this.props.desc}</h5>
         </div>
 
     }
 }
 
-class TicketPriority extends React.Component<{ priority: string }> {
-    public render() {
-
-        return <div>
-            <h5><strong>{this.props.priority}</strong></h5>
-        </div>
-
-    }
-}
-/*
 class TicketAssignee extends React.Component<{ assigneeName: string }> {
     public render() {
 
@@ -325,4 +593,4 @@ class TicketAssignee extends React.Component<{ assigneeName: string }> {
 
     }
 }
-*/
+
