@@ -184,7 +184,7 @@ namespace ESL.CO.React.Controllers
         }
 
         [HttpGet("[action]/{id?}")]
-        public async Task<Models.Value> BoardConfig(int id)
+        public Value BoardConfig(int id)
         {
             //var id = int.Parse(Request.QueryString.ToString());
             //var id = RouteParameter.Optional;

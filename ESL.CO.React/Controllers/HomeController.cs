@@ -12,8 +12,8 @@ namespace ESL.CO.React.Controllers
 {
     public class HomeController : Controller
     {
-       
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        public IActionResult Index()
         { /*
             //this.Id = id;
             //JObject j = Connect("board/" + Id + "/issue");

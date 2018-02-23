@@ -46,7 +46,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
             board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
         })
 
-        fetch('/api/Form', {
+        fetch('api/Form', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
