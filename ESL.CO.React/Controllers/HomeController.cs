@@ -10,9 +10,14 @@ using ESL.CO.React.Models;
 
 namespace ESL.CO.React.Controllers
 {
+    /// <summary>
+    /// Home controller
+    /// </summary>
     public class HomeController : Controller
     {
-        //public async Task<IActionResult> Index()
+        /// <summary>
+        /// Gets the index page
+        /// </summary>
         public IActionResult Index()
         { /*
             //this.Id = id;
