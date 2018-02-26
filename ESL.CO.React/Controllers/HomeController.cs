@@ -19,7 +19,8 @@ namespace ESL.CO.React.Controllers
         /// Gets the index page
         /// </summary>
         public IActionResult Index()
-        { /*
+        { 
+            /*
             //this.Id = id;
             //JObject j = Connect("board/" + Id + "/issue");
 
