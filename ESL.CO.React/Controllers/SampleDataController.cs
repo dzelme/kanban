@@ -68,7 +68,9 @@ namespace ESL.CO.React.Controllers
             if (board.FromCache == true) { return board; }  // in case of failed connection. currently draws. should do nothing instead...
 
             var cache = new CacheMethods();
-            if (cache.NeedsRedraw(board)) { return board; }  // new board different. draws.
+            if (cache.NeedsRedraw(board)) {
+                board.hasChanged = true;
+                return board; }  // new board different. draws.
 
             //return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
             return board;

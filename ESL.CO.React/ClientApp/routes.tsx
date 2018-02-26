@@ -6,7 +6,7 @@ import { KanbanBoard } from './components/KanbanBoard';
 import { BoardReader } from './components/KanBanReact';
 
 export const routes = <Layout>
-    <Route exact path='/' component={BoardList} />
+    <Route exact path='/' component={BoardReader} />
+    <Route path='/boardlist' component={BoardList} />
     <Route path='/kanbanboard' component={KanbanBoard} />
-    <Route path='/kanbanreact' component={BoardReader} />
 </Layout>;

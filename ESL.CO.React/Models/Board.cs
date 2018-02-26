@@ -11,6 +11,7 @@ namespace ESL.CO.React.Models
         public string Name { get;set; }
         public bool FromCache { get; set; }  //
         public string Message { get; set; }  //
+        public bool hasChanged { get; set; }
         public List<BoardColumn> Columns { get; set; }
         public List<BoardRow> Rows { get; set; }  //
 
@@ -20,6 +21,7 @@ namespace ESL.CO.React.Models
             Name = string.Empty;
             FromCache = false; 
             Message = string.Empty;
+            hasChanged = false;
             Columns = new List<BoardColumn>();
             Rows = new List<BoardRow>();
         }

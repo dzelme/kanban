@@ -19,7 +19,7 @@ export class NavMenu extends React.Component<{}, {}> {
                     <ul className='nav navbar-nav'>
                         <li>
                             <NavLink to={'/'} exact activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> Board List
+                                <span className='glyphicon glyphicon-home'></span> KanBan React
                             </NavLink>
                         </li>
                         <li>
@@ -28,8 +28,8 @@ export class NavMenu extends React.Component<{}, {}> {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/kanbanreact'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> KanBan React
+                            <NavLink to={'/boardlist'} activeClassName='active'>
+                                <span className='glyphicon glyphicon-th-list'></span> Boardlist
                             </NavLink>
                         </li>
                     </ul>
