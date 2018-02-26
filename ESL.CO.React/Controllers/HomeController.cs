@@ -103,7 +103,6 @@ namespace ESL.CO.React.Controllers
             var asd = "";
             return View(ivm);*/
             return View();
-
         }
 
         public IActionResult Error()
