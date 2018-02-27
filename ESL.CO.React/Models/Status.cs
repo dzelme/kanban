@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class Status
+    public class Status : IEquatable<Status>
     {
         //public string self { get; set; }
         //public string description { get; set; }
@@ -20,5 +20,38 @@ namespace ESL.CO.React.Models
             Name = string.Empty;
             Id = string.Empty;
         }
+
+        #region Equality
+
+        //public static bool operator == (Status a, Status b)
+        //{
+        //    return a.Equals(b);
+        //}
+
+        //public static bool operator != (Status a, Status b)
+        //{
+        //    return a.Equals(b);
+        //}
+
+        public bool Equals(Status other)
+        {
+            if (other == null)
+            {
+                if (this == null) { return true; }
+                return false;
+            }
+            return string.Equals(Name, other.Name) &&
+                string.Equals(Id, other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Status);
+        }
+
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace ESL.CO.Tests
         public void Test1()
         {
             var controller = new HomeController();
-            var result = controller.Index().Result;
+            var result = controller.Index();
             Assert.NotNull(result);
         }
     }
