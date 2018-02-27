@@ -63,7 +63,7 @@ export class KanbanBoard extends React.Component<RouteComponentProps<{}>, FetchD
             : KanbanBoard.renderBoard(this.state.board);
 
         return <div>
-            <h1>TEST Kanban board</h1>
+            <h1>TEST test test Kanban board</h1>
             {contents}
         </div>;
     }
