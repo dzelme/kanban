@@ -189,6 +189,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchD
 } 
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
+// error because generated file hass all boards with visibility false
 class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColumns> {
     refreshTimer: number;
 
