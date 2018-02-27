@@ -8,6 +8,7 @@ using ESL.CO.React.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace ESL.CO.React.Controllers
@@ -15,6 +16,13 @@ namespace ESL.CO.React.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+
+        private IMemoryCache cache;
+        public SampleDataController (IMemoryCache cache)
+        {
+            this.cache = cache;
+        }
+
         //Obtain board list from Jira, passes to React
         [HttpGet("[action]")]
         public async Task<IEnumerable<Models.Value>> BoardList()
@@ -62,6 +70,28 @@ namespace ESL.CO.React.Controllers
         public async Task<Models.Board> BoardData(int id)
         {
             var creator = new BoardCreator();
+            var b = creator.CreateBoardModel(id, cache);
+            var board = await b;
+
+            //if not in cache adds new
+            if (!this.cache.TryGetValue<Board>(id, out Board cachedBoard))
+            {
+                this.cache.Set<Board>(id, board);
+            }
+            else
+            {
+                //if in cache checks if equal
+                if (NeedsRedraw(board))
+                {
+                    this.cache.Set<Board>(id, board);
+                    return board;
+                }
+                else return board;
+            }
+            return board;
+
+            /*
+            var creator = new BoardCreator();
             var b = creator.CreateBoardModel(id);
             var board = await b;
 
@@ -72,8 +102,9 @@ namespace ESL.CO.React.Controllers
 
             //return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....
             return board;
+            */
 
-            #region
+            #region Old code
             /*
             int id = 963;
             var client = new JiraClient();
@@ -181,6 +212,13 @@ namespace ESL.CO.React.Controllers
             return cachedBoard;  //shouldn't redraw from cache. should do nothing instead.....
             */
             #endregion
+        }
+
+        public bool NeedsRedraw(Board board)
+        {
+            if (!this.cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
+            if (board.Equals(cachedBoard)) { return false; }
+            else return true;
         }
 
         [HttpGet("[action]/{id?}")]

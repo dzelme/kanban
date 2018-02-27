@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class Issue
+    public class Issue : IEquatable<Issue>
     {
         //public string expand { get; set; }
         //public string id { get; set; }
@@ -18,6 +18,25 @@ namespace ESL.CO.React.Models
             Key = string.Empty;
             Fields = new Fields();
         }
+
+        #region Equality
+
+        public bool Equals(Issue other)
+        {
+            if (other == null) { return false; }
+            return string.Equals(Key, other.Key) &&
+                Fields.Equals(other.Fields);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Issue);
+        }
+
+        #endregion
     }
 
 }

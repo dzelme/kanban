@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class Fields
+    public class Fields : IEquatable<Fields>
     {
         //public Issuetype issuetype { get; set; }
         //public object timespent { get; set; }
@@ -53,5 +53,64 @@ namespace ESL.CO.React.Models
             Description = string.Empty;
             Summary = string.Empty;
         }
+
+        #region Equality
+
+        //public static bool operator == (Fields a, Fields b)
+        //{
+        //    return a.Equals(b);
+        //}
+
+        //public static bool operator != (Fields a, Fields b)
+        //{
+        //    return a.Equals(b);
+        //}
+        
+        public bool Equals(Fields other)
+        {
+            if (other == null)
+            {
+                if (this == null) { return true; }
+                return false;
+            }
+
+            bool assEqual = false;
+            if (Assignee != null) { assEqual = Assignee.Equals(other.Assignee); }
+            else
+            {
+                if (other.Assignee == null) { assEqual = true; }
+                else { assEqual = false; }
+            }
+            bool priorityEqual = false;
+            if (Priority != null) { priorityEqual = Priority.Equals(other.Priority); }
+            else
+            {
+                if (other.Priority == null) { priorityEqual = true; }
+                else { priorityEqual = false; }
+            }
+            bool statusEqual = false;
+            if (Status != null) { statusEqual = Status.Equals(other.Status); }
+            else
+            {
+                if (other.Status == null) { statusEqual = true; }
+                else { statusEqual = false; }
+            }
+
+            return priorityEqual && //Priority.Equals(other.Priority) &&
+                assEqual  &&
+                statusEqual && //Status.Equals(other.Status) &&
+                string.Equals(Description, other.Description) &&
+                string.Equals(Summary, other.Summary);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Fields);
+        }
+
+        #endregion
     }
 }

@@ -6,31 +6,57 @@ using System.Threading.Tasks;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
 
+using Microsoft.Extensions.Caching.Memory;
+
 namespace ESL.CO.React.JiraIntegration
 {
     public class BoardCreator
     {
 
-        public async Task<Board> CreateBoardModel(int id)
+        public async Task<Board> CreateBoardModel(int id, IMemoryCache cache)
         {
             var board = new Board(id);
-            var cache = new CacheMethods();
+            //var cache = new CacheMethods();
             var client = new JiraClient();
             var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration");
-            if (boardConfig == null) { return cache.GetCachedBoard(id); }  //
+            if (boardConfig == null)  //
+            {
+                if (!cache.TryGetValue(id, out Board cachedBoard))
+                {
+                    return new Board(id);
+                }
+                cachedBoard.FromCache = true;
+                return cachedBoard;
+            }
 
             board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
             IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue");
-            if (issueList == null) { return cache.GetCachedBoard(id); }  //
+            if (issueList == null)  //
+            {
+                if (!cache.TryGetValue(id, out Board cachedBoard))
+                {
+                    return new Board(id);
+                }
+                cachedBoard.FromCache = true;
+                return cachedBoard;
+            }
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
                 issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
-                if (issueList == null) { return cache.GetCachedBoard(id); }  //
+                if (issueList == null)  //
+                {
+                    if (!cache.TryGetValue(id, out Board cachedBoard))
+                    {
+                        return new Board(id);
+                    }
+                    cachedBoard.FromCache = true;
+                    return cachedBoard;
+                }
                 li.AllIssues.AddRange(issueList.Issues);
             }
 

@@ -18,7 +18,7 @@ namespace ESL.CO.React.JiraIntegration
             HttpClient client = new HttpClient();
 
             #region Credentials
-            string credentials = "adzelme:testTEST0";
+            string credentials = "adzelme:TESTtest0";
             #endregion
 
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));

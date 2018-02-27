@@ -387,7 +387,7 @@ class BoardName extends React.Component<{ name: string, fromCache: boolean, mess
 
     public render() {
         return <div>
-            <h1><strong>{this.props.name}</strong></h1>
+            <h1><strong>TEST TEST {this.props.name}</strong></h1>
             {this.props.fromCache ? <h2>Dati no keša</h2> : ""}<h2>{this.props.message}</h2>
         </div>
     }
