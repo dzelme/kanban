@@ -43,7 +43,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
         //alert('Izvēles saglabātas!');
 
         this.state.boardlist.map(board => {
-            board.visibility = (document.forms['boardlist'].elements[board.id + "visibility"].checked) ? true : false;
+            board.visibility = document.forms['boardlist'].elements[board.id + "visibility"].checked;
             board.timeShown = parseInt(document.forms['boardlist'].elements[board.id + "timeShown"].value);
             board.refreshRate = parseInt(document.forms['boardlist'].elements[board.id + "refreshRate"].value);
         })
