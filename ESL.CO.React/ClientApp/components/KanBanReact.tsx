@@ -188,6 +188,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchD
   
 } 
 
+// test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColumns> {
     refreshTimer: number;
 
@@ -310,102 +311,12 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
 }
 
 
-/*
-class ColumnReader extends React.Component<{ boardId: number, boardRefresh: number }, FetchDataColumns> {
-    refreshTimer: number;
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
-            },
-            loading: true,
-            boardId: this.props.boardId,
-            boardChanged: false
-        };
-
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
-            .then(response => response.json() as Promise<Board>)
-            .then(data => {
-                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
-            });
-
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.boardId != this.state.boardId) {
-            this.setState({ boardId: nextProps.boardId }, this.boardLoad);
-        }
-    }
-   
-
-    boardLoad() {
-
-        clearInterval(this.refreshTimer);
-        
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
-            .then(response => response.json() as Promise<Board>)
-            .then(data => {
-                if (data.id == this.state.boardId) {
-
-                    if (this.state.board.id == data.id && data.hasChanged == false) {
-
-                        this.setState({ board: data, boardChanged: false }, this.RefreshRate);
-
-                    }
-                    else {
-                        this.setState({ board: data, boardChanged: true }, this.RefreshRate);
-                    }
-                }
-
-            });
-    }
-
-    RefreshRate() {
-        this.refreshTimer = setInterval(
-            () => this.boardLoad(),
-            this.props.boardRefresh
-        );
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-        return nextState.boardChanged;
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.refreshTimer);
-    }
-
-    public render() {
-       
-        if (this.state.loading) {
-            return <h1>Loading...</h1>
-        }
-        else {
-
-            if (this.state.board.columns.length == 0) {
-                return <h1>Error loading!</h1>
-            }
-            else {
-                return <div>  
-                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
-                    <BoardTable board={this.state.board} />
-                </div>;
-            }
-        }
-
-    }
-}
-*/
 class BoardName extends React.Component<{ name: string, fromCache: boolean, message: string }> {
 
     public render() {
 
         return <div>
-            <h1><strong>{this.props.name}</strong></h1>
+            <h1><strong>Version test {this.props.name}</strong></h1>
             {this.props.fromCache ? <h4>Dati no keša</h4> : ""}<h4>{this.props.message}</h4>
         </div>
     }
