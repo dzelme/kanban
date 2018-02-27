@@ -40,15 +40,20 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
         event.preventDefault();
         const data = new FormData(event.target);
 
-
-        alert('Izvēles saglabātas!');
-
+        //alert('Izvēles saglabātas!');
 
         this.state.boardlist.map(board => {
-            board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;
-            board.timeShown = parseInt(data.get(board.id + "timeShown").toString());
-            board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
+            board.visibility = (document.forms['boardlist'].elements[board.id + "visibility"].checked) ? true : false;
+            board.timeShown = parseInt(document.forms['boardlist'].elements[board.id + "timeShown"].value);
+            board.refreshRate = parseInt(document.forms['boardlist'].elements[board.id + "refreshRate"].value);
         })
+
+        //does not work on Edge, LG browser because data.get() is not supported
+        //this.state.boardlist.map(board => {
+        //    board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;
+        //    board.timeShown = parseInt(data.get(board.id + "timeShown").toString());
+        //    board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
+        //})
 
         fetch('api/Form', {
             method: 'POST',
@@ -72,7 +77,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     }
 
     private static renderBoardList(boardlist: Value[], handleSubmit) {  //
-        return <form onSubmit={handleSubmit}>
+        return <form name="boardlist" onSubmit={handleSubmit}>
             <table className='table'>
                 <thead>
                     <tr>
