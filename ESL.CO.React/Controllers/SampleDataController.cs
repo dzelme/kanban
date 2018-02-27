@@ -69,7 +69,7 @@ namespace ESL.CO.React.Controllers
 
             var cache = new CacheMethods();
             if (cache.NeedsRedraw(board)) {
-                board.hasChanged = true;
+                board.HasChanged = true;
                 return board; }  // new board different. draws.
 
             //return cache.GetCachedBoard(board.Id);  //shouldn't redraw from cache. should do nothing instead.....

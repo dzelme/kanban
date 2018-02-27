@@ -1,6 +1,15 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 
+
+const styleBoard = {
+    maxWidth: '2000'
+}
+
+const styleCenter = {
+    margin: 'auto'
+}
+
 const styleColumn = {
     border: 'solid',
 };
@@ -66,18 +75,6 @@ const styleLink = {
     color: 'black'
 };
 
-const styleNextButton = {
-    width: '20%',
-    float: 'right',
-    marginTop:'20'
-}
-
-const stylePrevButton = {
-    width: '20%',
-    marginTop:'20'
-}
-
-
 interface Value {
     id: number;
     name: string;
@@ -138,47 +135,14 @@ interface FetchDataBoardList {
     loading: boolean;
 }
 
-interface IBoardDraw {
-    boardlist: Value[];
-   // currentIndex: number;
-}
-
-interface FetchDataBoards {
-    boardlist: Value[];
-    currentIndex: number;
-    boardId: number;
-    loading: boolean;
-}
-
 interface FetchDataColumns {
-    board: Board;
-    loading: boolean;
-    boardId: number;
-    boardChanged: boolean;
     boardlist: Value[];
     currentIndex: number;
+    boardId: number;
+    board: Board;
+    boardChanged: boolean;
+    loading: boolean;
 }
-
-
-class SwipeLeft extends React.Component<{ index: number, onClick: any }> {
-
-    public render() {
-
-        return <button style={stylePrevButton} onClick={this.props.onClick}>Previous</button>
-    }
-
-}
-
-
-class SwipeRight extends React.Component<{ index: number, onClick: any }> {
-
-    public render() {
-
-        return <button style={styleNextButton} onClick={this.props.onClick}>Next</button>
-    }
-
-}
-
 
 export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchDataBoardList> {     //Get all boards in list
 
@@ -217,92 +181,11 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, FetchD
             ? <p><em>Loading...</em></p>
             : <ColumnReader boardlist={this.state.boardlist} />
 
-        return <div>{boardInfo}</div>          
+        return <div style={styleBoard}>{boardInfo}</div>          
            
     }
   
-}
-
-/*
-class BoardDraw extends React.Component<{ boardlist: Value[] }, IBoardDraw> {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            boardlist: this.props.boardlist,
-        };
-
-        //currentIndex: 0
-
-       // this.clickPrev = this.clickPrev.bind(this);
-        //this.clickNext = this.clickNext.bind(this);
-
-    }
-
-/*
-    slideShow(timeShown: number) {
-
-        setTimeout(this.clickNext, timeShown);
-    }
-*//*
-    public render() {
-        
-
-        var boardID = this.state.boardlist[this.state.currentIndex].id;
-        var boardRefreshRate = this.state.boardlist[this.state.currentIndex].refreshRate;
-
-
-
-        return <div>
-            <ColumnReader boardId={boardID} boardRefresh={boardRefreshRate} boardlist={this.state.boardlist} />
-
-        </div>      
-
-    }   
-
-   // <SwipeLeft onClick={this.clickPrev} index={this.state.currentIndex} />
-   //<SwipeRight onClick={this.clickNext} index={this.state.currentIndex} />
-/*
-    clickNext() {
-
-        var index;
-
-        if (this.state.currentIndex == (this.state.boardlist.length - 1)) {
-            index = 0;
-        }
-        else {
-            index = this.state.currentIndex + 1;
-        }
-
-
-        const newState = {
-            currentIndex: index
-        }
-
-        this.setState(newState);
-    }
-
-    clickPrev() {
-
-        var index;
-
-
-        if (this.state.currentIndex == 0) {
-            index = this.state.boardlist.length - 1;
-        }
-        else {
-            index = this.state.currentIndex - 1;
-        }
-
-        const newState = {
-            currentIndex: index
-        }
-
-        this.setState(newState);
-    }
-    *//*
-}
-*/
+} 
 
 class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColumns> {
     refreshTimer: number;
@@ -310,25 +193,24 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
     constructor(props) {
         super(props);
         this.state = {
+            boardlist: this.props.boardlist,
+            currentIndex: 0,
+            boardId: this.props.boardlist[0].id,
             board: {
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
-            loading: true,
-            boardId: this.props.boardlist[0].id,
             boardChanged: false,
-            boardlist: this.props.boardlist,
-            currentIndex: 0
+            loading: true     
         };
 
         this.nextSlide = this.nextSlide.bind(this);
+
 
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
             });
-
-
     }
 
     nextSlide() {
@@ -356,17 +238,7 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
 
         setTimeout(this.nextSlide, timeShown);
     }
-
-
-
-    /*
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.boardId != this.state.boardId) {
-            this.setState({ boardId: nextProps.boardId }, this.boardLoad);
-        }
-    }
-    */
-
+ 
     boardLoad() {
 
         clearInterval(this.refreshTimer);
@@ -416,10 +288,9 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
                 return <h1>Error loading!</h1>
             }
             else {
-                return <div>
+                return <div style={styleCenter}>
                     <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
                     <BoardTable board={this.state.board} />
-
 
                     {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
                     
@@ -527,7 +398,7 @@ class BoardName extends React.Component<{ name: string, fromCache: boolean, mess
 
         return <div>
             <h1><strong>{this.props.name}</strong></h1>
-            {this.props.fromCache ? <h2>Dati no keša</h2> : ""}<h2>{this.props.message}</h2>
+            {this.props.fromCache ? <h4>Dati no keša</h4> : ""}<h4>{this.props.message}</h4>
         </div>
     }
 }
@@ -536,7 +407,6 @@ class BoardName extends React.Component<{ name: string, fromCache: boolean, mess
 class BoardTable extends React.Component<{ board: Board }> {
   
     public render() {
-       // alert('Draw Board');
         return <tr>
             {this.props.board.columns.map((column, index) =>
                 <td key={index} style={styleColumn}><Column column={column} board={this.props.board} /></td>
@@ -581,9 +451,9 @@ class ColumnFill extends React.Component<{ column: BoardColumn }> {
 
 
             {
-                SortedIssues.map((issue, i) =>
+                SortedIssues.map((issue, index) =>
 
-                    <tr> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+                    <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
             )
         }
 

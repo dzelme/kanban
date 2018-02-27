@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 
@@ -39,6 +39,10 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
+
+
+        alert('Izvēles saglabātas!');
+
 
         this.state.boardlist.map(board => {
             board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;

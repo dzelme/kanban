@@ -10,7 +10,6 @@ export class NavMenu extends React.Component<{}, {}> {
                         <span className='sr-only'>Toggle navigation</span>
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
                     </button>
                     <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
                 </div>
@@ -20,11 +19,6 @@ export class NavMenu extends React.Component<{}, {}> {
                         <li>
                             <NavLink to={'/'} exact activeClassName='active'>
                                 <span className='glyphicon glyphicon-home'></span> KanBan React
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={'/kanbanboard'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-education'></span> Kanban Board
                             </NavLink>
                         </li>
                         <li>
