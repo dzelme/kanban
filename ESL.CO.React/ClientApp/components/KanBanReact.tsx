@@ -135,6 +135,7 @@ interface FetchDataBoardList {
     loading: boolean;
 }
 
+// this is a state xxxState
 interface FetchDataColumns {
     boardlist: Value[];
     currentIndex: number;
@@ -200,7 +201,7 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
-            loading: true     
+            loading: true
         };
 
         this.nextSlide = this.nextSlide.bind(this);
@@ -209,7 +210,11 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
+                this.setState({
+                    board: data,
+                    loading: false,
+                    boardChanged: true
+                }, this.RefreshRate);
             });
     }
 
@@ -289,7 +294,10 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
             }
             else {
                 return <div style={styleCenter}>
-                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
+                    <BoardName
+                        name={this.state.board.name}
+                        fromCache={this.state.board.fromCache}
+                        message={this.state.board.message}/>
                     <BoardTable board={this.state.board} />
 
                     {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}

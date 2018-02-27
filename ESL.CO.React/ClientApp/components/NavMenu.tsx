@@ -1,7 +1,27 @@
 import * as React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-export class NavMenu extends React.Component<{}, {}> {
+export class NavMenu extends React.Component<{}, { version: String }> {
+
+    constructor(props, context) {
+        super(props, context)
+        this.state = {
+            version: ''
+        };
+
+        setInterval(() => {
+            fetch('api/version')
+                .then(res => res.json() as Promise<string>)
+                .then(data => {
+                    this.setState((prevState) => {
+                        if (prevState.version != '' && prevState.version != data)
+                            window.location.reload();
+                        return { version: data }
+                    });
+                })
+        }, 5000); // todo: make this pretty
+    }
+
     public render() {
         return <div className='main-nav'>
             <div className='navbar navbar-inverse'>
@@ -12,6 +32,7 @@ export class NavMenu extends React.Component<{}, {}> {
                         <span className='icon-bar'></span>
                     </button>
                     <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
+                    <span className='version-aside'>{this.state.version}</span>
                 </div>
                 <div className='clearfix'></div>
                 <div className='navbar-collapse collapse'>
