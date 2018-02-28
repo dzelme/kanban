@@ -14,6 +14,7 @@ namespace ESL.CO.React.Models
         {
             Name = name;
             Issues = new List<Issue>();
+
         }
 
         #region Equality

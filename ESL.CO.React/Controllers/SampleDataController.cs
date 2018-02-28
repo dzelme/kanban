@@ -83,6 +83,7 @@ namespace ESL.CO.React.Controllers
                 //if in cache checks if equal
                 if (NeedsRedraw(board))
                 {
+                    board.HasChanged = true;
                     this.cache.Set<Board>(id, board);
                     return board;
                 }

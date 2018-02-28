@@ -3,15 +3,21 @@ import { RouteComponentProps } from 'react-router';
 
 
 const styleBoard = {
-    maxWidth: '2000'
+    maxWidth: '2000px'
 }
 
 const styleCenter = {
     margin: 'auto'
 }
 
-const styleColumn = {
+const styleColumnFirst = {
     border: 'solid',
+};
+
+const styleColumnOther = {
+    borderTop: 'solid',
+    borderBottom: 'solid',
+    borderRight: 'solid'
 };
 
 const styleColumnTitle = {
@@ -31,48 +37,72 @@ const styleColumnNext = {
 
 const styleTicket = {
     background: 'yellow',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleTicketBlocker = {
     background: 'red',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleTicketCritical = {
     background: 'orange',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleTicketMajor = {
     background: 'lightyellow',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleTicketMinor = {
     background: 'lightgreen',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleTicketTrivial = {
     background: 'lightgray',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '2%',
     border: 'solid'
 };
 
 const styleLink = {
     color: 'black'
+};
+
+const styleAssignee = {
+    float: 'right',
+    paddingRight: '2%'
+};
+
+const styleKey = {
+    float: 'left'
+};
+
+const styleSummary = {
+   clear: 'both'
+};
+
+const styleColumnNameFirst = {
+    borderTop: 'solid',
+    borderRight: 'solid',
+    borderLeft: 'solid'
+};
+
+const styleColumnNameOther = {
+    borderTop: 'solid',
+    borderRight: 'solid'
 };
 
 interface Value {
@@ -234,9 +264,10 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
     }
 
 
-    slideShow(timeShown: number) {
+    slideShow(/*timeShown: number*/) {
 
-        setTimeout(this.nextSlide, timeShown);
+        setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
+
     }
  
     boardLoad() {
@@ -254,18 +285,26 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
 
                     }
                     else {
+
                         this.setState({ board: data, boardChanged: true }, this.RefreshRate);
                     }
+
+                }
+                else {
+
                 }
 
             });
+
     }
 
     RefreshRate() {
+
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
             this.state.boardlist[this.state.currentIndex].refreshRate
         );
+
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -284,114 +323,29 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
         }
         else {
 
-            if (this.state.board.columns.length == 0) {
-                return <h1>Error loading!</h1>
-            }
-            else {
-                return <div style={styleCenter}>
-                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
-                    <BoardTable board={this.state.board} />
-
-                    {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
-                    
-                </div>;
-            }
-        }
-
-    }
-}
-
-
-/*
-class ColumnReader extends React.Component<{ boardId: number, boardRefresh: number }, FetchDataColumns> {
-    refreshTimer: number;
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
-            },
-            loading: true,
-            boardId: this.props.boardId,
-            boardChanged: false
-        };
-
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
-            .then(response => response.json() as Promise<Board>)
-            .then(data => {
-                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
-            });
-
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.boardId != this.state.boardId) {
-            this.setState({ boardId: nextProps.boardId }, this.boardLoad);
-        }
-    }
-   
-
-    boardLoad() {
-
-        clearInterval(this.refreshTimer);
-        
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
-            .then(response => response.json() as Promise<Board>)
-            .then(data => {
-                if (data.id == this.state.boardId) {
-
-                    if (this.state.board.id == data.id && data.hasChanged == false) {
-
-                        this.setState({ board: data, boardChanged: false }, this.RefreshRate);
-
-                    }
-                    else {
-                        this.setState({ board: data, boardChanged: true }, this.RefreshRate);
-                    }
+                if (this.state.board.columns.length == 0) {
+                    return <h1>Error loading!</h1>
                 }
+                else {
 
-            });
-    }
+                    return <div style={styleCenter}>
 
-    RefreshRate() {
-        this.refreshTimer = setInterval(
-            () => this.boardLoad(),
-            this.props.boardRefresh
-        );
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-        return nextState.boardChanged;
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.refreshTimer);
-    }
-
-    public render() {
-       
-        if (this.state.loading) {
-            return <h1>Loading...</h1>
-        }
-        else {
-
-            if (this.state.board.columns.length == 0) {
-                return <h1>Error loading!</h1>
-            }
-            else {
-                return <div>  
                     <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
                     <BoardTable board={this.state.board} />
-                </div>;
+
+                    {
+                        this.setState({ boardChanged: false }, this.slideShow)
+                    }
+                    
+                    </div>;
+                }
             }
-        }
 
     }
 }
-*/
+
+// this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)
+
 class BoardName extends React.Component<{ name: string, fromCache: boolean, message: string }> {
 
     public render() {
@@ -407,12 +361,47 @@ class BoardName extends React.Component<{ name: string, fromCache: boolean, mess
 class BoardTable extends React.Component<{ board: Board }> {
   
     public render() {
-        return <tr>
-            {this.props.board.columns.map((column, index) =>
-                <td key={index} style={styleColumn}><Column column={column} board={this.props.board} /></td>
-                )}
+        return <div>
+            <tr>{
+                this.props.board.columns.map((column, index) =>
+                    <th style={this.whichColumnHeader(index)}>   <ColumnTitle name={column.name} />   </th>
+                )
+            }</tr>
+        <tr>
+            {
+                this.props.board.columns.map((column, index) => 
+
+                        <td key={index} style={this.whichColumn(index)}><Column column={column} board={this.props.board} /></td>               
+                )
+            }
         </tr>
-        
+        </div>
+    }
+
+    whichColumnHeader(Nr: number) {
+        let HeaderStyle;
+
+        if (Nr == 0) {
+            HeaderStyle = styleColumnNameFirst;
+        }
+        else {
+            HeaderStyle = styleColumnNameOther;
+        }
+
+        return HeaderStyle;
+    }
+
+    whichColumn(Nr: number) {
+        let ColumnStyle;
+
+        if (Nr == 0) {
+            ColumnStyle = styleColumnFirst;
+        }
+        else {
+            ColumnStyle = styleColumnOther;
+        }
+
+        return ColumnStyle;
     }
 
 }
@@ -425,7 +414,6 @@ class Column extends React.Component<{ column: BoardColumn , board: Board}> {
 
 
         return <div>
-            <div style={styleColumnTitle}>   <ColumnTitle name={currentColumn.name} />   </div>
             <div>   <ColumnFill column={currentColumn} />   </div>
 
         </div>
@@ -444,22 +432,63 @@ class ColumnTitle extends React.Component<{name: string}> {
 class ColumnFill extends React.Component<{ column: BoardColumn }> {
     public render() {        
 
-        let SortedIssues = ColumnFill.IssuePriority(this.props.column);
+
     
-       
-        return <div>
 
 
-            {
-                SortedIssues.map((issue, index) =>
+        if (this.props.column.issues.length == 0) {
+            return null;
+        }
+        else {
 
-                    <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
-            )
+            let SortedIssues = ColumnFill.IssuePriority(this.props.column);
+
+            if (this.props.column.issues.length > 10) {
+
+                let IssuesPerPage = ColumnFill.issueCount(SortedIssues);
+
+                return <div>
+
+                    {
+                        IssuesPerPage.map((issue, index) =>
+
+                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+
+                        )
+                    }
+
+                </div>
+
+            }
+            else {
+
+                return <div>
+
+                    {
+
+                        SortedIssues.map((issue, index) =>
+
+                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+
+                        )
+                    }
+
+                </div>
+            }
+            
+
+        }
+    }
+
+    private static issueCount(list: Issue[]) {
+
+        let shortList = [];
+
+        for (var i = 0; i < 10; i++) {
+            shortList.push(list[i]);
         }
 
-        </div> 
-            
-      
+        return shortList;
     }
 
     private static PriorityColor(issue: Issue) {
@@ -541,9 +570,11 @@ class Ticket extends React.Component<{ issue: Issue }> {
         return (
             <div>
 
-                <div><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
-                <div ><TicketSummary desc={currentIssue.fields.summary} /></div>
-                <div ><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
+                    <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
+                    <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
+
+                    <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
+                
                 
 
             </div>
@@ -555,7 +586,7 @@ class Ticket extends React.Component<{ issue: Issue }> {
         let AssigneeName; 
 
         if (assignee == null) {
-            AssigneeName = "None";
+            AssigneeName = "";
         }
         else {
             AssigneeName = assignee.displayName;
@@ -580,7 +611,7 @@ class TicketKey extends React.Component<{ keyName: string }> {
 class TicketSummary extends React.Component<{ desc: string }> {
     public render() {
         return <div>
-            <h5>{this.props.desc}</h5>
+            <h3>{this.props.desc}</h3>
         </div>
 
     }
@@ -590,7 +621,7 @@ class TicketAssignee extends React.Component<{ assigneeName: string }> {
     public render() {
 
         return <div>
-            <h5>Assignee: <strong>{this.props.assigneeName}</strong></h5>
+            <h4><strong>{this.props.assigneeName}</strong></h4>
         </div>
 
     }

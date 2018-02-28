@@ -12,6 +12,7 @@ namespace ESL.CO.React.Controllers
     [Route("api/[controller]")]
     public class FormController : Controller
     {
+
         [HttpPost] //, ValidateAntiForgeryToken]
         public void SaveSettings([FromBody]Value[] input)  //change name
         {
@@ -30,7 +31,7 @@ namespace ESL.CO.React.Controllers
                 //alert about invalid data
             }
             
-            return;
+            return ;
         }
     }
 }

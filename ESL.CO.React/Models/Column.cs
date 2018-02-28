@@ -9,5 +9,6 @@ namespace ESL.CO.React.Models
     {
         public string Name { get; set; }
         public List<ColumnStatus> Statuses { get; set; }
+        public string Max { get; set; }
     }
 }
