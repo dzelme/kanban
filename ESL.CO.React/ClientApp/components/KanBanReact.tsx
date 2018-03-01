@@ -307,6 +307,10 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
 
     }
 
+    componentWillMount() {
+        this.setState({boardChanged: false})
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
 
         return nextState.boardChanged;
@@ -328,14 +332,14 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
                 }
                 else {
 
+                    alert('Draw!');
+
                     return <div style={styleCenter}>
 
                     <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
                     <BoardTable board={this.state.board} />
 
-                    {
-                        this.setState({ boardChanged: false }, this.slideShow)
-                    }
+                    {this.slideShow}
                     
                     </div>;
                 }
@@ -409,32 +413,19 @@ class BoardTable extends React.Component<{ board: Board }> {
 
 class Column extends React.Component<{ column: BoardColumn , board: Board}> {
     public render() {
-
-        let currentColumn = this.props.column;
-
-
-        return <div>
-            <div>   <ColumnFill column={currentColumn} />   </div>
-
-        </div>
+        return <div> <ColumnFill column={this.props.column} /> </div>
     }
 }
 
 class ColumnTitle extends React.Component<{name: string}> {
     public render() {
-
         return <h2 style={styleColumnTitleText}><strong>{this.props.name}</strong></h2>
-
     }
 }
 
 
 class ColumnFill extends React.Component<{ column: BoardColumn }> {
     public render() {        
-
-
-    
-
 
         if (this.props.column.issues.length == 0) {
             return null;
@@ -567,18 +558,11 @@ class Ticket extends React.Component<{ issue: Issue }> {
         let currentIssue = this.props.issue;
         let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
-        return (
-            <div>
-
+        return <div>
                     <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
                     <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
-
                     <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
-                
-                
-
-            </div>
-        );
+            </div>       
     }
 
     private static AssigneeCheck(assignee: Assignee) {
@@ -593,9 +577,7 @@ class Ticket extends React.Component<{ issue: Issue }> {
         }
 
         return AssigneeName;
-
     }
-
 }
 
 
@@ -604,7 +586,6 @@ class TicketKey extends React.Component<{ keyName: string }> {
         return <div>
             <h4><strong>{this.props.keyName}</strong></h4>
         </div>
-
     }
 }
 
@@ -613,7 +594,6 @@ class TicketSummary extends React.Component<{ desc: string }> {
         return <div>
             <h3>{this.props.desc}</h3>
         </div>
-
     }
 }
 

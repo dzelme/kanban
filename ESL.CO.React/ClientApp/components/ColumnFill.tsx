@@ -4,16 +4,60 @@ import { Issue, BoardColumn } from './Interfaces';
 
 export default class ColumnFill extends React.Component<{ column: BoardColumn }> {
     public render() {
-        let SortedIssues = ColumnFill.IssuePriority(this.props.column);
-        return <div>
-            {
-                SortedIssues.map((issue, index) =>
-                    <tr key={index}>
-                        <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td>
-                    </tr>
-                )
+
+        if (this.props.column.issues.length == 0) {
+            return null;
+        }
+        else {
+
+            let SortedIssues = ColumnFill.IssuePriority(this.props.column);
+
+            if (this.props.column.issues.length > 10) {
+
+                let IssuesPerPage = ColumnFill.issueCount(SortedIssues);
+
+                return <div>
+
+                    {
+                        IssuesPerPage.map((issue, index) =>
+
+                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+
+                        )
+                    }
+
+                </div>
+
             }
-        </div>
+            else {
+
+                return <div>
+
+                    {
+
+                        SortedIssues.map((issue, index) =>
+
+                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+
+                        )
+                    }
+
+                </div>
+            }
+
+
+        }
+    }
+
+    private static issueCount(list: Issue[]) {
+
+        let shortList = [];
+
+        for (var i = 0; i < 10; i++) {
+            shortList.push(list[i]);
+        }
+
+        return shortList;
     }
 
     private static PriorityColor(issue: Issue) {
@@ -40,6 +84,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn }>
         }
 
         return Style;
+
     }
 
     private static IssuePriority(column: BoardColumn) {
@@ -78,48 +123,49 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn }>
         })
 
         return issueByPriority;
+
     }
 }
 
 
 const styleTicket = {
     background: 'yellow',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };
 
 const styleTicketBlocker = {
     background: 'red',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };
 
 const styleTicketCritical = {
     background: 'orange',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };
 
 const styleTicketMajor = {
     background: 'lightyellow',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };
 
 const styleTicketMinor = {
     background: 'lightgreen',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };
 
 const styleTicketTrivial = {
     background: 'lightgray',
-    borderRadius: '10',
-    paddingLeft: '10',
+    borderRadius: '10px',
+    paddingLeft: '10px',
     border: 'solid'
 };

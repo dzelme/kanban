@@ -2,8 +2,9 @@
 
 export default class TicketSummary extends React.Component<{ desc: string }> {
     public render() {
+
         return <div>
-            <h5>{this.props.desc}</h5>
+            <h3>{this.props.desc}</h3>
         </div>
 
     }

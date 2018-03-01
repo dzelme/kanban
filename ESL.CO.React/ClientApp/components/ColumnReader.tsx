@@ -32,14 +32,11 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
         this.nextSlide = this.nextSlide.bind(this);
 
+
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                this.setState({
-                    board: data,
-                    loading: false,
-                    boardChanged: true
-                }, this.RefreshRate);
+                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
             });
     }
 
@@ -64,8 +61,10 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
     }
 
 
-    slideShow(timeShown: number) {
-        setTimeout(this.nextSlide, timeShown);
+    slideShow() {
+
+        setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
+
     }
 
     boardLoad() {
@@ -75,28 +74,35 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
         fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                if (data.id == this.state.boardId) {
+                if (data.id == this.state.boardId) {                                            //nonem problemu, ja fetch beidzas pec tam, kad jau jauns boards izvelets
 
-                    if (this.state.board.id == data.id && data.hasChanged == false) {
+                    if (this.state.board.id == data.id && data.hasChanged == false) {           //ja tiek nolasits tas pats boards un nav mainijies
 
                         this.setState({ board: data, boardChanged: false }, this.RefreshRate);
 
                     }
                     else {
+
                         this.setState({ board: data, boardChanged: true }, this.RefreshRate);
                     }
+
                 }
+
             });
+
     }
 
     RefreshRate() {
+
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
             this.state.boardlist[this.state.currentIndex].refreshRate
         );
+
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+
         return nextState.boardChanged;
     }
 
@@ -105,6 +111,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
     }
 
     public render() {
+
         if (this.state.loading) {
             return <h1>Loading...</h1>
         }
@@ -114,20 +121,26 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
                 return <h1>Error loading!</h1>
             }
             else {
+
                 return <div style={styleCenter}>
-                    <BoardName
-                        name={this.state.board.name}
-                        fromCache={this.state.board.fromCache}
-                        message={this.state.board.message} />
+
+                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
                     <BoardTable board={this.state.board} />
 
-                    {this.slideShow(this.state.boardlist[this.state.currentIndex].timeShown)}
+                    {
+                        this.setState({ boardChanged: false }, this.slideShow)
+                    }
+
                 </div>;
             }
         }
+
     }
 }
 
 const styleCenter = {
     margin: 'auto'
 }
+
+
+//Vajag izmainit, lai setstate nav returna

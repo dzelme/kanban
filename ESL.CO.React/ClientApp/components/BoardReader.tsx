@@ -4,7 +4,7 @@ import ColumnReader from './ColumnReader';
 import { Value } from './Interfaces';
 
 const styleBoard = {
-    maxWidth: '2000'
+    maxWidth: '2000px'
 }
 
 //const styleColumnNext = {
@@ -47,14 +47,17 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
         })
 
         this.setState({ boardlist: visibleBoardList, loading: false });
+
     }
 
     public render() {
+
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
             : <ColumnReader boardlist={this.state.boardlist} />
 
         return <div style={styleBoard}>{boardInfo}</div>
+
     }
 } 
 

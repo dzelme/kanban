@@ -10,27 +10,41 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         let currentIssue = this.props.issue;
         let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
-        return (
-            <div>
-                <div><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
-                <div ><TicketSummary desc={currentIssue.fields.summary} /></div>
-                <div ><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
-            </div>
-        );
+        return <div>
+            <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
+            <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
+            <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
+        </div>
     }
 
     private static AssigneeCheck(assignee: Assignee) {
+
         let AssigneeName;
+
         if (assignee == null) {
-            AssigneeName = "None";
+            AssigneeName = "";
         }
         else {
             AssigneeName = assignee.displayName;
         }
+
         return AssigneeName;
     }
 }
 
 const styleLink = {
     color: 'black'
+};
+
+const styleAssignee = {
+    float: 'right',
+    paddingRight: '2%'
+};
+
+const styleKey = {
+    float: 'left'
+};
+
+const styleSummary = {
+    clear: 'both'
 };
