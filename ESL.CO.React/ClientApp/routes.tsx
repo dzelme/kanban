@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { BoardList } from './components/BoardList';
 import { KanbanBoard } from './components/KanbanBoard';
-import { BoardReader } from './components/KanBanReact';
+import { BoardReader } from './components/BoardReader';
 
 export const routes = <Layout>
     <Route exact path='/' component={BoardReader} />

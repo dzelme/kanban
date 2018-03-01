@@ -5,14 +5,13 @@ import 'isomorphic-fetch';
 interface FetchDataExampleState {
     boardlist: Value[];
     loading: boolean;
-    visible: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-
-        this.state = { boardlist: [], loading: true, visible: true };
+        
+        this.state = { boardlist: [], loading: true };
 
         fetch('api/SampleData/BoardList')
             .then(response => response.json() as Promise<Value[]>)
@@ -37,23 +36,24 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     }
     */
 
-
-
     handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
 
-
-        
-
+        //alert('Izvēles saglabātas!');
 
         this.state.boardlist.map(board => {
-            board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;
-            board.timeShown = parseInt(data.get(board.id + "timeShown").toString());
-            board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
+            board.visibility = document.forms['boardlist'].elements[board.id + "visibility"].checked;
+            board.timeShown = parseInt(document.forms['boardlist'].elements[board.id + "timeShown"].value);
+            board.refreshRate = parseInt(document.forms['boardlist'].elements[board.id + "refreshRate"].value);
         })
 
-         alert('Izvēles saglabātas!');
+        //does not work on Edge, LG browser because data.get() is not supported
+        //this.state.boardlist.map(board => {
+        //    board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;
+        //    board.timeShown = parseInt(data.get(board.id + "timeShown").toString());
+        //    board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
+        //})
 
         fetch('api/Form', {
             method: 'POST',
@@ -63,9 +63,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
             },
             body: JSON.stringify(this.state.boardlist),
         });
-
-       
-
     }
 
     public render() {
@@ -80,7 +77,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     }
 
     private static renderBoardList(boardlist: Value[], handleSubmit) {  //
-        return <form onSubmit={handleSubmit}>
+        return <form name="boardlist" onSubmit={handleSubmit}>
             <table className='table'>
                 <thead>
                     <tr>
@@ -99,7 +96,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                             <td key={board.id + "name"}>{board.name}</td>
                             <td key={board.id + "type"}>{board.type}</td>
                             <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
-                            <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()}/></td>
+                            <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
                             <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
                         </tr>
                     )}
