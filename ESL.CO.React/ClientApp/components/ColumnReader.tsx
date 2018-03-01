@@ -54,7 +54,8 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
         const newState = {
             currentIndex: index,
-            boardId: this.state.boardlist[index].id
+            boardId: this.state.boardlist[index].id,
+            boardChanged: false
         }
 
         this.setState(newState, this.boardLoad);
@@ -128,7 +129,8 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
                     <BoardTable board={this.state.board} />
 
                     {
-                        this.setState({ boardChanged: false }, this.slideShow)
+                        this.slideShow()
+                        //this.setState({ boardChanged: false }, this.slideShow)
                     }
 
                 </div>;

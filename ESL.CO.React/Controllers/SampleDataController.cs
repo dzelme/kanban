@@ -16,6 +16,8 @@ namespace ESL.CO.React.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+        private AppSettings a;
+
 
         private IMemoryCache cache;
         public SampleDataController (IMemoryCache cache)
@@ -36,7 +38,7 @@ namespace ESL.CO.React.Controllers
 
 
             var client = new JiraClient();
-            var a = new AppSettings();
+            //var a = new AppSettings();
             var boardList = await client.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
