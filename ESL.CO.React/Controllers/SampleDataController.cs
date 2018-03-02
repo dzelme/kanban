@@ -16,6 +16,8 @@ namespace ESL.CO.React.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+        private AppSettings a;
+
 
         private IMemoryCache cache;
         public SampleDataController (IMemoryCache cache)
