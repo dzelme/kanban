@@ -123,14 +123,13 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
             }
             else {
 
-                return <div style={styleCenter}>
+                return <div>
 
-                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
-                    <BoardTable board={this.state.board} />
+                    <div style={styleCenter}>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
+                    <div style={styleCenter}><BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
 
                     {
                         this.slideShow()
-                        //this.setState({ boardChanged: false }, this.slideShow)
                     }
 
                 </div>;
@@ -141,8 +140,9 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 }
 
 const styleCenter = {
-    margin: 'auto'
+    height: '100 %',
+    width: '100 %',
+    display: 'flex',
+    justifyContent: 'center' as 'center',
+    alignItems: 'center' as 'center'
 }
-
-
-//Vajag izmainit, lai setstate nav returna

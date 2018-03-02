@@ -3,9 +3,12 @@ import ColumnTitle from './ColumnTitle';
 import Column from './Column';
 import { Board } from './Interfaces';
 
-export default class BoardTable extends React.Component<{ board: Board }> {
+export default class BoardTable extends React.Component<{ board: Board, boardTime: number }> {
 
     public render() {
+
+        let columnCount = this.props.board.columns.length;
+
         return <div>
             <tr>{
                 this.props.board.columns.map((column, index) =>
@@ -13,10 +16,12 @@ export default class BoardTable extends React.Component<{ board: Board }> {
                 )
             }</tr>
             <tr>
+
                 {
+
                     this.props.board.columns.map((column, index) =>
 
-                        <td key={index} style={this.whichColumn(index)}><Column column={column} board={this.props.board} /></td>
+                        <td key={index} style={this.whichColumn(index)}><Column column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
                     )
                 }
             </tr>

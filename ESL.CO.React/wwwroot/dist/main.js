@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a9d25a56c90b073c2726"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6f506b5e3bdbf8fa0741"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -1257,7 +1257,7 @@ var routes = __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPO
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/kanbanboard', component: __WEBPACK_IMPORTED_MODULE_4__components_KanbanBoard__["a" /* KanbanBoard */] }));
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -2599,7 +2599,7 @@ if (true) {
 }
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\boot.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\boot.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\boot.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\boot.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -7880,7 +7880,7 @@ var BoardList = (function (_super) {
 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardList.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardList.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardList.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardList.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -7918,7 +7918,7 @@ var BoardName = (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (BoardName);
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardName.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardName.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardName.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardName.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -7954,19 +7954,11 @@ var BoardReader = (function (_super) {
             boardlist: [],
             loading: true
         };
-        function handleErrors(response) {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
         fetch('api/SampleData/BoardList')
-            .then(handleErrors)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ boardlist: data }, _this.checkVisibility);
-        })
-            .catch(function (error) { return console.log("asd" + error); });
+        });
         return _this;
     }
     BoardReader.prototype.checkVisibility = function () {
@@ -7991,7 +7983,7 @@ var BoardReader = (function (_super) {
 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardReader.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardReader.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardReader.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardReader.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8023,6 +8015,7 @@ var BoardTable = (function (_super) {
     }
     BoardTable.prototype.render = function () {
         var _this = this;
+        var columnCount = this.props.board.columns.length;
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", null, this.props.board.columns.map(function (column, index) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("th", { style: _this.whichColumnHeader(index), key: index },
@@ -8030,7 +8023,7 @@ var BoardTable = (function (_super) {
             })),
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", null, this.props.board.columns.map(function (column, index) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { key: index, style: _this.whichColumn(index) },
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__Column__["a" /* default */], { column: column, board: _this.props.board }));
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__Column__["a" /* default */], { column: column, board: _this.props.board, time: _this.props.boardTime, index: index, columnCount: columnCount }));
             })));
     };
     BoardTable.prototype.whichColumnHeader = function (Nr) {
@@ -8078,7 +8071,7 @@ var styleColumnNameOther = {
 };
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardTable.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardTable.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardTable.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\BoardTable.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8109,7 +8102,7 @@ var Column = (function (_super) {
     Column.prototype.render = function () {
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
             " ",
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__ColumnFill__["a" /* default */], { column: this.props.column }),
+            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__ColumnFill__["a" /* default */], { column: this.props.column, board: this.props.board, time: this.props.time, index: this.props.index, columnCount: this.props.columnCount }),
             " ");
     };
     return Column;
@@ -8117,7 +8110,7 @@ var Column = (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (Column);
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Column.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Column.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Column.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Column.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8142,57 +8135,108 @@ var __extends = (this && this.__extends) || (function () {
 
 var ColumnFill = (function (_super) {
     __extends(ColumnFill, _super);
-    function ColumnFill() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function ColumnFill(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            issueStart: 0,
+            issueEnd: 10,
+            issueTotal: _this.props.column.issues.length
+        };
+        _this.test2 = _this.test2.bind(_this);
+        return _this;
     }
+    ColumnFill.prototype.testFunction = function (time) {
+        var timeForNext = time / 3;
+        setTimeout(this.test2, timeForNext);
+    };
+    ColumnFill.prototype.test2 = function () {
+        var issueStart = this.state.issueStart;
+        var issueEnd = this.state.issueEnd;
+        var issueTotal = this.state.issueTotal;
+        if (issueEnd == issueTotal) {
+            issueStart = 0;
+            issueEnd = 10;
+        }
+        else if ((issueEnd + 10) > issueTotal) {
+            var differenceToEnd = issueTotal - issueEnd;
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + differenceToEnd;
+        }
+        else {
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + 10;
+        }
+        this.setState({ issueStart: issueStart, issueEnd: issueEnd });
+    };
     ColumnFill.prototype.render = function () {
+        var _this = this;
         if (this.props.column.issues.length == 0) {
             return null;
         }
         else {
             var SortedIssues = ColumnFill.IssuePriority(this.props.column);
             if (this.props.column.issues.length > 10) {
-                var IssuesPerPage = ColumnFill.issueCount(SortedIssues);
-                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, IssuesPerPage.map(function (issue, index) {
-                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
-                        " ",
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue) },
-                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
-                }));
+                if (this.props.index == 0) {
+                    var IssuesPerPage = ColumnFill.issueCount(SortedIssues, this.state.issueStart, this.state.issueEnd);
+                    var timesToSwap = Math.ceil(this.props.column.issues.length / 10);
+                    var timeForOneSwap = this.props.time / timesToSwap;
+                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
+                        IssuesPerPage.map(function (issue, index) {
+                            return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
+                                " ",
+                                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
+                                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
+                        }),
+                        this.testFunction(timeForOneSwap));
+                }
+                else {
+                    var IssuesPerPage = ColumnFill.issueCount(SortedIssues, 0, 10);
+                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, IssuesPerPage.map(function (issue, index) {
+                        return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
+                            " ",
+                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
+                                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
+                    }));
+                }
             }
             else {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, SortedIssues.map(function (issue, index) {
                     return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
                         " ",
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue) },
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
                             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
                 }));
             }
         }
     };
-    ColumnFill.issueCount = function (list) {
+    ColumnFill.issueCount = function (list, start, end) {
         var shortList = [];
-        for (var i = 0; i < 10; i++) {
+        for (var i = start; i < end; i++) {
             shortList.push(list[i]);
         }
         return shortList;
     };
-    ColumnFill.PriorityColor = function (issue) {
+    ColumnFill.PriorityColor = function (issue, size) {
         var Priority = issue.fields.priority.name;
         var Style;
         if (Priority == 'Blocker') {
+            styleTicketBlocker.width = size + 'px';
             Style = styleTicketBlocker;
         }
         else if (Priority == 'Critical') {
+            styleTicketCritical.width = size + 'px';
             Style = styleTicketCritical;
         }
         else if (Priority == 'Major') {
+            styleTicketMajor.width = size + 'px';
             Style = styleTicketMajor;
         }
         else if (Priority == 'Minor') {
+            styleTicketMinor.width = size + 'px';
             Style = styleTicketMinor;
         }
         else if (Priority == 'Trivial') {
+            styleTicketTrivial.width = size + 'px';
             Style = styleTicketTrivial;
         }
         else {
@@ -8237,41 +8281,47 @@ var styleTicket = {
     background: 'yellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketBlocker = {
     background: 'red',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketCritical = {
     background: 'orange',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketMajor = {
     background: 'lightyellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketMinor = {
     background: 'lightgreen',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketTrivial = {
     background: 'lightgray',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnFill.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnFill.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnFill.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnFill.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8373,12 +8423,13 @@ var ColumnReader = (function (_super) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h1", null, "Error loading!");
             }
             else {
-                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__BoardName__["a" /* default */], { name: this.state.board.name, fromCache: this.state.board.fromCache, message: this.state.board.message }),
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__BoardTable__["a" /* default */], { board: this.state.board }),
-                    this.slideShow()
-                //this.setState({ boardChanged: false }, this.slideShow)
-                );
+                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
+                        "  ",
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__BoardName__["a" /* default */], { name: this.state.board.name, fromCache: this.state.board.fromCache, message: this.state.board.message })),
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__BoardTable__["a" /* default */], { board: this.state.board, boardTime: this.state.boardlist[this.state.currentIndex].timeShown })),
+                    this.slideShow());
             }
         }
     };
@@ -8386,12 +8437,15 @@ var ColumnReader = (function (_super) {
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
 /* harmony default export */ __webpack_exports__["a"] = (ColumnReader);
 var styleCenter = {
-    margin: 'auto'
+    height: '100 %',
+    width: '100 %',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
 };
-//Vajag izmainit, lai setstate nav returna 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8429,7 +8483,7 @@ var styleColumnTitleText = {
 };
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnTitle.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnTitle.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnTitle.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnTitle.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8539,7 +8593,7 @@ var KanbanBoard = (function (_super) {
 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\KanbanBoard.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\KanbanBoard.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\KanbanBoard.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\KanbanBoard.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8580,7 +8634,7 @@ var Layout = (function (_super) {
 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Layout.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Layout.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Layout.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Layout.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8651,7 +8705,7 @@ var NavMenu = (function (_super) {
 
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\NavMenu.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\NavMenu.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\NavMenu.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\NavMenu.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8724,7 +8778,7 @@ var styleSummary = {
 };
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Ticket.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Ticket.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Ticket.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\Ticket.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8760,7 +8814,7 @@ var TicketAssignee = (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (TicketAssignee);
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketAssignee.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketAssignee.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketAssignee.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketAssignee.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8796,7 +8850,7 @@ var TicketKey = (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (TicketKey);
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketKey.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketKey.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketKey.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketKey.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
@@ -8831,7 +8885,7 @@ var TicketSummary = (function (_super) {
 /* harmony default export */ __webpack_exports__["a"] = (TicketSummary);
 
 
- ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketSummary.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketSummary.tsx"); } } })();
+ ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketSummary.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\TicketSummary.tsx"); } } })();
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
 
 /***/ }),
