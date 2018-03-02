@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7215d8bb934530e8df5b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6f506b5e3bdbf8fa0741"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -8015,6 +8015,7 @@ var BoardTable = (function (_super) {
     }
     BoardTable.prototype.render = function () {
         var _this = this;
+        var columnCount = this.props.board.columns.length;
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", null, this.props.board.columns.map(function (column, index) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("th", { style: _this.whichColumnHeader(index), key: index },
@@ -8022,7 +8023,7 @@ var BoardTable = (function (_super) {
             })),
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", null, this.props.board.columns.map(function (column, index) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { key: index, style: _this.whichColumn(index) },
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__Column__["a" /* default */], { column: column, board: _this.props.board }));
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__Column__["a" /* default */], { column: column, board: _this.props.board, time: _this.props.boardTime, index: index, columnCount: columnCount }));
             })));
     };
     BoardTable.prototype.whichColumnHeader = function (Nr) {
@@ -8101,7 +8102,7 @@ var Column = (function (_super) {
     Column.prototype.render = function () {
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
             " ",
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__ColumnFill__["a" /* default */], { column: this.props.column }),
+            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__ColumnFill__["a" /* default */], { column: this.props.column, board: this.props.board, time: this.props.time, index: this.props.index, columnCount: this.props.columnCount }),
             " ");
     };
     return Column;
@@ -8134,57 +8135,108 @@ var __extends = (this && this.__extends) || (function () {
 
 var ColumnFill = (function (_super) {
     __extends(ColumnFill, _super);
-    function ColumnFill() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function ColumnFill(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            issueStart: 0,
+            issueEnd: 10,
+            issueTotal: _this.props.column.issues.length
+        };
+        _this.test2 = _this.test2.bind(_this);
+        return _this;
     }
+    ColumnFill.prototype.testFunction = function (time) {
+        var timeForNext = time / 3;
+        setTimeout(this.test2, timeForNext);
+    };
+    ColumnFill.prototype.test2 = function () {
+        var issueStart = this.state.issueStart;
+        var issueEnd = this.state.issueEnd;
+        var issueTotal = this.state.issueTotal;
+        if (issueEnd == issueTotal) {
+            issueStart = 0;
+            issueEnd = 10;
+        }
+        else if ((issueEnd + 10) > issueTotal) {
+            var differenceToEnd = issueTotal - issueEnd;
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + differenceToEnd;
+        }
+        else {
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + 10;
+        }
+        this.setState({ issueStart: issueStart, issueEnd: issueEnd });
+    };
     ColumnFill.prototype.render = function () {
+        var _this = this;
         if (this.props.column.issues.length == 0) {
             return null;
         }
         else {
             var SortedIssues = ColumnFill.IssuePriority(this.props.column);
             if (this.props.column.issues.length > 10) {
-                var IssuesPerPage = ColumnFill.issueCount(SortedIssues);
-                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, IssuesPerPage.map(function (issue, index) {
-                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
-                        " ",
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue) },
-                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
-                }));
+                if (this.props.index == 0) {
+                    var IssuesPerPage = ColumnFill.issueCount(SortedIssues, this.state.issueStart, this.state.issueEnd);
+                    var timesToSwap = Math.ceil(this.props.column.issues.length / 10);
+                    var timeForOneSwap = this.props.time / timesToSwap;
+                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
+                        IssuesPerPage.map(function (issue, index) {
+                            return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
+                                " ",
+                                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
+                                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
+                        }),
+                        this.testFunction(timeForOneSwap));
+                }
+                else {
+                    var IssuesPerPage = ColumnFill.issueCount(SortedIssues, 0, 10);
+                    return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, IssuesPerPage.map(function (issue, index) {
+                        return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
+                            " ",
+                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
+                                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
+                    }));
+                }
             }
             else {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, SortedIssues.map(function (issue, index) {
                     return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("tr", { key: index },
                         " ",
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue) },
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", { style: ColumnFill.PriorityColor(issue, 2000 / _this.props.columnCount) },
                             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__Ticket__["a" /* default */], { issue: issue })));
                 }));
             }
         }
     };
-    ColumnFill.issueCount = function (list) {
+    ColumnFill.issueCount = function (list, start, end) {
         var shortList = [];
-        for (var i = 0; i < 10; i++) {
+        for (var i = start; i < end; i++) {
             shortList.push(list[i]);
         }
         return shortList;
     };
-    ColumnFill.PriorityColor = function (issue) {
+    ColumnFill.PriorityColor = function (issue, size) {
         var Priority = issue.fields.priority.name;
         var Style;
         if (Priority == 'Blocker') {
+            styleTicketBlocker.width = size + 'px';
             Style = styleTicketBlocker;
         }
         else if (Priority == 'Critical') {
+            styleTicketCritical.width = size + 'px';
             Style = styleTicketCritical;
         }
         else if (Priority == 'Major') {
+            styleTicketMajor.width = size + 'px';
             Style = styleTicketMajor;
         }
         else if (Priority == 'Minor') {
+            styleTicketMinor.width = size + 'px';
             Style = styleTicketMinor;
         }
         else if (Priority == 'Trivial') {
+            styleTicketTrivial.width = size + 'px';
             Style = styleTicketTrivial;
         }
         else {
@@ -8229,37 +8281,43 @@ var styleTicket = {
     background: 'yellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketBlocker = {
     background: 'red',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketCritical = {
     background: 'orange',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketMajor = {
     background: 'lightyellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketMinor = {
     background: 'lightgreen',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 var styleTicketTrivial = {
     background: 'lightgray',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 
@@ -8322,7 +8380,8 @@ var ColumnReader = (function (_super) {
         }
         var newState = {
             currentIndex: index,
-            boardId: this.state.boardlist[index].id
+            boardId: this.state.boardlist[index].id,
+            boardChanged: false
         };
         this.setState(newState, this.boardLoad);
     };
@@ -8364,10 +8423,13 @@ var ColumnReader = (function (_super) {
                 return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h1", null, "Error loading!");
             }
             else {
-                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__BoardName__["a" /* default */], { name: this.state.board.name, fromCache: this.state.board.fromCache, message: this.state.board.message }),
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__BoardTable__["a" /* default */], { board: this.state.board }),
-                    this.setState({ boardChanged: false }, this.slideShow));
+                return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
+                        "  ",
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1__BoardName__["a" /* default */], { name: this.state.board.name, fromCache: this.state.board.fromCache, message: this.state.board.message })),
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: styleCenter },
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_2__BoardTable__["a" /* default */], { board: this.state.board, boardTime: this.state.boardlist[this.state.currentIndex].timeShown })),
+                    this.slideShow());
             }
         }
     };
@@ -8375,9 +8437,12 @@ var ColumnReader = (function (_super) {
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
 /* harmony default export */ __webpack_exports__["a"] = (ColumnReader);
 var styleCenter = {
-    margin: 'auto'
+    height: '100 %',
+    width: '100 %',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
 };
-//Vajag izmainit, lai setstate nav returna 
 
 
  ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\arumka\\Source\\Repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\components\\ColumnReader.tsx"); } } })();

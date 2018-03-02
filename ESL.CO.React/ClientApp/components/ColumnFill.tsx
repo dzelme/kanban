@@ -1,8 +1,66 @@
 ﻿import * as React from 'react';
 import Ticket from './Ticket';
-import { Issue, BoardColumn } from './Interfaces';
+import { Issue, BoardColumn, Board } from './Interfaces';
 
-export default class ColumnFill extends React.Component<{ column: BoardColumn }> {
+interface IColumnFill {
+    issueStart: number;
+    issueEnd: number;
+    issueTotal: number;
+}
+
+export default class ColumnFill extends React.Component<{ column: BoardColumn, board: Board, time: number, index: number, columnCount: number }, IColumnFill> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            issueStart: 0,
+            issueEnd: 10,
+            issueTotal: this.props.column.issues.length
+        };
+
+        this.test2 = this.test2.bind(this);
+
+    }
+    
+    testFunction(time: number) {
+
+        let timeForNext = time/3;
+
+        setTimeout(this.test2, timeForNext);
+
+    }
+
+    test2() {
+
+        let issueStart = this.state.issueStart;
+        let issueEnd = this.state.issueEnd;
+        let issueTotal = this.state.issueTotal
+
+
+        if (issueEnd == issueTotal) {
+            issueStart = 0;
+            issueEnd = 10;
+
+        }
+        else if ((issueEnd + 10) > issueTotal) {
+
+            let differenceToEnd = issueTotal - issueEnd;
+
+            
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + differenceToEnd;
+
+
+        }
+        else {
+            issueStart = issueStart + 10;
+            issueEnd = issueEnd + 10;
+        }
+
+        this.setState({ issueStart: issueStart, issueEnd: issueEnd });
+
+    }
+    
+
     public render() {
 
         if (this.props.column.issues.length == 0) {
@@ -14,31 +72,55 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn }>
 
             if (this.props.column.issues.length > 10) {
 
-                let IssuesPerPage = ColumnFill.issueCount(SortedIssues);
 
-                return <div>
+                if (this.props.index == 0) {
 
-                    {
-                        IssuesPerPage.map((issue, index) =>
+                     let IssuesPerPage = ColumnFill.issueCount(SortedIssues, this.state.issueStart, this.state.issueEnd);
 
-                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
+                     let timesToSwap = Math.ceil(this.props.column.issues.length / 10);
 
-                        )
-                    }
+                     let timeForOneSwap = this.props.time / timesToSwap;
 
-                </div>
+                     return <div>
 
+                         {
+                             IssuesPerPage.map((issue, index) =>
+
+                                 <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
+
+                             )
+                         }
+
+                         {this.testFunction(timeForOneSwap)}
+
+                     </div>
+                }
+     
+                else {
+                    let IssuesPerPage = ColumnFill.issueCount(SortedIssues, 0, 10);
+
+                    return <div>
+
+                        {
+                            IssuesPerPage.map((issue, index) =>
+
+                                <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
+
+                            )
+                        }
+
+
+                    </div>
+                }
             }
             else {
 
                 return <div>
 
                     {
-
                         SortedIssues.map((issue, index) =>
 
-                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue)}><Ticket issue={issue} /></td></tr>
-
+                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
                         )
                     }
 
@@ -49,34 +131,41 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn }>
         }
     }
 
-    private static issueCount(list: Issue[]) {
+        
+
+    private static issueCount(list: Issue[], start: number, end: number) {
 
         let shortList = [];
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = start; i < end; i++) {
             shortList.push(list[i]);
         }
 
         return shortList;
     }
 
-    private static PriorityColor(issue: Issue) {
+    private static PriorityColor(issue: Issue, size: number) {
         let Priority = issue.fields.priority.name;
         let Style;
-
+    
         if (Priority == 'Blocker') {
+            styleTicketBlocker.width = size + 'px';
             Style = styleTicketBlocker;
         }
         else if (Priority == 'Critical') {
+            styleTicketCritical.width = size + 'px';
             Style = styleTicketCritical;
         }
         else if (Priority == 'Major') {
+            styleTicketMajor.width = size + 'px';
             Style = styleTicketMajor;
         }
         else if (Priority == 'Minor') {
+            styleTicketMinor.width = size + 'px';
             Style = styleTicketMinor;
         }
         else if (Priority == 'Trivial') {
+            styleTicketTrivial.width = size + 'px';
             Style = styleTicketTrivial;
         }
         else {
@@ -132,40 +221,46 @@ const styleTicket = {
     background: 'yellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 const styleTicketBlocker = {
     background: 'red',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 const styleTicketCritical = {
     background: 'orange',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 const styleTicketMajor = {
     background: 'lightyellow',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 const styleTicketMinor = {
     background: 'lightgreen',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };
 
 const styleTicketTrivial = {
     background: 'lightgray',
     borderRadius: '10px',
     paddingLeft: '10px',
-    border: 'solid'
+    border: 'solid',
+    width: ''
 };

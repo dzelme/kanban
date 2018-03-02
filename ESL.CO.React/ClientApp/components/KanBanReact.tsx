@@ -336,8 +336,8 @@ class ColumnReader extends React.Component<{ boardlist: Value[] }, FetchDataColu
 
                     return <div style={styleCenter}>
 
-                    <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
-                    <BoardTable board={this.state.board} />
+                        <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
+                        <BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} />
 
                     {this.slideShow}
                     
@@ -362,7 +362,7 @@ class BoardName extends React.Component<{ name: string, fromCache: boolean, mess
 }
 
 
-class BoardTable extends React.Component<{ board: Board }> {
+class BoardTable extends React.Component<{ board: Board, boardTime: number }> {
   
     public render() {
         return <div>
