@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "36b67350476b82d23d10"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a9d25a56c90b073c2726"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -7954,11 +7954,19 @@ var BoardReader = (function (_super) {
             boardlist: [],
             loading: true
         };
+        function handleErrors(response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
         fetch('api/SampleData/BoardList')
+            .then(handleErrors)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ boardlist: data }, _this.checkVisibility);
-        });
+        })
+            .catch(function (error) { return console.log("asd" + error); });
         return _this;
     }
     BoardReader.prototype.checkVisibility = function () {
