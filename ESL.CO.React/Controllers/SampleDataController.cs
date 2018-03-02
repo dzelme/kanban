@@ -38,7 +38,7 @@ namespace ESL.CO.React.Controllers
 
 
             var client = new JiraClient();
-            //var a = new AppSettings();
+            var a = new AppSettings();
             var boardList = await client.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
