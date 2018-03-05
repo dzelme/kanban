@@ -9,6 +9,9 @@ interface IColumnFill {
 }
 
 export default class ColumnFill extends React.Component<{ column: BoardColumn, board: Board, time: number, index: number, columnCount: number }, IColumnFill> {
+
+    timeout: number;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -17,19 +20,19 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
             issueTotal: this.props.column.issues.length
         };
 
-        this.test2 = this.test2.bind(this);
+        this.issueChange = this.issueChange.bind(this);
 
     }
     
-    testFunction(time: number) {
+    timeBetweenColumnFill(time: number) {
 
-        let timeForNext = time/3;
+        let timeTillNext = time/3;
 
-        setTimeout(this.test2, timeForNext);
+        this.timeout = setTimeout(this.issueChange, timeTillNext);
 
     }
 
-    test2() {
+    issueChange() {
 
         let issueStart = this.state.issueStart;
         let issueEnd = this.state.issueEnd;
@@ -58,6 +61,10 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
 
         this.setState({ issueStart: issueStart, issueEnd: issueEnd });
 
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout);
     }
     
 
@@ -91,7 +98,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                              )
                          }
 
-                         {this.testFunction(timeForOneSwap)}
+                         {this.timeBetweenColumnFill(timeForOneSwap)}
 
                      </div>
                 }

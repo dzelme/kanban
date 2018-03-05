@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import ColumnTitle from './ColumnTitle';
-import Column from './Column';
+import ColumnFill from './ColumnFill';
 import { Board } from './Interfaces';
 
 export default class BoardTable extends React.Component<{ board: Board, boardTime: number }> {
@@ -21,7 +21,7 @@ export default class BoardTable extends React.Component<{ board: Board, boardTim
 
                     this.props.board.columns.map((column, index) =>
 
-                        <td key={index} style={this.whichColumn(index)}><Column column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
+                        <td key={index} style={this.whichColumn(index)}><ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
                     )
                 }
             </tr>

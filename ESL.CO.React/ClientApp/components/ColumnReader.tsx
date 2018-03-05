@@ -15,7 +15,9 @@ interface ColumnReaderState {
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
 export default class ColumnReader extends React.Component<{ boardlist: Value[] }, ColumnReaderState> {
+
     refreshTimer: number;
+    timeout: number;
 
     constructor(props) {
         super(props);
@@ -64,7 +66,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
     slideShow() {
 
-        setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
+       setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
 
     }
 
@@ -79,12 +81,12 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
                     if (this.state.board.id == data.id && data.hasChanged == false) {           //ja tiek nolasits tas pats boards un nav mainijies
 
-                        this.setState({ board: data, boardChanged: false }, this.RefreshRate);
+                       this.setState({ board: data, boardChanged: false }, this.RefreshRate);
 
                     }
                     else {
 
-                        this.setState({ board: data, boardChanged: true }, this.RefreshRate);
+                       this.setState({ board: data, boardChanged: true }, this.RefreshRate);
                     }
 
                 }
@@ -109,6 +111,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
     componentWillUnmount() {
         clearInterval(this.refreshTimer);
+        clearTimeout(this.timeout);
     }
 
     public render() {
