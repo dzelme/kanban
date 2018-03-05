@@ -16,7 +16,7 @@ namespace ESL.CO.React.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
-        private AppSettings a;
+        //private AppSettings a;
 
 
         private IMemoryCache cache;
@@ -73,16 +73,10 @@ namespace ESL.CO.React.Controllers
         {
             var creator = new BoardCreator();
             var b = creator.CreateBoardModel(id, cache);
-            var board = await b;
-
-            //if not in cache adds new
-            if (!this.cache.TryGetValue<Board>(id, out Board cachedBoard))
+            Board board = null;
+            try
             {
-                this.cache.Set<Board>(id, board);
-            }
-            else
-            {
-                //if in cache checks if equal
+                board = await b;
                 if (NeedsRedraw(board))
                 {
                     board.HasChanged = true;
@@ -91,8 +85,12 @@ namespace ESL.CO.React.Controllers
                 }
                 else return board;
             }
+            catch
+            {
+                //
+                Console.Write("no internet");
+            }
             return board;
-
             /*
             var creator = new BoardCreator();
             var b = creator.CreateBoardModel(id);

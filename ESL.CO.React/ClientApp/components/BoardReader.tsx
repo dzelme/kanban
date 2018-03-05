@@ -28,11 +28,21 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
             loading: true
         };
 
+        //client offline error
+        function handleErrors(response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
         fetch('api/SampleData/BoardList')
+            .then(handleErrors)
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardlist: data }, this.checkVisibility);
-            });
+            })
+            .catch(error => console.log(error));
     }
 
     checkVisibility() {
