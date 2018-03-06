@@ -64,6 +64,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
     slideShow() {
 
+        this.increment();  //AD: increments timesShown board statistic
         setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
 
     }
@@ -100,6 +101,18 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
             this.state.boardlist[this.state.currentIndex].refreshRate
         );
 
+    }
+
+    //AD: increments timesShown board statistic
+    increment() {
+        fetch('api/SampleData/IncrementTimesShown', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.boardId),
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
