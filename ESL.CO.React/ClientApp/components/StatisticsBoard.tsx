@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 import 'isomorphic-fetch';
 
 interface FetchDataExampleState {
@@ -7,14 +8,14 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
-export class StatisticsBoard extends React.Component<RouteComponentProps<{id}>, FetchDataExampleState> {
+export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
         
         this.state = { connectionLog: [], loading: true };
 
         var id = 748; //////////////////
-        fetch('api/SampleData/NetworkStatistics?id=' + id)//+ this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id)
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
