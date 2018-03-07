@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ESL.CO.React.Models
 {
@@ -10,6 +11,7 @@ namespace ESL.CO.React.Models
         //public string expand { get; set; }
         //public string id { get; set; }
         //public string self { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string Key { get; set; }  //used to generate link to the particular issue
         public Fields Fields { get; set; }
 

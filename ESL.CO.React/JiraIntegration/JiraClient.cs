@@ -18,7 +18,7 @@ namespace ESL.CO.React.JiraIntegration
             HttpClient client = new HttpClient();
 
             #region Credentials
-            string credentials = "adzelme:";
+            string credentials = "adzelme:0TESTtest";
             #endregion
 
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
@@ -65,7 +65,7 @@ namespace ESL.CO.React.JiraIntegration
                     }
                     catch
                     {
-                        connectionLog = null;
+                        //connectionLog = null;
                     }
                 }
             }
@@ -78,6 +78,7 @@ namespace ESL.CO.React.JiraIntegration
                 serializer.Serialize(file, connectionLog);
             }
 
+            return;
             // replace list with JiraConnectionLogEntry[] array = new JiraConnectionLogEntry[100];
             // keep track of head when adding
         }

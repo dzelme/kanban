@@ -32,7 +32,6 @@ namespace ESL.CO.React.Models
         public Status Status { get; set; }  //which column belongs to
         //public List<Component> components { get; set; }
         //public object timeoriginalestimate { get; set; }
-        [JsonProperty(Required = Required.Always)]
         public string Description { get; set; }
         //public Timetracking timetracking { get; set; }
         //public object aggregatetimeestimate { get; set; }

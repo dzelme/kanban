@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9957bba510e803933ef4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cc95c0eecb9e60f1eb07"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -1260,7 +1260,7 @@ var routes = __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPO
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/boardlist', component: __WEBPACK_IMPORTED_MODULE_3__components_BoardList__["a" /* BoardList */] }),
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/kanbanboard', component: __WEBPACK_IMPORTED_MODULE_4__components_KanbanBoard__["a" /* KanbanBoard */] }),
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/statistics', component: __WEBPACK_IMPORTED_MODULE_6__components_StatisticsList__["a" /* StatisticsList */] }),
-    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/jiraconnectionstats', component: __WEBPACK_IMPORTED_MODULE_7__components_StatisticsBoard__["a" /* StatisticsBoard */] }));
+    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/jiraconnectionstats/:id', component: __WEBPACK_IMPORTED_MODULE_7__components_StatisticsBoard__["a" /* StatisticsBoard */] }));
 
 
  ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); } } })();
@@ -8728,7 +8728,8 @@ var StatisticsBoard = (function (_super) {
     function StatisticsBoard() {
         var _this = _super.call(this) || this;
         _this.state = { connectionLog: [], loading: true };
-        fetch('api/SampleData/NetworkStatistics')
+        var id = 748; //////////////////
+        fetch('api/SampleData/NetworkStatistics?id=' + id) //+ this.props.match.params.id)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ connectionLog: data, loading: false });
@@ -8837,7 +8838,7 @@ var StatisticsList = (function (_super) {
                         }).format(new Date(Date.parse(board.lastShown)))
                         : ""),
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("td", null,
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("a", { href: '/jiraconnectionstats', className: "btn btn-default" }, "Show Jira connections")));
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("a", { href: '/jiraconnectionstats/' + board.id, className: "btn btn-default" }, "Show Jira connections")));
             })));
     };
     return StatisticsList;

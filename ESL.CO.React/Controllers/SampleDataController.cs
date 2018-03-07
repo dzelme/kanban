@@ -264,9 +264,9 @@ namespace ESL.CO.React.Controllers
 
         //return statistics file entries
         [HttpGet("[action]")]
-        public List<JiraConnectionLogEntry> NetworkStatistics()
+        public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {
-            var filePath = @".\data\logs\jiraConnectionLog.json";
+            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.json");
             var connectionLog = new List<JiraConnectionLogEntry>();
             if (System.IO.File.Exists(filePath))
             {

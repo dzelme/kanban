@@ -12,5 +12,5 @@ export const routes = <Layout>
     <Route path='/boardlist' component={BoardList} />
     <Route path='/kanbanboard' component={KanbanBoard} />
     <Route path='/statistics' component={StatisticsList} />
-    <Route path='/jiraconnectionstats' component={StatisticsBoard} />
+    <Route path='/jiraconnectionstats/:id' component={StatisticsBoard} />
 </Layout>;
