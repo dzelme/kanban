@@ -18,7 +18,7 @@ namespace ESL.CO.React.JiraIntegration
             var board = new Board(id);
             //var cache = new CacheMethods();
             var client = new JiraClient();
-            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration");
+            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", id);
             if (boardConfig == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
@@ -32,7 +32,7 @@ namespace ESL.CO.React.JiraIntegration
             board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue");
+            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue", id);
             if (issueList == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
@@ -47,7 +47,7 @@ namespace ESL.CO.React.JiraIntegration
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString());
+                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), id);
                 if (issueList == null)  //
                 {
                     if (!cache.TryGetValue(id, out Board cachedBoard))

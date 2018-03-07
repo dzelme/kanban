@@ -261,5 +261,29 @@ namespace ESL.CO.React.Controllers
             }
             return;
         }
+
+        //return statistics file entries
+        [HttpGet("[action]")]
+        public List<JiraConnectionLogEntry> NetworkStatistics()
+        {
+            var filePath = @".\data\logs\jiraConnectionLog.json";
+            var connectionLog = new List<JiraConnectionLogEntry>();
+            if (System.IO.File.Exists(filePath))
+            {
+                using (StreamReader r = new StreamReader(filePath))
+                {
+                    string json = r.ReadToEnd();
+                    try
+                    {
+                        connectionLog = JsonConvert.DeserializeObject<List<JiraConnectionLogEntry>>(json);
+                    }
+                    catch
+                    {
+                        //connectionLog = Json(new object[] { new object() });
+                    }
+                }
+            }
+            return connectionLog;
+        }
     }
 }

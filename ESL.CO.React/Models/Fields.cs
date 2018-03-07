@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ESL.CO.React.Models
 {
@@ -18,6 +19,7 @@ namespace ESL.CO.React.Models
         //public DateTime? lastViewed { get; set; }
         //public Watches watches { get; set; }
         //public DateTime created { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public Priority Priority { get; set; }
         //public List<object> labels { get; set; }
         //public object aggregatetimeoriginalestimate { get; set; }
@@ -26,13 +28,16 @@ namespace ESL.CO.React.Models
         //public List<object> issuelinks { get; set; }  //?
         public Assignee Assignee { get; set; }
         //public DateTime updated { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public Status Status { get; set; }  //which column belongs to
         //public List<Component> components { get; set; }
         //public object timeoriginalestimate { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string Description { get; set; }
         //public Timetracking timetracking { get; set; }
         //public object aggregatetimeestimate { get; set; }
         //public bool flagged { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string Summary { get; set; }
         //public Creator creator { get; set; }
         //public List<object> subtasks { get; set; }
