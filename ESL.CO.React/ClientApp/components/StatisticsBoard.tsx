@@ -9,13 +9,13 @@ interface FetchDataExampleState {
 }
 
 export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+    private id = 748; //////////////////
     constructor() {
         super();
         
         this.state = { connectionLog: [], loading: true };
 
-        var id = 748; //////////////////
-        fetch('api/SampleData/NetworkStatistics?id=' + id) //+ this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + this.id) //+ this.props.match.params.id)
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
@@ -28,7 +28,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, Fe
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div>
-            <h1>Board #XXX : Network Statistics</h1>
+            <h1>Board #{this.id} : Network Statistics</h1>
             {contents}
         </div>;
     }

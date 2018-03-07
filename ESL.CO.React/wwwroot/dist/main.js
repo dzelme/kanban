@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c78d0b07766177fcf965"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2b21ac6f42b602c40aed"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -1260,7 +1260,7 @@ var routes = __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPO
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/boardlist', component: __WEBPACK_IMPORTED_MODULE_3__components_BoardList__["a" /* BoardList */] }),
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/kanbanboard', component: __WEBPACK_IMPORTED_MODULE_4__components_KanbanBoard__["a" /* KanbanBoard */] }),
     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/statistics', component: __WEBPACK_IMPORTED_MODULE_6__components_StatisticsList__["a" /* StatisticsList */] }),
-    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: '/jiraconnectionstats/:id', component: __WEBPACK_IMPORTED_MODULE_7__components_StatisticsBoard__["a" /* StatisticsBoard */] }));
+    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["Route"], { path: "/jiraconnectionstats/:id", component: __WEBPACK_IMPORTED_MODULE_7__components_StatisticsBoard__["a" /* StatisticsBoard */] }));
 
 
  ;(function register() { /* react-hot-loader/webpack */ if (process.env.NODE_ENV !== 'production') { if (typeof __REACT_HOT_LOADER__ === 'undefined') { return; } if (typeof module.exports === 'function') { __REACT_HOT_LOADER__.register(module.exports, 'module.exports', "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); return; } for (var key in module.exports) { if (!Object.prototype.hasOwnProperty.call(module.exports, key)) { continue; } var namedExport = void 0; try { namedExport = module.exports[key]; } catch (err) { continue; } __REACT_HOT_LOADER__.register(namedExport, key, "C:\\Users\\adzelme\\source\\repos\\ESL.CO.Panelis\\ESL.CO.React\\ClientApp\\routes.tsx"); } } })();
@@ -8727,9 +8727,9 @@ var StatisticsBoard = (function (_super) {
     __extends(StatisticsBoard, _super);
     function StatisticsBoard() {
         var _this = _super.call(this) || this;
+        _this.id = 748; //////////////////
         _this.state = { connectionLog: [], loading: true };
-        var id = 748; //////////////////
-        fetch('api/SampleData/NetworkStatistics?id=' + _this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + _this.id) //+ this.props.match.params.id)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ connectionLog: data, loading: false });
@@ -8742,7 +8742,10 @@ var StatisticsBoard = (function (_super) {
                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("em", null, "Loading..."))
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h1", null, "Board #XXX : Network Statistics"),
+            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h1", null,
+                "Board #",
+                this.id,
+                " : Network Statistics"),
             contents);
     };
     StatisticsBoard.renderStatisticsBoard = function (connectionLog) {
