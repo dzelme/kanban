@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cc95c0eecb9e60f1eb07"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c78d0b07766177fcf965"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -8729,7 +8729,7 @@ var StatisticsBoard = (function (_super) {
         var _this = _super.call(this) || this;
         _this.state = { connectionLog: [], loading: true };
         var id = 748; //////////////////
-        fetch('api/SampleData/NetworkStatistics?id=' + id) //+ this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + _this.props.match.params.id)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ connectionLog: data, loading: false });
