@@ -20,7 +20,7 @@ namespace ESL.CO.React.Controllers
 
 
         private IMemoryCache cache;
-        public SampleDataController (IMemoryCache cache)
+        public SampleDataController(IMemoryCache cache)
         {
             this.cache = cache;
         }
@@ -224,19 +224,42 @@ namespace ESL.CO.React.Controllers
             else return true;
         }
 
-        [HttpGet("[action]/{id?}")]
-        public Value BoardConfig(int id)
+        //[HttpGet("[action]/{id?}")]
+        //public Value BoardConfig(int id)
+        //{
+        //    //var id = int.Parse(Request.QueryString.ToString());
+        //    //var id = RouteParameter.Optional;
+        //    var a = new AppSettings();
+        //    var appSettings = a.GetSavedAppSettings();
+        //    var boardConfig = new Value();
+        //    foreach (var val in appSettings.AllValues)
+        //    {
+        //        if (val.Id == id) { boardConfig = val; }
+        //    }
+        //    return boardConfig;
+        //}
+
+        //obtain a full kanban board
+        [HttpPost("[action]")]
+        public void IncrementTimesShown([FromBody]int id)
         {
-            //var id = int.Parse(Request.QueryString.ToString());
-            //var id = RouteParameter.Optional;
             var a = new AppSettings();
-            var appSettings = a.GetSavedAppSettings();
-            var boardConfig = new Value();
-            foreach (var val in appSettings.AllValues)
+            var boardList = new FullBoardList();
+            boardList = a.GetSavedAppSettings();
+
+
+            //updates the board's statistics
+            foreach (var value in boardList.AllValues)
             {
-                if (val.Id == id) { boardConfig = val; }
+                if (value.Id == id)
+                {
+                    checked { value.TimesShown++; } //checked...
+                    value.LastShown = DateTime.Now;
+                    a.SaveAppSettings(boardList);
+                    return;
+                }
             }
-            return boardConfig;
+            return;
         }
     }
 }
