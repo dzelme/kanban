@@ -30,6 +30,7 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                         <span className='sr-only'>Toggle navigation</span>
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
+                        <span className='icon-bar'></span>
                     </button>
                     <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
                     <span className='version-aside'>{this.state.version}</span>
@@ -45,6 +46,11 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                         <li>
                             <NavLink to={'/boardlist'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-th-list'></span> Boardlist
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={'/statistics'} activeClassName='active'>
+                                <span className='glyphicon glyphicon-signal'></span> Statistics
                             </NavLink>
                         </li>
                     </ul>
