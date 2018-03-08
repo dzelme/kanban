@@ -16,7 +16,7 @@ interface ColumnReaderState {
 // error because generated file hass all boards with visibility false
 export default class ColumnReader extends React.Component<{ boardlist: Value[] }, ColumnReaderState> {
     refreshTimer: number;
-
+    
     constructor(props) {
         super(props);
         this.state = {

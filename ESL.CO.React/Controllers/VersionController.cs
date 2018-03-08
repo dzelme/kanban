@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Controllers
 {
+    /// <summary>
+    /// A controller for keeping track of version numbers.
+    /// </summary>
     [Route("/api/version")]
     [Produces("application/json")]
     public class VersionController : Controller

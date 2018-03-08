@@ -7,11 +7,11 @@ namespace ESL.CO.React.Models
 {
     public class FullBoardList //: BoardList
     {
-        public List<Value> AllValues { get; set; }
+        public List<Value> Values { get; set; }
 
         public FullBoardList()
         {
-            AllValues = new List<Value>();
+            Values = new List<Value>();
         }
     }
 }

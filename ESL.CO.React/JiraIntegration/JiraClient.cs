@@ -11,9 +11,19 @@ using ESL.CO.React.Models;
 
 namespace ESL.CO.React.JiraIntegration
 {
-    public class JiraClient
+    /// <summary>
+    /// A class for making requests to Atlassian Jira REST API.
+    /// </summary>
+    public class JiraClient : IJiraClient
     {
-        public async Task<T> GetBoardDataAsync<T>(string url, int id = 0)
+        /// <summary>
+        /// Makes connections to Atlassian Jira.
+        /// </summary>
+        /// <typeparam name="T">Determines the type of object whose information will be retrieved.</typeparam>
+        /// <param name="url">Part of URL required to make different Jira REST API requests.</param>
+        /// <param name="id">Board id required for creating board specific connection logs.</param>
+        /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
+        public async Task<T> GetBoardDataAsync<T>(string url, int id)
         {
             HttpClient client = new HttpClient();
 
@@ -46,6 +56,12 @@ namespace ESL.CO.React.JiraIntegration
             //throw new InvalidOperationException();
         }
 
+        /// <summary>
+        /// Adds an entry to the appropriate connection log file.
+        /// </summary>
+        /// <param name="url">Jira REST API request URL to be logged.</param>
+        /// <param name="response">Request's HTTP response message.</param>
+        /// <param name="id">Board id used for saving to the appropriate log file.</param>
         public void SaveToConnectionLog(string url, HttpResponseMessage response, int id)
         {
             var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.json");
@@ -59,14 +75,7 @@ namespace ESL.CO.React.JiraIntegration
                 using (StreamReader r = new StreamReader(filePath))
                 {
                     string json = r.ReadToEnd();
-                    try
-                    {
-                        connectionLog = JsonConvert.DeserializeObject<List<JiraConnectionLogEntry>>(json);
-                    }
-                    catch
-                    {
-                        //connectionLog = null;
-                    }
+                    connectionLog = JsonConvert.DeserializeObject<List<JiraConnectionLogEntry>>(json);
                 }
             }
 
@@ -83,25 +92,4 @@ namespace ESL.CO.React.JiraIntegration
             // keep track of head when adding
         }
     }
-
-
-    //public static class HttpResponseMessageExtension
-    //{
-    //    public static async Task<ExceptionResponse> ExceptionResponse(this HttpResponseMessage httpResponseMessage)
-    //    {
-    //        string responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
-    //        ExceptionResponse exceptionResponse = JsonConvert.DeserializeObject<ExceptionResponse>(responseContent);
-    //        return exceptionResponse;
-    //    }
-    //}
-
-    //public class ExceptionResponse
-    //{
-    //    public string Message { get; set; }
-    //    public string ExceptionMessage { get; set; }
-    //    public string ExceptionType { get; set; }
-    //    public string StackTrace { get; set; }
-    //    public ExceptionResponse InnerException { get; set; }
-    //}
-
 }

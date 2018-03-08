@@ -64,7 +64,8 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
 
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : <ColumnReader boardlist={this.state.boardlist} />
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1>No boards selected</h1>
+    
 
         return <div /*style={styleBoard}*/>{boardInfo}</div>
 
