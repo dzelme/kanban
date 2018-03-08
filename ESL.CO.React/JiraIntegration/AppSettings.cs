@@ -9,31 +9,42 @@ using ESL.CO.React.Models;
 
 namespace ESL.CO.React.JiraIntegration
 {
+    /// <summary>
+    /// A class for working with application settings.
+    /// </summary>
     public class AppSettings : IAppSettings
     {
+        /// <summary>
+        /// Reads application settings from a JSON file to an object.
+        /// </summary>
+        /// <returns>An object containing a list of all saved Kanban boards and their settings.</returns>
         public FullBoardList GetSavedAppSettings()
         {
-            // read from JSON to object, if file exists
             var filePath = @".\data\appSettings.json";
-            FullBoardList appSettings = new FullBoardList();
-            if (System.IO.File.Exists(filePath))
+            FullBoardList fullBoardList = new FullBoardList();
+            if (File.Exists(filePath))
             {
                 using (StreamReader r = new StreamReader(filePath))
                 {
                     string json = r.ReadToEnd();
-                    appSettings = JsonConvert.DeserializeObject<FullBoardList>(json);
+                    fullBoardList = JsonConvert.DeserializeObject<FullBoardList>(json);
                 }
             }
             else
             {
                 return null;
             }
-            return appSettings;
+            return fullBoardList;
         }
 
+        /// <summary>
+        /// Saves application settings to the specified path.
+        /// </summary>
+        /// <param name="appSettings">An object containing a list of Kanban boards and their settings.</param>
+        /// <param name="filePath">Path of the file where application settings will be stored. Default path in interface.</param>
+        /// <returns>Path of the file where application settings were stored.</returns>
         public string SaveAppSettings(FullBoardList appSettings, string filePath)
         {
-            // save info read from JIRA in a temp file
             // serialize JSON directly to a file
             using (StreamWriter file = System.IO.File.CreateText(filePath))
             {
@@ -42,8 +53,16 @@ namespace ESL.CO.React.JiraIntegration
             }
 
             return filePath;
+
+            //consider replacing with a global SaveToJson<type> method
         }
 
+        /// <summary>
+        /// Upadates the current board list obtained from Jira with the corresponding saved settings from the application settings file.
+        /// </summary>
+        /// <param name="saved">An object containing the stored list of all available Kanban boards and their settings.</param>
+        /// <param name="current">An object containing the newly obtained list of all currently available Kanban boards with default settings.</param>
+        /// <returns>An object containing a list of all currently available Kanban boards and their settings.</returns>
         public static FullBoardList MergeSettings(FullBoardList saved, FullBoardList current)
         {
             if (saved == null)
@@ -53,9 +72,9 @@ namespace ESL.CO.React.JiraIntegration
             }
             if (current == null) { return saved; }
             
-            foreach (Value currentBoard in current.AllValues)
+            foreach (Value currentBoard in current.Values)
             {
-                foreach (Value savedBoard in saved.AllValues)
+                foreach (Value savedBoard in saved.Values)
                 {
                     if (savedBoard.Id == currentBoard.Id)
                     {
@@ -70,6 +89,11 @@ namespace ESL.CO.React.JiraIntegration
                 }
             }
             return current;
+
+            // first page read, after no connection.
+            // which settings list should be used?
+            // the one that was read from the first page only or 
+            // the one stored in app settings (old one)??
         }
 
     }

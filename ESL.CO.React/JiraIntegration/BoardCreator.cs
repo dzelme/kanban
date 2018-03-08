@@ -10,9 +10,17 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ESL.CO.React.JiraIntegration
 {
+    /// <summary>
+    /// A class for filling board objects with appropriate information.
+    /// </summary>
     public class BoardCreator
     {
-
+        /// <summary>
+        /// Creates and fills a board object with appropriate information.
+        /// </summary>
+        /// <param name="id">Id of the board whose object will be made.</param>
+        /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
+        /// <returns>A filled board object.</returns>
         public async Task<Board> CreateBoardModel(int id, IMemoryCache cache)
         {
             var board = new Board(id);

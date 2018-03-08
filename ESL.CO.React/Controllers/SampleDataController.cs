@@ -13,6 +13,9 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ESL.CO.React.Controllers
 {
+    /// <summary>
+    /// A data controller.
+    /// </summary>
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
@@ -27,18 +30,21 @@ namespace ESL.CO.React.Controllers
             this.cache = cache;
         }
 
-        //Obtain board list from Jira, passes to React
+        /// <summary>
+        /// Obtains the full currently available board list from Jira REST API.
+        /// </summary>
+        /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Models.Value>> BoardList()
+        public async Task<IEnumerable<Value>> BoardList()
         {
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
-                return this.appSettings.GetSavedAppSettings()?.AllValues;
+                return this.appSettings.GetSavedAppSettings()?.Values;
             }  //
 
-            FullBoardList boardSettings = new FullBoardList();
-            boardSettings.AllValues.AddRange(boardList.Values);
+            FullBoardList fullBoardList = new FullBoardList();
+            fullBoardList.Values.AddRange(boardList.Values);
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
@@ -46,21 +52,25 @@ namespace ESL.CO.React.Controllers
                 //if (boardList == null) { return null; }  //
                 if (boardList == null)
                 {
-                    boardSettings = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
-                    appSettings.SaveAppSettings(boardSettings);
-                    return boardSettings.AllValues;
+                    fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
+                    appSettings.SaveAppSettings(fullBoardList);
+                    return fullBoardList.Values;
                 }
-                boardSettings.AllValues.AddRange(boardList.Values);
+                fullBoardList.Values.AddRange(boardList.Values);
             }
 
-            boardSettings = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
-            appSettings.SaveAppSettings(boardSettings);
-            return boardSettings.AllValues;
+            fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
+            appSettings.SaveAppSettings(fullBoardList);
+            return fullBoardList.Values;
         }
 
-        //obtain a full kanban board
+        /// <summary>
+        /// Gets board data, checks if the data has changed (compared to cached version), saves to cache if it has.
+        /// </summary>
+        /// <param name="id">Id of the board whose data will be returned</param>
+        /// <returns>Board information.</returns>
         [HttpGet("[action]")]
-        public async Task<Models.Board> BoardData(int id)
+        public async Task<Board> BoardData(int id)
         {
             var creator = new BoardCreator();
             var b = creator.CreateBoardModel(id, cache);
@@ -84,6 +94,11 @@ namespace ESL.CO.React.Controllers
             return board;
         }
 
+        /// <summary>
+        /// Checks if board has to be redrawn.
+        /// </summary>
+        /// <param name="board">Board data to be compared with the cached version.</param>
+        /// <returns>True or false.</returns>
         public bool NeedsRedraw(Board board)
         {
             if (!this.cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
@@ -92,18 +107,17 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// obtain a full kanban board
+        /// Increases the statistics counter each time the board is shown.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the board whose counter will be increased.</param>
         [HttpPost("[action]")]
         public void IncrementTimesShown([FromBody]int id)
         {
             var boardList = new FullBoardList();
             boardList = appSettings.GetSavedAppSettings();
 
-
             //updates the board's statistics
-            foreach (var value in boardList.AllValues)
+            foreach (var value in boardList.Values)
             {
                 if (value.Id == id)
                 {
@@ -117,10 +131,10 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// return statistics file entries
+        /// Gets connection log entries.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Id of the board whose connection log will be returned.</param>
+        /// <returns>List of connection log entries.</returns>
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {
