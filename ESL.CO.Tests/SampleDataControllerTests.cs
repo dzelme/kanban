@@ -120,5 +120,43 @@ namespace ESL.CO.Tests
             Assert.Contains(actual, x => x.Id == 77);
         }
 
+        [Fact]
+        public void BoardList_Should_Retrieve_Values_From_Jira_First_Page_But_Not_From_Second()
+        {
+            // Arrange
+            var firstPage = new BoardList()
+            {
+                IsLast = false,
+                Values = new List<Value>() {
+                    new Value {  Id = 74 },
+                    new Value {  Id = 75 },
+                },
+                StartAt = 0,
+                MaxResults = 2
+            };
+
+
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), 0)).Returns((string a, int i) =>
+            {
+                switch (a)
+                {
+                    case "board/": return Task.FromResult(firstPage);
+                    case "board?startAt=2": return Task.FromResult<BoardList>(null);
+                    default: return Task.FromResult<BoardList>(null);
+                }
+            });
+
+            // Act
+            var actual = controller.BoardList().Result;
+
+            // Assert
+            Assert.Equal(2, actual.Count());
+            Assert.Contains(actual, x => x.Id == 74);
+            Assert.Contains(actual, x => x.Id == 75);
+            Assert.DoesNotContain(actual, x => x.Id == 76);
+            Assert.DoesNotContain(actual, x => x.Id == 77);
+
+        }
+
     }
 }
