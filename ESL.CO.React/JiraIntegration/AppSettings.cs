@@ -44,7 +44,7 @@ namespace ESL.CO.React.JiraIntegration
             return filePath;
         }
 
-        public FullBoardList MergeSettings(FullBoardList saved, FullBoardList current)
+        public static FullBoardList MergeSettings(FullBoardList saved, FullBoardList current)
         {
             if (saved == null)
             {

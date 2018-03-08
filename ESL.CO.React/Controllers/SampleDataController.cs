@@ -46,14 +46,14 @@ namespace ESL.CO.React.Controllers
                 //if (boardList == null) { return null; }  //
                 if (boardList == null)
                 {
-                    boardSettings = appSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
+                    boardSettings = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
                     appSettings.SaveAppSettings(boardSettings);
                     return boardSettings.AllValues;
                 }
                 boardSettings.AllValues.AddRange(boardList.Values);
             }
 
-            boardSettings = appSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
+            boardSettings = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
             appSettings.SaveAppSettings(boardSettings);
             return boardSettings.AllValues;
         }
