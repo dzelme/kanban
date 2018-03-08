@@ -27,7 +27,7 @@ namespace ESL.CO.Tests
 
             this.cachedSettings = new FullBoardList
             {
-                AllValues = new List<Value>()
+                Values = new List<Value>()
                 {
                     new Value { Id = 74 },
                     new Value { Id = 75 },
@@ -49,7 +49,7 @@ namespace ESL.CO.Tests
             var actual = controller.BoardList().Result;
 
             // Assert
-            Assert.Equal(cachedSettings.AllValues, actual);
+            Assert.Equal(cachedSettings.Values, actual);
         }
 
         [Fact]

@@ -9,6 +9,9 @@ using ESL.CO.React.JiraIntegration;
 
 namespace ESL.CO.React.Controllers
 {
+    /// <summary>
+    /// A controller for working with forms.
+    /// </summary>
     [Route("api/[controller]")]
     public class FormController : Controller
     {
@@ -19,7 +22,10 @@ namespace ESL.CO.React.Controllers
             this.appSettings = appSettings;
         }
 
-
+        /// <summary>
+        /// Saves the altered application settings.
+        /// </summary>
+        /// <param name="input">New application settings received from form data via a post request.</param>
         [HttpPost] //, ValidateAntiForgeryToken]
         public void SaveSettings([FromBody]Value[] input)  //change name
         {
@@ -27,7 +33,7 @@ namespace ESL.CO.React.Controllers
             {
                 var boardList = new FullBoardList
                 {
-                    AllValues = input.ToList()
+                    Values = input.ToList()
                 };
 
                 appSettings.SaveAppSettings(boardList);

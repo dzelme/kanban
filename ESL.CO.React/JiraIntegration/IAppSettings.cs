@@ -2,6 +2,9 @@
 
 namespace ESL.CO.React.JiraIntegration
 {
+    /// <summary>
+    /// An interface for AppSettings class???
+    /// </summary>
     public interface IAppSettings
     {
         FullBoardList GetSavedAppSettings();
