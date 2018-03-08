@@ -12,17 +12,19 @@ interface ColumnReaderState {
     loading: boolean;
 }
 
+const getId = (a: any): number => { return a && a.id || 0; };
+
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
 export default class ColumnReader extends React.Component<{ boardlist: Value[] }, ColumnReaderState> {
     refreshTimer: number;
-
+    
     constructor(props) {
         super(props);
         this.state = {
             boardlist: this.props.boardlist,
             currentIndex: 0,
-            boardId: this.props.boardlist[0].id,
+            boardId: getId(this.props.boardlist[0]),
             board: {
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
