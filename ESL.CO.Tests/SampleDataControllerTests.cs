@@ -29,7 +29,10 @@ namespace ESL.CO.Tests
             {
                 AllValues = new List<Value>()
                 {
-                    new Value { Id = 74 }
+                    new Value { Id = 74 },
+                    new Value { Id = 75 },
+                    new Value { Id = 76 },
+                    new Value { Id = 77 },
                 }
             };
             appSettings.Setup(a => a.GetSavedAppSettings()).Returns(cachedSettings);
@@ -119,7 +122,7 @@ namespace ESL.CO.Tests
             Assert.Contains(actual, x => x.Id == 76);
             Assert.Contains(actual, x => x.Id == 77);
         }
-
+        
         [Fact]
         public void BoardList_Should_Retrieve_Values_From_Jira_First_Page_But_Not_From_Second()
         {
@@ -151,12 +154,12 @@ namespace ESL.CO.Tests
 
             // Assert
             Assert.Equal(2, actual.Count());
+            Assert.NotEqual(cachedSettings.AllValues, actual);
             Assert.Contains(actual, x => x.Id == 74);
             Assert.Contains(actual, x => x.Id == 75);
             Assert.DoesNotContain(actual, x => x.Id == 76);
             Assert.DoesNotContain(actual, x => x.Id == 77);
-
         }
-
+        
     }
 }
