@@ -9,7 +9,7 @@ using ESL.CO.React.Models;
 
 namespace ESL.CO.React.JiraIntegration
 {
-    public class AppSettings
+    public class AppSettings : IAppSettings
     {
         public FullBoardList GetSavedAppSettings()
         {
@@ -31,7 +31,7 @@ namespace ESL.CO.React.JiraIntegration
             return appSettings;
         }
 
-        public string SaveAppSettings(FullBoardList appSettings, string filePath = @".\data\appSettings.json")
+        public string SaveAppSettings(FullBoardList appSettings, string filePath)
         {
             // save info read from JIRA in a temp file
             // serialize JSON directly to a file

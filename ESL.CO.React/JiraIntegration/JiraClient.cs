@@ -11,9 +11,9 @@ using ESL.CO.React.Models;
 
 namespace ESL.CO.React.JiraIntegration
 {
-    public class JiraClient
+    public class JiraClient : IJiraClient
     {
-        public async Task<T> GetBoardDataAsync<T>(string url, int id = 0)
+        public async Task<T> GetBoardDataAsync<T>(string url, int id)
         {
             HttpClient client = new HttpClient();
 

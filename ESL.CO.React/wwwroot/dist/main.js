@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2b21ac6f42b602c40aed"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1f8235b2ff71f319285b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -8725,11 +8725,11 @@ var __extends = (this && this.__extends) || (function () {
 
 var StatisticsBoard = (function (_super) {
     __extends(StatisticsBoard, _super);
+    //private id = 748; //////////////////
     function StatisticsBoard() {
         var _this = _super.call(this) || this;
-        _this.id = 748; //////////////////
         _this.state = { connectionLog: [], loading: true };
-        fetch('api/SampleData/NetworkStatistics?id=' + _this.id) //+ this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + _this.props.match.params.id)
             .then(function (response) { return response.json(); })
             .then(function (data) {
             _this.setState({ connectionLog: data, loading: false });
@@ -8744,7 +8744,6 @@ var StatisticsBoard = (function (_super) {
         return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("h1", null,
                 "Board #",
-                this.id,
                 " : Network Statistics"),
             contents);
     };
