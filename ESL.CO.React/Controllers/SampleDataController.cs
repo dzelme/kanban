@@ -34,8 +34,8 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
-                return this.appSettings.GetSavedAppSettings()?.AllValues;
-            }  //
+                return appSettings.GetSavedAppSettings()?.AllValues;
+            }  
 
             FullBoardList boardSettings = new FullBoardList();
             boardSettings.AllValues.AddRange(boardList.Values);
@@ -43,7 +43,6 @@ namespace ESL.CO.React.Controllers
             {
                 boardList.StartAt += boardList.MaxResults;
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
-                //if (boardList == null) { return null; }  //
                 if (boardList == null)
                 {
                     boardSettings = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), boardSettings);
