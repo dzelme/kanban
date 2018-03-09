@@ -7,14 +7,14 @@ namespace ESL.CO.React.Models
 {
     public class JiraConnectionLogEntry
     {
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
         public string Link { get;set; }
         public string ResponseStatus { get; set; }
         public string Exception { get; set; }
 
-        public JiraConnectionLogEntry(string link = "", string responseStatus = "", string exception ="")
+        public JiraConnectionLogEntry(string link = "", string responseStatus = "", string exception ="", string time = "")
         {
-            Time = DateTime.Now;
+            this.Time = (time == "") ? DateTime.Now.ToString() : time;
             this.Link = link;
             this.ResponseStatus = responseStatus;
             this.Exception = exception;

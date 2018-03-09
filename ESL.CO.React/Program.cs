@@ -19,7 +19,16 @@ namespace ESL.CO.React
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(builder => builder.AddFile()) // adds file logging capability (ILogger logging provider for files) uses nuget package netescapades
                 .UseStartup<Startup>()
+                /// ILogger tests
+                //.ConfigureLogging((hostingContext, logging) =>
+                //{
+                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                //    //logging.AddConsole();
+                //    //logging.AddDebug();
+                //})
+                //
                 .Build();
     }
 }
