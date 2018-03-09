@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Xunit;
-using ESL.CO.React.JiraIntegration;
-using Microsoft.Extensions.Caching.Memory;
 using ESL.CO.React.Models;
 
 namespace ESL.CO.Tests
@@ -42,7 +38,7 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            var creator = new BoardCreator();
+            //var creator = new BoardCreator();
             Board board1 = null;
             var board2 = new Board(id);
 
@@ -54,7 +50,7 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            var creator = new BoardCreator();
+            //var creator = new BoardCreator();
             Board board1 = new Board
             {
                 Id = id,
@@ -133,7 +129,7 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            var creator = new BoardCreator();
+            //var creator = new BoardCreator();
             Board board1 = new Board
             {
                 Id = id,

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-
-using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-
 using Microsoft.Extensions.Caching.Memory;
 
 namespace ESL.CO.React.JiraIntegration
@@ -31,8 +26,6 @@ namespace ESL.CO.React.JiraIntegration
         public async Task<Board> CreateBoardModel(int id, IMemoryCache cache)
         {
             var board = new Board(id);
-            //var cache = new CacheMethods();
-            //var client = new JiraClient();
 
             var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", id);
             if (boardConfig == null)  //
@@ -41,8 +34,11 @@ namespace ESL.CO.React.JiraIntegration
                 {
                     return new Board(id);
                 }
-                cachedBoard.FromCache = true;
-                return cachedBoard;
+                else
+                {
+                    cachedBoard.FromCache = true;
+                    return cachedBoard;
+                }
             }
 
             board.Name = boardConfig.Name;
@@ -55,8 +51,11 @@ namespace ESL.CO.React.JiraIntegration
                 {
                     return new Board(id);
                 }
-                cachedBoard.FromCache = true;
-                return cachedBoard;
+                else
+                {
+                    cachedBoard.FromCache = true;
+                    return cachedBoard;
+                }
             }
 
             li.AllIssues.AddRange(issueList.Issues);
@@ -70,8 +69,11 @@ namespace ESL.CO.React.JiraIntegration
                     {
                         return new Board(id);
                     }
-                    cachedBoard.FromCache = true;
-                    return cachedBoard;
+                    else
+                    {
+                        cachedBoard.FromCache = true;
+                        return cachedBoard;
+                    }
                 }
                 li.AllIssues.AddRange(issueList.Issues);
             }

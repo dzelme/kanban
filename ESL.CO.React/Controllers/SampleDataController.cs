@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
 using Newtonsoft.Json;
 using System.IO;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Caching.Memory;
 
 
