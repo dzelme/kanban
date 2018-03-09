@@ -22,12 +22,14 @@ namespace ESL.CO.React.Controllers
         private readonly IJiraClient jiraClient;
         private readonly IAppSettings appSettings;
         private readonly IMemoryCache cache;
+        private readonly IBoardCreator boardCreator;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings)
+        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator)
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
             this.cache = cache;
+            this.boardCreator = boardCreator;
         }
 
         /// <summary>
@@ -40,8 +42,8 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
-                return this.appSettings.GetSavedAppSettings()?.Values;
-            }  //
+                return appSettings.GetSavedAppSettings()?.Values;
+            }  
 
             FullBoardList fullBoardList = new FullBoardList();
             fullBoardList.Values.AddRange(boardList.Values);
@@ -49,7 +51,7 @@ namespace ESL.CO.React.Controllers
             {
                 boardList.StartAt += boardList.MaxResults;
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
-                //if (boardList == null) { return null; }  //
+
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -72,16 +74,16 @@ namespace ESL.CO.React.Controllers
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
         {
-            var creator = new BoardCreator();
-            var b = creator.CreateBoardModel(id, cache);
+            var b = boardCreator.CreateBoardModel(id, cache);
             Board board = null;
+
             try
             {
                 board = await b;
                 if (NeedsRedraw(board))
                 {
                     board.HasChanged = true;
-                    this.cache.Set<Board>(id, board);
+                    cache.Set(id, board);
                     return board;
                 }
                 else return board;
@@ -101,7 +103,7 @@ namespace ESL.CO.React.Controllers
         /// <returns>True or false.</returns>
         public bool NeedsRedraw(Board board)
         {
-            if (!this.cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
+            if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
             else return true;
         }
