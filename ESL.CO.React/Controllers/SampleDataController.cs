@@ -20,12 +20,14 @@ namespace ESL.CO.React.Controllers
         private readonly IJiraClient jiraClient;
         private readonly IAppSettings appSettings;
         private readonly IMemoryCache cache;
+        private readonly IBoardCreator boardCreator;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings)
+        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator)
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
             this.cache = cache;
+            this.boardCreator = boardCreator;
         }
 
         /// <summary>
@@ -70,8 +72,8 @@ namespace ESL.CO.React.Controllers
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
         {
-            var creator = new BoardCreator(jiraClient);
-            var b = creator.CreateBoardModel(id, cache);
+            
+            var b = boardCreator.CreateBoardModel(id, cache);
             Board board = null;
             try
             {

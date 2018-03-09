@@ -15,12 +15,58 @@ namespace ESL.CO.Tests
         private Mock<IMemoryCache> memoryCache;
         private Mock<IJiraClient> jiraClient;
         private BoardCreator controller;
+        private BoardConfig boardConfiguration;
 
         public BoardCreatorTest()
         {
-
             memoryCache = new Mock<IMemoryCache>();
             jiraClient = new Mock<IJiraClient>();
+
+            boardConfiguration = new BoardConfig()
+            {
+                Id = 74,
+                Name = "Test Board",
+
+                ColumnConfig = new ColumnConfig()
+                {
+                    Columns = new List<Column>()
+                    {
+                        new Column()
+                        {
+                            Name = "To-Do",
+                            Statuses = new List<ColumnStatus>
+                            {
+                               new ColumnStatus()
+                               {
+                                   Id = "1"
+                               }
+                            }
+                        },
+                        new Column()
+                        {
+                            Name = "In Progress",
+                            Statuses = new List<ColumnStatus>
+                            {
+                               new ColumnStatus()
+                               {
+                                   Id = "2"
+                               }
+                            }
+                        },
+                        new Column()
+                        {
+                            Name = "Done",
+                            Statuses = new List<ColumnStatus>
+                            {
+                               new ColumnStatus()
+                               {
+                                   Id = "3"
+                               }
+                            }
+                        }
+                    }
+                }
+            };
 
             controller = new BoardCreator(jiraClient.Object);
         }
@@ -65,51 +111,6 @@ namespace ESL.CO.Tests
         [Fact]
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
-            var boardConfiguration = new BoardConfig()
-            {
-                Id = 74,
-                Name = "Test Board",
-
-                ColumnConfig = new ColumnConfig()
-                {
-                    Columns = new List<Column>()
-                    {
-                        new Column()
-                        {
-                            Name = "To-Do",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "1"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "In Progress",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "2"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "Done",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "3"
-                               }
-                            }
-                        }
-                    }
-                }
-            };
 
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
@@ -126,53 +127,7 @@ namespace ESL.CO.Tests
         [Fact]
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty()
         {
-            var board = new Board(74);
-
-            var boardConfiguration = new BoardConfig()
-            {
-                Id = 74,
-                Name = "Test Board",
-
-                ColumnConfig = new ColumnConfig()
-                {
-                    Columns = new List<Column>()
-                    {
-                        new Column()
-                        {
-                            Name = "To-Do",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "1"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "In Progress",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "2"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "Done",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "3"
-                               }
-                            }
-                        }
-                    }
-                }
-            };
+            var board = new Board(74);  
 
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
@@ -240,52 +195,6 @@ namespace ESL.CO.Tests
                 }
             };
 
-            var boardConfiguration = new BoardConfig()
-            {
-                Id = 74,
-                Name = "Test Board",
-
-                ColumnConfig = new ColumnConfig()
-                {
-                    Columns = new List<Column>()
-                    {
-                        new Column()
-                        {
-                            Name = "To-Do",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "1"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "In Progress",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "2"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "Done",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "3"
-                               }
-                            }
-                        }
-                    }
-                }
-            };
-
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult(IssuePageOne));
 
@@ -303,7 +212,9 @@ namespace ESL.CO.Tests
             Assert.Empty(actual.Columns[2].Issues);
         }
 
-
+        /// <summary>
+        /// Tests neiziet, liekas, ka netiek pievienoti issues no otrās lapas
+        /// </summary>
         [Fact]
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_Multiple_Page()
         {
@@ -312,6 +223,7 @@ namespace ESL.CO.Tests
             {
                 StartAt = 0,
                 MaxResults = 2,
+                Total = 4,
                 Issues = new List<Issue>()
                 {
                     new Issue()
@@ -363,6 +275,7 @@ namespace ESL.CO.Tests
             {
                 StartAt = 2,
                 MaxResults = 2,
+                Total = 4,
                 Issues = new List<Issue>()
                 {
                     new Issue()
@@ -407,52 +320,6 @@ namespace ESL.CO.Tests
                              }
                          }
                     },
-                }
-            };
-
-            var boardConfiguration = new BoardConfig()
-            {
-                Id = 74,
-                Name = "Test Board",
-
-                ColumnConfig = new ColumnConfig()
-                {
-                    Columns = new List<Column>()
-                    {
-                        new Column()
-                        {
-                            Name = "To-Do",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "1"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "In Progress",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "2"
-                               }
-                            }
-                        },
-                        new Column()
-                        {
-                            Name = "Done",
-                            Statuses = new List<ColumnStatus>
-                            {
-                               new ColumnStatus()
-                               {
-                                   Id = "3"
-                               }
-                            }
-                        }
-                    }
                 }
             };
 
