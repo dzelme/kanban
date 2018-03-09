@@ -8,14 +8,14 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
-export class StatisticsBoard extends React.Component<RouteComponentProps<{id : number}>, FetchDataExampleState> {
-    //private id = 748; //////////////////
+export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
+    private id = 748; //this.props.match.params.id; //////////////////
     constructor() {
         super();
         
         this.state = { connectionLog: [], loading: true };
 
-        fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + this.id)  // + this.props.match.params.id)
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
@@ -28,7 +28,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{id : n
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div>
-            <h1>Board #{} : Network Statistics</h1>
+            <h1>Board #{this.id} : Network Statistics</h1>
             {contents}
         </div>;
     }
@@ -45,7 +45,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{id : n
                 </thead>
                 <tbody>
                     {connectionLog.map(entry =>
-                        <tr key={entry.time + "row"}>
+                        <tr key={entry.time + entry.link + "row"}>
                             <td key={entry.time + "time"}>
                             {entry.time ?
                                 new Intl.DateTimeFormat('lv-LV', {

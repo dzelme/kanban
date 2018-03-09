@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Text.Encodings;
 using System.Text;
 using ESL.CO.React.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -16,6 +17,14 @@ namespace ESL.CO.React.JiraIntegration
     /// </summary>
     public class JiraClient : IJiraClient
     {
+
+        private readonly ILogger logger;
+
+        public JiraClient(ILogger<JiraClient> logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>
         /// Makes connections to Atlassian Jira.
         /// </summary>
@@ -31,6 +40,9 @@ namespace ESL.CO.React.JiraIntegration
             string credentials = "adzelme:0TESTtest";
             #endregion
 
+            //ILogger<JiraClient> logger;
+            //logger.LogInformation();
+
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
 
             var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
@@ -42,7 +54,7 @@ namespace ESL.CO.React.JiraIntegration
                 using (var jsonReader = new JsonTextReader(reader))
                 {
                     //return serializer.Deserialize<IssueList>(jsonReader);
-                    SaveToConnectionLog(url, response, id);
+                    SaveToConnectionLog_AsTextFile(url, response, id);
                     return serializer.Deserialize<T>(jsonReader);
                 }
             }
@@ -51,7 +63,7 @@ namespace ESL.CO.React.JiraIntegration
                 //HttpError error = response.Content.ReadAsStringAsync().Result;
             }
 
-            SaveToConnectionLog(url, response, id);
+            SaveToConnectionLog_AsTextFile(url, response, id);
             return default(T);  //null
             //throw new InvalidOperationException();
         }
@@ -90,6 +102,22 @@ namespace ESL.CO.React.JiraIntegration
             return;
             // replace list with JiraConnectionLogEntry[] array = new JiraConnectionLogEntry[100];
             // keep track of head when adding
+        }
+
+        public void SaveToConnectionLog_UsingLogger(string url, HttpResponseMessage response, int id)
+        {
+
+            var logEntry = new JiraConnectionLogEntry(url, response.StatusCode.ToString()); //, (response.ExceptionResponse().Result.Message != null) ? response.ExceptionResponse().Result.Message : "");
+            this.logger.LogInformation(url + " " + response.StatusCode.ToString());
+        }
+
+        public void SaveToConnectionLog_AsTextFile(string url, HttpResponseMessage response, int id)
+        {
+            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.txt");
+            using (StreamWriter file = File.AppendText(filePath))
+            {
+                file.WriteLine(DateTime.Now + "|" + url + "|" + response.StatusCode.ToString());
+            }
         }
     }
 }
