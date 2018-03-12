@@ -48,7 +48,6 @@ namespace ESL.CO.React.Controllers
             {
                 boardList.StartAt += boardList.MaxResults;
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
-                //if (boardList == null) { return null; }  //
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -70,8 +69,7 @@ namespace ESL.CO.React.Controllers
         /// <returns>Board information.</returns>
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
-        {
-            
+        {     
             var b = boardCreator.CreateBoardModel(id, cache);
             Board board = null;
             try
@@ -128,27 +126,6 @@ namespace ESL.CO.React.Controllers
             }
             return;
         }
-
-        /// <summary>
-        /// Gets connection log entries.
-        /// </summary>
-        /// <param name="id">Id of the board whose connection log will be returned.</param>
-        /// <returns>List of connection log entries.</returns>
-        //[HttpGet("[action]")]
-        //public List<JiraConnectionLogEntry> NetworkStatistics(int id)
-        //{
-        //    var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.json");
-        //    var connectionLog = new List<JiraConnectionLogEntry>();
-        //    if (System.IO.File.Exists(filePath))
-        //    {
-        //        using (StreamReader r = new StreamReader(filePath))
-        //        {
-        //            string json = r.ReadToEnd();
-        //            connectionLog = JsonConvert.DeserializeObject<List<JiraConnectionLogEntry>>(json);
-        //        }
-        //    }
-        //    return connectionLog;
-        //}
 
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)

@@ -175,6 +175,9 @@ namespace ESL.CO.Tests
             // Arrange
             boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
+
             // Act
             var actual = controller.BoardData(74).Result;
 

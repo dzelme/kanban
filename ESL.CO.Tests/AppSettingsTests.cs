@@ -13,16 +13,17 @@ namespace ESL.CO.Tests
     public class AppSettingsTests
     {
         private AppSettings controller;
-        private FullBoardList ListSaved;
-        private FullBoardList ListCurrent;
+        private FullBoardList listSaved;
+        private FullBoardList listCurrent;
 
         public AppSettingsTests()
         {
             controller = new AppSettings();
         }
 
-
-        //Testi MergeSettings, ja mainīs klasi uz ne-statisku
+        ///<Summary>
+        ///Testi MergeSettings, ja mainīs klasi uz ne-statisku
+        ///</Summary>
         /*
         [Fact]
         public void MergeSettings_Should_Return_Null_Because_Both_Parameters_Null()

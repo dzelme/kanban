@@ -226,7 +226,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
 
 const styleTicket = {
     background: 'yellow',
-    borderRadius: '10px',
+   // borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''
@@ -234,39 +234,39 @@ const styleTicket = {
 
 const styleTicketBlocker = {
     background: 'red',
-    borderRadius: '10px',
+    //borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''
 };
 
 const styleTicketCritical = {
-    background: 'orange',
-    borderRadius: '10px',
+    background: 'orangered',
+   // borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''
 };
 
 const styleTicketMajor = {
-    background: 'lightyellow',
-    borderRadius: '10px',
+    background: 'purple',
+    //borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''
 };
 
 const styleTicketMinor = {
-    background: 'lightgreen',
-    borderRadius: '10px',
+    background: 'navy',
+    //borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''
 };
 
 const styleTicketTrivial = {
-    background: 'lightgray',
-    borderRadius: '10px',
+    background: 'slategray',
+    //borderRadius: '10px',
     paddingLeft: '10px',
     border: 'solid',
     width: ''

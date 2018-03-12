@@ -18,9 +18,9 @@ namespace ESL.CO.Tests
         private BoardConfig boardConfiguration;
         private Board cachedBoard;
         private Board testBoard;
-        private IssueList IssuePageOne;
-        private IssueList IssuePageTwo;
-        private IssueList IssueOnlyPage;
+        private IssueList issuePageOne;
+        private IssueList issuePageTwo;
+        private IssueList issueOnlyPage;
 
         public BoardCreatorTest()
         {
@@ -76,7 +76,7 @@ namespace ESL.CO.Tests
             cachedBoard = new Board(74);
             testBoard = new Board(80);
 
-            IssuePageOne = new IssueList()
+            issuePageOne = new IssueList()
             {
                 StartAt = 0,
                 MaxResults = 2,
@@ -127,7 +127,7 @@ namespace ESL.CO.Tests
                     },
                 }
             };
-            IssuePageTwo = new IssueList()
+            issuePageTwo = new IssueList()
             {
                 StartAt = 2,
                 MaxResults = 2,
@@ -179,7 +179,7 @@ namespace ESL.CO.Tests
                 }
             };
 
-            IssueOnlyPage = new IssueList()
+            issueOnlyPage = new IssueList()
             {
                 Issues = new List<Issue>()
                 {
@@ -307,7 +307,7 @@ namespace ESL.CO.Tests
             // Arrange
 
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult(IssueOnlyPage));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult(issueOnlyPage));
 
             // Act
             var actual = controller.CreateBoardModel(74, memoryCache.Object).Result;
@@ -334,8 +334,8 @@ namespace ESL.CO.Tests
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(IssuePageOne);
-                    case "board/74/issue?startAt=2": return Task.FromResult(IssuePageTwo);
+                    case "board/74/issue": return Task.FromResult(issuePageOne);
+                    case "board/74/issue?startAt=2": return Task.FromResult(issuePageTwo);
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
@@ -365,7 +365,7 @@ namespace ESL.CO.Tests
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(IssuePageOne);
+                    case "board/74/issue": return Task.FromResult(issuePageOne);
                     case "board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
                     default: return Task.FromResult<IssueList>(null);
                 }
@@ -394,7 +394,7 @@ namespace ESL.CO.Tests
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(IssuePageOne);
+                    case "board/74/issue": return Task.FromResult(issuePageOne);
                     case "board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
                     default: return Task.FromResult<IssueList>(null);
                 }

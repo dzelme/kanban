@@ -7,5 +7,8 @@ export default class ColumnTitle extends React.Component<{ name: string }> {
 }
 
 const styleColumnTitleText = {
-    textAlign: 'center'
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'dimgrey'
 };
+

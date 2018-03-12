@@ -12,7 +12,7 @@ export default class BoardTable extends React.Component<{ board: Board, boardTim
         return <div>
             <tr>{
                 this.props.board.columns.map((column, index) =>
-                    <th style={this.whichColumnHeader(index)} key={index}><ColumnTitle name={column.name} /></th>
+                    <th /*style={this.whichColumnHeader(index)}*/ key={index}><ColumnTitle name={column.name} /></th>
                 )
             }</tr>
             <tr>
@@ -21,7 +21,7 @@ export default class BoardTable extends React.Component<{ board: Board, boardTim
 
                     this.props.board.columns.map((column, index) =>
 
-                        <td key={index} style={this.whichColumn(index)}><ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
+                        <td key={index} /*style={this.whichColumn(index)}*/><ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
                     )
                 }
             </tr>
@@ -79,3 +79,4 @@ const styleColumnNameOther = {
     borderTop: 'solid',
     borderRight: 'solid'
 };
+
