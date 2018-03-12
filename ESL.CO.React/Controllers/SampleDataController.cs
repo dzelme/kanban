@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-using Newtonsoft.Json;
 using System.IO;
 using Microsoft.Extensions.Caching.Memory;
 

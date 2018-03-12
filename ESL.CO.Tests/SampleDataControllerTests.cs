@@ -182,16 +182,14 @@ namespace ESL.CO.Tests
             Assert.True(actual.HasChanged);
         }
 
-        /// <summary>
-        /// Tests nenostrādā, hasChanged ir true, nevis false, netiek iegūts false no NeedsRedraw
-        /// </summary>
         [Fact]
         public void BoardData_Should_Return_Board_With_HasChanged_False()
         {
             // Arrange
             boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
-           // controller.Setup(s=>s.NeedsRedraw(testBoard1)).Returns(false);
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
 
             // Act
             var actual = controller.BoardData(74).Result;
