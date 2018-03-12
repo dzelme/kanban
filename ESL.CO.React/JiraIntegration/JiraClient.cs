@@ -19,6 +19,7 @@ namespace ESL.CO.React.JiraIntegration
     {
 
         private readonly ILogger logger;
+        private readonly HttpClient client;
 
         public JiraClient(ILogger<JiraClient> logger)
         {

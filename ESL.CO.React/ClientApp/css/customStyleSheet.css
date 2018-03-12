@@ -1,3 +1,120 @@
-﻿.display-linebreak {
-    white-space: pre-line;
+﻿
+body {
+    font: normal 84% "Segoe UI", Arial;
+    background-color: #000;
+    color: #fff;
+}
+
+#board {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* For cells of equal size */
+}
+
+    #board section {
+        display: table-cell;
+        text-align: left;
+    }
+
+.column-wrapper {
+    background-color: #222;
+    margin: 0 4%;
+}
+
+h2, h3, ul {
+    padding: 3px 8px;
+}
+
+progress[value] {
+    width: 100%;
+    height: 4px;
+    margin: 0;
+    border: 0;
+}
+
+.blocker {
+    background-color: #da190b;
+}
+
+    .blocker ul.progress {
+        background-color: #f44336;
+    }
+
+.critical {
+    background-color: #e63600;
+}
+
+    .critical ul.progress {
+        background-color: #ff5722;
+    }
+
+.major {
+    background-color: #6f1c7d;
+}
+
+    .major ul.progress {
+        background-color: #9c27b0;
+    }
+
+.minor {
+    background-color: #2e3b84;
+}
+
+    .minor ul.progress {
+        background-color: #3f51b5;
+    }
+
+.trivial {
+    background-color: #495f69;
+}
+
+.trivial ul.progress {
+    background-color: #607d8b;
+}
+
+
+h2 {
+    text-transform: uppercase;
+    margin: .5em 0 0 0;
+    border-bottom: 1em solid #000;
+}
+
+h3 {
+    font-weight: normal;
+    padding-top: .45em;
+    padding-bottom: .45em;
+    margin: 0;
+}
+
+article + article {
+    margin-top: 1em;
+}
+
+article ul {
+    list-style-type: none;
+    margin: 0;
+}
+
+article > ul.progress > li {
+    font-size: .75em;
+}
+
+    article > ul.progress > li > em {
+        font-weight: bold;
+        font-style: normal;
+    }
+
+article > ul.information {
+    text-align: justify;
+}
+
+article > ul.information > li {
+    display: inline-block;
+}
+
+article > ul.information:after {
+    content: ' ';
+    display: inline-block;
+    width: 100%;
+    height: 0;
 }

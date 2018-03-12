@@ -93,7 +93,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                          {
                              IssuesPerPage.map((issue, index) =>
 
-                                 <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
+                                 <article className={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></article>
 
                              )
                          }
@@ -111,7 +111,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                         {
                             IssuesPerPage.map((issue, index) =>
 
-                                <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
+                                <article key={index} className={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></article>
 
                             )
                         }
@@ -153,33 +153,33 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
 
     private static PriorityColor(issue: Issue, size: number) {
         let Priority = issue.fields.priority.name;
-        let Style;
+        let className;
     
         if (Priority == 'Blocker') {
             styleTicketBlocker.width = size + 'px';
-            Style = styleTicketBlocker;
+            className = styleTicketBlocker;
         }
         else if (Priority == 'Critical') {
             styleTicketCritical.width = size + 'px';
-            Style = styleTicketCritical;
+            className = styleTicketCritical;
         }
         else if (Priority == 'Major') {
             styleTicketMajor.width = size + 'px';
-            Style = styleTicketMajor;
+            className = styleTicketMajor;
         }
         else if (Priority == 'Minor') {
             styleTicketMinor.width = size + 'px';
-            Style = styleTicketMinor;
+            className = styleTicketMinor;
         }
         else if (Priority == 'Trivial') {
             styleTicketTrivial.width = size + 'px';
-            Style = styleTicketTrivial;
+            className = styleTicketTrivial;
         }
         else {
-            Style = styleTicket;
+            className = styleTicket;
         }
 
-        return Style;
+        return className;
 
     }
 
