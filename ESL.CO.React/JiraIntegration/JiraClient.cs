@@ -37,7 +37,7 @@ namespace ESL.CO.React.JiraIntegration
             HttpClient client = new HttpClient();
 
             #region Credentials
-            string credentials = "adzelme:0TESTtest";
+            string credentials = "arumka:Dzukste22";
             #endregion
 
             //ILogger<JiraClient> logger;

@@ -40,7 +40,7 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
-                return this.appSettings.GetSavedAppSettings()?.Values;
+                return appSettings.GetSavedAppSettings()?.Values;
             }  //
 
             FullBoardList fullBoardList = new FullBoardList();
@@ -81,7 +81,7 @@ namespace ESL.CO.React.Controllers
                 if (NeedsRedraw(board))
                 {
                     board.HasChanged = true;
-                    this.cache.Set<Board>(id, board);
+                    cache.Set(id, board);
                     return board;
                 }
                 else return board;
@@ -101,7 +101,7 @@ namespace ESL.CO.React.Controllers
         /// <returns>True or false.</returns>
         public bool NeedsRedraw(Board board)
         {
-            if (!this.cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
+            if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
             else return true;
         }

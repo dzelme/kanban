@@ -191,7 +191,7 @@ namespace ESL.CO.Tests
         }
 
         /// <summary>
-        /// Tests nenostrādā, hasChanged ir true, nevis false
+        /// Tests nenostrādā, hasChanged ir true, nevis false, pieļauju, ka pie vainas NeedsRedraw metode
         /// </summary>
         [Fact]
         public void BoardData_Should_Return_Board_With_HasChanged_False()

@@ -71,7 +71,7 @@ namespace ESL.CO.Tests
             controller = new BoardCreator(jiraClient.Object);
         }
         /// <summary>
-        /// Tests neiziet, true vietā atgriež false
+        /// Tests neiziet, true vietā atgriež false, pieļauju, ka pie vainas .TryGetValue metode
         /// </summary>
         [Fact]
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Cache_If_Jira_Is_Not_Available()
@@ -212,9 +212,6 @@ namespace ESL.CO.Tests
             Assert.Empty(actual.Columns[2].Issues);
         }
 
-        /// <summary>
-        /// Tests neiziet, liekas, ka netiek pievienoti issues no otrās lapas
-        /// </summary>
         [Fact]
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_Multiple_Page()
         {
