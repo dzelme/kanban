@@ -17,7 +17,9 @@ namespace ESL.CO.Tests
         private Mock<IJiraClient> jiraClient;
         private Mock<IBoardCreator> boardCreator;
         private FullBoardList cachedSettings;
-        private Board cachedboardSettings;
+        private Board cachedboard;
+        private Board testBoard1;
+        private Board testBoard2;
         private SampleDataController controller;
 
         public SampleDataControllerTests()
@@ -38,10 +40,10 @@ namespace ESL.CO.Tests
                 }
             };
 
-            cachedboardSettings = new Board()
-            {
-                Id = 74
-            };
+            cachedboard = new Board(74);
+
+            testBoard1 = new Board(74);
+            testBoard2 = new Board(80);
 
             appSettings.Setup(a => a.GetSavedAppSettings()).Returns(cachedSettings);
             controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object, boardCreator.Object);
@@ -98,7 +100,6 @@ namespace ESL.CO.Tests
                 StartAt = 0,
                 MaxResults = 2
             };
-
             var secondPage = new BoardList()
             {
                 IsLast = true,
@@ -146,7 +147,6 @@ namespace ESL.CO.Tests
                 MaxResults = 2
             };
 
-
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), 0)).Returns((string a, int i) =>
             {
                 switch (a)
@@ -173,15 +173,7 @@ namespace ESL.CO.Tests
         public void BoardData_Should_Return_Board_With_HasChanged_True()
         {
             // Arrange
-            var board = new Board()
-            {
-                Id = 74,
-                HasChanged = false
-            };
-
-            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(board));
-
-            controller.NeedsRedraw(board).Equals(true);
+            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             // Act
             var actual = controller.BoardData(74).Result;
@@ -191,21 +183,15 @@ namespace ESL.CO.Tests
         }
 
         /// <summary>
-        /// Tests nenostrādā, hasChanged ir true, nevis false, pieļauju, ka pie vainas NeedsRedraw metode
+        /// Tests nenostrādā, hasChanged ir true, nevis false, netiek iegūts false no NeedsRedraw
         /// </summary>
         [Fact]
         public void BoardData_Should_Return_Board_With_HasChanged_False()
         {
             // Arrange
-            var board = new Board()
-            {
-                Id = 74,
-                HasChanged = false
-            };
+            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
-            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(board));
-
-            controller.NeedsRedraw(board).Equals(false);
+           // controller.Setup(s=>s.NeedsRedraw(testBoard1)).Returns(false);
 
             // Act
             var actual = controller.BoardData(74).Result;
@@ -214,23 +200,15 @@ namespace ESL.CO.Tests
             Assert.False(actual.HasChanged);
         }
 
-
-        /// <summary>
-        /// Tests nenostrādā, atgriež true nevis false
-        /// </summary>
         [Fact]
         public void NeedsRedraw_Should_Return_False()
         {
-            // Arrange
-            var board = new Board()
-            {
-                Id = 74
-            };
-
-            board.Equals(cachedboardSettings).Equals(true);
-
+             // Arrange
+             object board = cachedboard;
+             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
+          
             // Act
-            var actual = controller.NeedsRedraw(board);
+            var actual = controller.NeedsRedraw(testBoard1);
 
             // Assert
             Assert.False(actual);
@@ -240,15 +218,11 @@ namespace ESL.CO.Tests
         public void NeedsRedraw_Should_Return_True()
         {
             // Arrange
-            var board = new Board()
-            {
-                Id = 80
-            };
-
-            board.Equals(cachedboardSettings).Equals(false);
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
 
             // Act
-            var actual = controller.NeedsRedraw(board);
+            var actual = controller.NeedsRedraw(testBoard2);
 
             // Assert
             Assert.True(actual);

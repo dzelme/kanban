@@ -19,8 +19,8 @@ namespace ESL.CO.React.Models
         {
             Id = id;
             Name = string.Empty;
-            this.FromCache = fromCache;
-            this.Message = message;
+            FromCache = fromCache;
+            Message = message;
             HasChanged = false;
             Columns = new List<BoardColumn>();
             Rows = new List<BoardRow>();
