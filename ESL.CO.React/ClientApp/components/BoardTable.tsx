@@ -9,20 +9,16 @@ export default class BoardTable extends React.Component<{ board: Board, boardTim
 
         let columnCount = this.props.board.columns.length;
 
-        return <section className="column">
-            <div className="column-wrapper">{
+        return <div>{
                 this.props.board.columns.map((column, index) =>
-                    <h2 key={index}><ColumnTitle name={column.name} /></h2>
+                    <section className="column">
+                        <div className="column-wrapper">
+                            <h2 key={index}>{column.name}</h2>
+                            <ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} />
+                        </div>
+                    </section>
                 )
-            }
-                {
-
-                    this.props.board.columns.map((column, index) =>
-
-                        <ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} />
-                    )
-                }
-             </div>
-        </section>
+        }
+        </div>
     }
 }

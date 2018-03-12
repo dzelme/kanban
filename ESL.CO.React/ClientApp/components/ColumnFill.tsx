@@ -93,7 +93,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                          {
                              IssuesPerPage.map((issue, index) =>
 
-                                 <article className={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></article>
+                                 <Ticket issue={issue} />
 
                              )
                          }
@@ -111,7 +111,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                         {
                             IssuesPerPage.map((issue, index) =>
 
-                                <article key={index} className={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></article>
+                                <Ticket issue={issue} />
 
                             )
                         }
@@ -127,7 +127,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
                     {
                         SortedIssues.map((issue, index) =>
 
-                            <tr key={index}> <td style={ColumnFill.PriorityColor(issue, 2000 / this.props.columnCount)}><Ticket issue={issue} /></td></tr>
+                            <Ticket issue={issue} />
                         )
                     }
 
@@ -151,37 +151,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
         return shortList;
     }
 
-    private static PriorityColor(issue: Issue, size: number) {
-        let Priority = issue.fields.priority.name;
-        let className;
     
-        if (Priority == 'Blocker') {
-            styleTicketBlocker.width = size + 'px';
-            className = styleTicketBlocker;
-        }
-        else if (Priority == 'Critical') {
-            styleTicketCritical.width = size + 'px';
-            className = styleTicketCritical;
-        }
-        else if (Priority == 'Major') {
-            styleTicketMajor.width = size + 'px';
-            className = styleTicketMajor;
-        }
-        else if (Priority == 'Minor') {
-            styleTicketMinor.width = size + 'px';
-            className = styleTicketMinor;
-        }
-        else if (Priority == 'Trivial') {
-            styleTicketTrivial.width = size + 'px';
-            className = styleTicketTrivial;
-        }
-        else {
-            className = styleTicket;
-        }
-
-        return className;
-
-    }
 
     private static IssuePriority(column: BoardColumn) {
 
@@ -222,52 +192,3 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, b
 
     }
 }
-
-
-const styleTicket = {
-    background: 'yellow',
-   // borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};
-
-const styleTicketBlocker = {
-    background: 'red',
-    //borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};
-
-const styleTicketCritical = {
-    background: 'orangered',
-   // borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};
-
-const styleTicketMajor = {
-    background: 'purple',
-    //borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};
-
-const styleTicketMinor = {
-    background: 'navy',
-    //borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};
-
-const styleTicketTrivial = {
-    background: 'slategray',
-    //borderRadius: '10px',
-    paddingLeft: '10px',
-    border: 'solid',
-    width: ''
-};

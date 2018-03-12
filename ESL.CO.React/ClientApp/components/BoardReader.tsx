@@ -3,20 +3,6 @@ import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
 import { Value } from './Interfaces';
 
-const styleBoard = {
-    backgroundColor: 'black'
-}
-
-const styleText = {
-    color: 'white'
-}
-
-//const styleColumnNext = {
-//    borderBottom: 'solid',
-//    borderTop: 'solid',
-//    borderRight: 'solid',
-//};
-
 interface BoardReaderState {
     boardlist: Value[];
     loading: boolean;
@@ -67,11 +53,11 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
     public render() {
 
         let boardInfo = this.state.loading
-            ? <p style={styleText}><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 style={styleText}>No boards selected</h1>
+            ? <p><em>Loading...</em></p>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1>No boards selected</h1>
     
 
-        return <div style={styleBoard}>{boardInfo}</div>
+        return <div id="supercontainer">{boardInfo}</div>
 
     }
 } 
