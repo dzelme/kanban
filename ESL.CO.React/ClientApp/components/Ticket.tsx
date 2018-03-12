@@ -11,9 +11,9 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
         return <div>
+            <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
             <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
             <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
-            <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
         </div>
     }
 
@@ -33,18 +33,21 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
 }
 
 const styleLink = {
-    color: 'black'
+    color: 'white'
 };
 
 const styleAssignee = {
     float: 'right',
-    paddingRight: '2%'
+    paddingRight: '2%',
+    color: 'white'
 };
 
 const styleKey = {
-    float: 'left'
+    float: 'left',
+    color:'white'
 };
 
 const styleSummary = {
-    clear: 'both'
+    clear: 'both',
+    color: 'white'
 };

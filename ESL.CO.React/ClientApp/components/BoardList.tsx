@@ -71,13 +71,14 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
             : BoardList.renderBoardList(this.state.boardlist, this.handleSubmit);
 
         return <div>
-            <h1>Board List</h1>
+            <h1 style={styleTitle}>Board List</h1>
             {contents}
         </div>;
     }
 
     private static renderBoardList(boardlist: Value[], handleSubmit) {  //
         return <form name="boardlist" onSubmit={handleSubmit}>
+            <p><input type="submit" style={styleButton} name="Submit" /></p>
             <table className='table'>
                 <thead>
                     <tr>
@@ -102,7 +103,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                     )}
                 </tbody>
             </table>
-            <p><input type="submit" name="Submit" /></p>
+            
         </form>;
     }
 
@@ -117,4 +118,13 @@ interface Value {
     visibility: boolean;
     refreshRate: number;
     timeShown: number;
+}
+
+const styleButton = {
+    float: 'right',
+    margin: '20px'
+}
+
+const styleTitle = {
+    float: 'left'
 }

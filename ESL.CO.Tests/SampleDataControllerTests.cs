@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ESL.CO.React.Controllers;
 using ESL.CO.React.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using ESL.CO.React.JiraIntegration;
@@ -16,24 +15,38 @@ namespace ESL.CO.Tests
         private Mock<IMemoryCache> memoryCache;
         private Mock<IAppSettings> appSettings;
         private Mock<IJiraClient> jiraClient;
+        private Mock<IBoardCreator> boardCreator;
         private FullBoardList cachedSettings;
+        private Board cachedboard;
+        private Board testBoard1;
+        private Board testBoard2;
         private SampleDataController controller;
 
         public SampleDataControllerTests()
         {
-           this.memoryCache = new Mock<IMemoryCache>();
-           this.appSettings = new Mock<IAppSettings>();
-           this.jiraClient = new Mock<IJiraClient>();
+            memoryCache = new Mock<IMemoryCache>();
+            appSettings = new Mock<IAppSettings>();
+            jiraClient = new Mock<IJiraClient>();
+            boardCreator = new Mock<IBoardCreator>();
 
-            this.cachedSettings = new FullBoardList
+            cachedSettings = new FullBoardList
             {
                 Values = new List<Value>()
                 {
-                    new Value { Id = 74 }
+                    new Value { Id = 74 },
+                    new Value { Id = 75 },
+                    new Value { Id = 76 },
+                    new Value { Id = 77 },
                 }
             };
+
+            cachedboard = new Board(74);
+
+            testBoard1 = new Board(74);
+            testBoard2 = new Board(80);
+
             appSettings.Setup(a => a.GetSavedAppSettings()).Returns(cachedSettings);
-            this.controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object);
+            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object, boardCreator.Object);
         }
 
         [Fact]
@@ -87,7 +100,6 @@ namespace ESL.CO.Tests
                 StartAt = 0,
                 MaxResults = 2
             };
-
             var secondPage = new BoardList()
             {
                 IsLast = true,
@@ -135,7 +147,6 @@ namespace ESL.CO.Tests
                 MaxResults = 2
             };
 
-
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), 0)).Returns((string a, int i) =>
             {
                 switch (a)
@@ -151,12 +162,72 @@ namespace ESL.CO.Tests
 
             // Assert
             Assert.Equal(2, actual.Count());
+            Assert.NotEqual(cachedSettings.Values.Count(), actual.Count());
             Assert.Contains(actual, x => x.Id == 74);
             Assert.Contains(actual, x => x.Id == 75);
             Assert.DoesNotContain(actual, x => x.Id == 76);
             Assert.DoesNotContain(actual, x => x.Id == 77);
-
         }
 
+        [Fact]
+        public void BoardData_Should_Return_Board_With_HasChanged_True()
+        {
+            // Arrange
+            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
+
+            // Act
+            var actual = controller.BoardData(74).Result;
+
+            // Assert
+            Assert.True(actual.HasChanged);
+        }
+
+        [Fact]
+        public void BoardData_Should_Return_Board_With_HasChanged_False()
+        {
+            // Arrange
+            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
+
+            // Act
+            var actual = controller.BoardData(74).Result;
+
+            // Assert
+            Assert.False(actual.HasChanged);
+        }
+
+        [Fact]
+        public void NeedsRedraw_Should_Return_False()
+        {
+             // Arrange
+             object board = cachedboard;
+             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
+          
+            // Act
+            var actual = controller.NeedsRedraw(testBoard1);
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void NeedsRedraw_Should_Return_True()
+        {
+            // Arrange
+            object board = cachedboard;
+            memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
+
+            // Act
+            var actual = controller.NeedsRedraw(testBoard2);
+
+            // Assert
+            Assert.True(actual);
+        }
     }
 }
+

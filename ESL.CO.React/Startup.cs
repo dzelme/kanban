@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ESL.CO.React.JiraIntegration;
+using Microsoft.Extensions.Logging;
+using NetEscapades.Extensions.Logging;
 
 namespace ESL.CO.React
 {
@@ -25,15 +27,14 @@ namespace ESL.CO.React
         {
             services.AddSingleton<IJiraClient, JiraClient>();
             services.AddSingleton<IAppSettings, AppSettings>();
+            services.AddSingleton<IBoardCreator, BoardCreator>();
             services.AddMemoryCache();
             services.AddMvc();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, ILoggerFactory loggerFactory)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

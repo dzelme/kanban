@@ -1,5 +1,6 @@
 ## Ignore project specific directories
 /ESL.CO.React/data
+/ESL.CO.React/Logs
 /ESL.CO.React/wwwroot/dist
 
 ## Ignore Visual Studio temporary files, build results, and

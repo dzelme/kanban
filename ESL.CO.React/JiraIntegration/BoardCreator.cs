@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-
-using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-
 using Microsoft.Extensions.Caching.Memory;
 
 namespace ESL.CO.React.JiraIntegration
@@ -13,8 +8,15 @@ namespace ESL.CO.React.JiraIntegration
     /// <summary>
     /// A class for filling board objects with appropriate information.
     /// </summary>
-    public class BoardCreator
+    public class BoardCreator : IBoardCreator
     {
+        private readonly IJiraClient jiraClient;
+
+        public BoardCreator(IJiraClient jiraClient)
+        {
+            this.jiraClient = jiraClient;
+        }
+
         /// <summary>
         /// Creates and fills a board object with appropriate information.
         /// </summary>
@@ -24,46 +26,54 @@ namespace ESL.CO.React.JiraIntegration
         public async Task<Board> CreateBoardModel(int id, IMemoryCache cache)
         {
             var board = new Board(id);
-            //var cache = new CacheMethods();
-            var client = new JiraClient();
-            var boardConfig = await client.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", id);
+
+            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", id);
             if (boardConfig == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
                 {
                     return new Board(id);
                 }
-                cachedBoard.FromCache = true;
-                return cachedBoard;
+                else
+                {
+                    cachedBoard.FromCache = true;
+                    return cachedBoard;
+                }
             }
 
             board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue", id);
+            IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue", id);
             if (issueList == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
                 {
                     return new Board(id);
                 }
-                cachedBoard.FromCache = true;
-                return cachedBoard;
+                else
+                {
+                    cachedBoard.FromCache = true;
+                    return cachedBoard;
+                }
             }
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await client.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), id);
+                issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), id);
                 if (issueList == null)  //
                 {
                     if (!cache.TryGetValue(id, out Board cachedBoard))
                     {
                         return new Board(id);
                     }
-                    cachedBoard.FromCache = true;
-                    return cachedBoard;
+                    else
+                    {
+                        cachedBoard.FromCache = true;
+                        return cachedBoard;
+                    }
                 }
                 li.AllIssues.AddRange(issueList.Issues);
             }

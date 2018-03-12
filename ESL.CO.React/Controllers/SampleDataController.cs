@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-using Newtonsoft.Json;
 using System.IO;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Caching.Memory;
 
 
@@ -22,12 +19,14 @@ namespace ESL.CO.React.Controllers
         private readonly IJiraClient jiraClient;
         private readonly IAppSettings appSettings;
         private readonly IMemoryCache cache;
+        private readonly IBoardCreator boardCreator;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings)
+        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator)
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
             this.cache = cache;
+            this.boardCreator = boardCreator;
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
             if (boardList == null)
             {
-                return this.appSettings.GetSavedAppSettings()?.Values;
+                return appSettings.GetSavedAppSettings()?.Values;
             }  //
 
             FullBoardList fullBoardList = new FullBoardList();
@@ -49,7 +48,6 @@ namespace ESL.CO.React.Controllers
             {
                 boardList.StartAt += boardList.MaxResults;
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
-                //if (boardList == null) { return null; }  //
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -71,9 +69,8 @@ namespace ESL.CO.React.Controllers
         /// <returns>Board information.</returns>
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
-        {
-            var creator = new BoardCreator();
-            var b = creator.CreateBoardModel(id, cache);
+        {     
+            var b = boardCreator.CreateBoardModel(id, cache);
             Board board = null;
             try
             {
@@ -81,7 +78,7 @@ namespace ESL.CO.React.Controllers
                 if (NeedsRedraw(board))
                 {
                     board.HasChanged = true;
-                    this.cache.Set<Board>(id, board);
+                    cache.Set(id, board);
                     return board;
                 }
                 else return board;
@@ -101,7 +98,7 @@ namespace ESL.CO.React.Controllers
         /// <returns>True or false.</returns>
         public bool NeedsRedraw(Board board)
         {
-            if (!this.cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
+            if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
             else return true;
         }
@@ -130,22 +127,27 @@ namespace ESL.CO.React.Controllers
             return;
         }
 
-        /// <summary>
-        /// Gets connection log entries.
-        /// </summary>
-        /// <param name="id">Id of the board whose connection log will be returned.</param>
-        /// <returns>List of connection log entries.</returns>
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {
-            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.json");
+            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.txt");
             var connectionLog = new List<JiraConnectionLogEntry>();
             if (System.IO.File.Exists(filePath))
             {
                 using (StreamReader r = new StreamReader(filePath))
                 {
-                    string json = r.ReadToEnd();
-                    connectionLog = JsonConvert.DeserializeObject<List<JiraConnectionLogEntry>>(json);
+                    var logEntry = r.ReadLine();
+                    while (logEntry != null)
+                    {
+                        string[] logEntryField = logEntry.Split('|');
+                        connectionLog.Add(new JiraConnectionLogEntry(
+                            logEntryField[1],
+                            logEntryField[2],
+                            (logEntryField.Length > 3) ? logEntryField[3] : "",
+                            logEntryField[0]
+                        ));
+                        logEntry = r.ReadLine();
+                    }
                 }
             }
             return connectionLog;

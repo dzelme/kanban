@@ -2,11 +2,15 @@
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
 import { Value } from './Interfaces';
-/*
+
 const styleBoard = {
-    maxWidth: '2000px'
+    backgroundColor: 'black'
 }
-*/
+
+const styleText = {
+    color: 'white'
+}
+
 //const styleColumnNext = {
 //    borderBottom: 'solid',
 //    borderTop: 'solid',
@@ -63,11 +67,11 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
     public render() {
 
         let boardInfo = this.state.loading
-            ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1>No boards selected</h1>
+            ? <p style={styleText}><em>Loading...</em></p>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 style={styleText}>No boards selected</h1>
     
 
-        return <div /*style={styleBoard}*/>{boardInfo}</div>
+        return <div style={styleBoard}>{boardInfo}</div>
 
     }
 } 
