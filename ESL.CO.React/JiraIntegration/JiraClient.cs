@@ -114,6 +114,7 @@ namespace ESL.CO.React.JiraIntegration
         public void SaveToConnectionLog_AsTextFile(string url, HttpResponseMessage response, int id)
         {
             var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.txt");
+            Directory.CreateDirectory(@".\data\logs\");
             using (StreamWriter file = File.AppendText(filePath))
             {
                 file.WriteLine(DateTime.Now + "|" + url + "|" + response.StatusCode.ToString());
