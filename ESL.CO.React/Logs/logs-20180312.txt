@@ -440,3 +440,182 @@ System.InvalidOperationException: Unable to resolve service for type 'ESL.CO.Rea
 2018-03-12 09:42:30.047 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (748) - ModelState is Valid
 2018-03-12 09:42:30.055 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 9.0026ms
 2018-03-12 09:42:30.065 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 43.9568ms 200 
+2018-03-12 09:58:28.975 +02:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\adzelme\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-03-12 09:58:31.905 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/  
+2018-03-12 09:58:32.104 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.HomeController.Index (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:34.591 +02:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Views/Home/Index.cshtml.
+2018-03-12 09:58:34.911 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.HomeController.Index (ESL.CO.React) in 2778.9435ms
+2018-03-12 09:58:34.924 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/main.js?v=-PEpCV_amGR_rMq4PUtPXsmwFZBUjyT73uLCaNqvcpE  
+2018-03-12 09:58:34.993 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3092.7686ms 200 text/html; charset=utf-8
+2018-03-12 09:58:35.715 +02:00 [Information] Microsoft.AspNetCore.NodeServices: webpack built a88c517a266d8f3593a5 in 4253ms
+2018-03-12 09:58:35.914 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1007.9909ms 200 application/javascript; charset=UTF-8
+2018-03-12 09:58:36.046 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/main.js.map  
+2018-03-12 09:58:36.189 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/__webpack_hmr  
+2018-03-12 09:58:36.194 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardList  
+2018-03-12 09:58:36.212 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:36.391 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:36.410 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) in 196.1378ms
+2018-03-12 09:58:36.443 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 337.404ms 200 application/json; charset=utf-8
+2018-03-12 09:58:36.488 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=748  
+2018-03-12 09:58:36.544 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 496.1918ms 200 application/json; charset=UTF-8
+2018-03-12 09:58:36.577 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:37.103 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:37.122 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 566.9697ms
+2018-03-12 09:58:37.127 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 646.3011ms 200 application/json; charset=utf-8
+2018-03-12 09:58:37.150 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:58:37.174 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:37.183 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 19.9424ms
+2018-03-12 09:58:37.192 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 48.1733ms 200 
+2018-03-12 09:58:41.059 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:58:41.086 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:41.110 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:41.114 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 48.6694ms
+2018-03-12 09:58:41.120 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 78.9494ms 200 application/json; charset=utf-8
+2018-03-12 09:58:42.135 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=963  
+2018-03-12 09:58:42.139 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:58:42.608 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:42.615 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 473.6981ms
+2018-03-12 09:58:42.665 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 483.9038ms 200 application/json; charset=utf-8
+2018-03-12 09:58:42.668 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:58:42.738 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:58:42.764 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 28.2269ms
+2018-03-12 09:58:42.768 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 123.9874ms 200 
+2018-03-12 09:58:46.039 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:58:46.044 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:46.049 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:46.055 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 9.9437ms
+2018-03-12 09:58:46.063 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 21.8855ms 200 application/json; charset=utf-8
+2018-03-12 09:58:47.626 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=748  
+2018-03-12 09:58:47.630 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:48.112 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:48.119 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 487.4181ms
+2018-03-12 09:58:48.137 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 499.8879ms 200 application/json; charset=utf-8
+2018-03-12 09:58:48.162 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:58:48.174 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:48.185 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 11.0064ms
+2018-03-12 09:58:48.194 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 50.1966ms 200 
+2018-03-12 09:58:51.039 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:58:51.065 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:51.090 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:51.114 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 50.087ms
+2018-03-12 09:58:51.120 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 79.9209ms 200 application/json; charset=utf-8
+2018-03-12 09:58:53.133 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=963  
+2018-03-12 09:58:53.138 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:58:53.619 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:53.626 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 485.4684ms
+2018-03-12 09:58:53.639 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 496.428ms 200 application/json; charset=utf-8
+2018-03-12 09:58:53.660 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:58:53.730 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:58:53.757 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 27.2624ms
+2018-03-12 09:58:53.762 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 120.462ms 200 
+2018-03-12 09:58:56.039 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:58:56.043 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:58:56.047 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:56.054 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 8.9494ms
+2018-03-12 09:58:56.066 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 20.744ms 200 application/json; charset=utf-8
+2018-03-12 09:58:58.637 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=748  
+2018-03-12 09:58:58.662 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:59.197 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:58:59.202 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 559.4409ms
+2018-03-12 09:58:59.211 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 568.6785ms 200 application/json; charset=utf-8
+2018-03-12 09:58:59.245 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:58:59.253 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:58:59.259 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 10.0858ms
+2018-03-12 09:58:59.263 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 46.6646ms 200 
+2018-03-12 09:59:01.040 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:59:01.065 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:59:01.089 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:01.094 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 29.4823ms
+2018-03-12 09:59:01.100 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 58.6684ms 200 application/json; charset=utf-8
+2018-03-12 09:59:04.213 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=963  
+2018-03-12 09:59:04.218 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:59:04.726 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:04.731 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 512.8249ms
+2018-03-12 09:59:04.742 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 522.1001ms 200 application/json; charset=utf-8
+2018-03-12 09:59:04.769 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:59:04.777 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:59:04.786 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 9.6823ms
+2018-03-12 09:59:04.795 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 47.591ms 200 
+2018-03-12 09:59:06.039 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:59:06.063 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:59:06.068 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:06.073 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 28.7804ms
+2018-03-12 09:59:06.079 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 37.7927ms 200 application/json; charset=utf-8
+2018-03-12 09:59:09.744 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=748  
+2018-03-12 09:59:09.770 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:59:10.280 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:10.285 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 535.9607ms
+2018-03-12 09:59:10.297 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 546.3263ms 200 application/json; charset=utf-8
+2018-03-12 09:59:10.327 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:59:10.334 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (748) - ModelState is Valid
+2018-03-12 09:59:10.342 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 7.853ms
+2018-03-12 09:59:10.359 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 49.6254ms 200 
+2018-03-12 09:59:11.041 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:59:11.065 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:59:11.071 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:11.075 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 29.9907ms
+2018-03-12 09:59:11.084 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 37.7242ms 200 application/json; charset=utf-8
+2018-03-12 09:59:15.298 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=963  
+2018-03-12 09:59:15.303 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:59:15.872 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:15.877 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 573.3619ms
+2018-03-12 09:59:15.893 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 584.4588ms 200 application/json; charset=utf-8
+2018-03-12 09:59:15.895 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 09:59:15.945 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 09:59:15.957 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 31.4729ms
+2018-03-12 09:59:15.962 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 66.9111ms 200 
+2018-03-12 09:59:16.039 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 09:59:16.063 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 09:59:16.089 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 09:59:16.094 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 50.2757ms
+2018-03-12 09:59:16.099 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 58.6194ms 200 application/json; charset=utf-8
+2018-03-12 10:03:38.424 +02:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\adzelme\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-03-12 10:03:41.294 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/  
+2018-03-12 10:03:41.492 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.HomeController.Index (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:43.976 +02:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Views/Home/Index.cshtml.
+2018-03-12 10:03:44.376 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.HomeController.Index (ESL.CO.React) in 2782.2529ms
+2018-03-12 10:03:44.441 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3094.0591ms 200 text/html; charset=utf-8
+2018-03-12 10:03:44.492 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/main.js?v=-PEpCV_amGR_rMq4PUtPXsmwFZBUjyT73uLCaNqvcpE  
+2018-03-12 10:03:45.094 +02:00 [Information] Microsoft.AspNetCore.NodeServices: webpack built a88c517a266d8f3593a5 in 4257ms
+2018-03-12 10:03:45.284 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 787.6719ms 200 application/javascript; charset=UTF-8
+2018-03-12 10:03:45.397 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/main.js.map  
+2018-03-12 10:03:45.507 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardList  
+2018-03-12 10:03:45.554 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/dist/__webpack_hmr  
+2018-03-12 10:03:45.579 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:45.768 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:45.786 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) in 206.623ms
+2018-03-12 10:03:45.800 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 382.8164ms 200 application/json; charset=utf-8
+2018-03-12 10:03:45.921 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 513.4883ms 200 application/json; charset=UTF-8
+2018-03-12 10:03:50.252 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardList  
+2018-03-12 10:03:50.260 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:50.391 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:50.397 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) in 138.3822ms
+2018-03-12 10:03:50.413 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 10:03:50.454 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:50.462 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 159.367ms 200 application/json; charset=utf-8
+2018-03-12 10:03:50.490 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:50.494 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 58.934ms
+2018-03-12 10:03:50.502 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 99.3843ms 200 application/json; charset=utf-8
+2018-03-12 10:03:53.871 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/Form application/json 4181
+2018-03-12 10:03:53.962 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.FormController.SaveSettings (ESL.CO.React) with arguments (ESL.CO.React.Models.Value[]) - ModelState is Valid
+2018-03-12 10:03:53.989 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.FormController.SaveSettings (ESL.CO.React) in 73.3226ms
+2018-03-12 10:03:53.997 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 124.1298ms 200 
+2018-03-12 10:03:54.728 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardList  
+2018-03-12 10:03:54.738 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:54.844 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:54.848 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardList (ESL.CO.React) in 110.8415ms
+2018-03-12 10:03:54.856 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 126.6612ms 200 application/json; charset=utf-8
+2018-03-12 10:03:54.858 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/SampleData/BoardData?ID=963  
+2018-03-12 10:03:54.916 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 10:03:55.401 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:58533/api/version  
+2018-03-12 10:03:55.409 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) with arguments ((null)) - ModelState is Valid
+2018-03-12 10:03:55.422 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:55.428 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.VersionController.GetVersion (ESL.CO.React) in 21.0358ms
+2018-03-12 10:03:55.440 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 34.3694ms 200 application/json; charset=utf-8
+2018-03-12 10:03:55.468 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor: Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+2018-03-12 10:03:55.508 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.BoardData (ESL.CO.React) in 577.5787ms
+2018-03-12 10:03:55.571 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 660.5292ms 200 application/json; charset=utf-8
+2018-03-12 10:03:55.582 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:58533/api/SampleData/IncrementTimesShown application/json 3
+2018-03-12 10:03:55.611 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) with arguments (963) - ModelState is Valid
+2018-03-12 10:03:55.620 +02:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action ESL.CO.React.Controllers.SampleDataController.IncrementTimesShown (ESL.CO.React) in 9.1345ms
+2018-03-12 10:03:55.628 +02:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 57.7631ms 200 
