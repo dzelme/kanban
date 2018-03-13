@@ -1,5 +1,6 @@
 ## Ignore project specific directories
 /ESL.CO.React/data
+/ESL.CO.React/data/logs
 /ESL.CO.React/Logs
 /ESL.CO.React/wwwroot/dist
 

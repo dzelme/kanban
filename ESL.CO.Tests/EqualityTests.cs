@@ -38,7 +38,6 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            //var creator = new BoardCreator();
             Board board1 = null;
             var board2 = new Board(id);
 
@@ -50,7 +49,6 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            //var creator = new BoardCreator();
             Board board1 = new Board
             {
                 Id = id,
@@ -129,7 +127,6 @@ namespace ESL.CO.Tests
         {
             var id = 620;
 
-            //var creator = new BoardCreator();
             Board board1 = new Board
             {
                 Id = id,
