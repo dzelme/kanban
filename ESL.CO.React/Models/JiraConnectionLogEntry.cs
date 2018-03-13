@@ -18,6 +18,10 @@ namespace ESL.CO.React.Models
             this.Link = link;
             this.ResponseStatus = responseStatus;
             this.Exception = exception;
+
+            //required because javascript date.parse only understands months first (mm/dd/yyyy) format
+            string[] timeParts = Time.Split('.');  //13.03.2018 12:04:19
+            Time = timeParts[1] + "." + timeParts[0] + "." + timeParts[2];  //03.13.2018 12:04:19
         }
     }
 }
