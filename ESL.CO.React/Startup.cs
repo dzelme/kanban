@@ -25,6 +25,9 @@ namespace ESL.CO.React
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //needed for windows authentication?
+            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
+
             services.AddSingleton<IJiraClient, JiraClient>();
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();
