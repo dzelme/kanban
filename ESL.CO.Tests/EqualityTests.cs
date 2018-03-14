@@ -64,7 +64,7 @@ namespace ESL.CO.Tests
                 {
                     Priority = new Priority
                     {
-                        Id = "111",
+                        Id = 111,
                         Name = "big",
                     },
                     Assignee = null,  //difference
@@ -98,7 +98,7 @@ namespace ESL.CO.Tests
                 {
                     Priority = new Priority
                     {
-                        Id = "111",
+                        Id = 111,
                         Name = "big",
                     },
                     Assignee = new Assignee
@@ -142,7 +142,7 @@ namespace ESL.CO.Tests
                 {
                     Priority = new Priority
                     {
-                        Id = "111",
+                        Id = 111,
                         Name = "big",
                     },
                     Assignee = new Assignee
@@ -179,7 +179,7 @@ namespace ESL.CO.Tests
                 {
                     Priority = new Priority
                     {
-                        Id = "111",
+                        Id = 111,
                         Name = "big",
                     },
                     Assignee = new Assignee
