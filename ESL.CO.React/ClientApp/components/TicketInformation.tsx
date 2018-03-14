@@ -9,11 +9,11 @@ export default class TicketInformation extends React.Component<{ issue: Issue }>
 
         let currentIssue = this.props.issue;
 
-        return <ul /*style={styleInformation}*/ className='information'>
-            <li style={styleStatus}><TicketStatusName statusName={currentIssue.fields.status.name} /></li>
-            <li style={styleKey}><TicketKey keyName={currentIssue.key} /></li>
-            <li style={styleAssignee}><TicketAssignee assigneeName={TicketInformation.AssigneeCheck(currentIssue.fields.assignee)} /></li>
-        </ul>
+        return <div className='information'>
+            <div><TicketStatusName statusName={currentIssue.fields.status.name} /></div>
+            <div><TicketKey keyName={currentIssue.key} /></div>
+            <div><TicketAssignee assigneeName={TicketInformation.AssigneeCheck(currentIssue.fields.assignee)} /></div>
+        </div>
 
     }
 
@@ -31,22 +31,3 @@ export default class TicketInformation extends React.Component<{ issue: Issue }>
     }
 
 }
-
-const styleInformation = {
-    textAlign:'justify'
-};
-
-const styleKey = {
-    color: 'white',
-    display:'inline-block'
-};
-
-const styleAssignee = {
-    color: 'white',
-    display: 'inline-block'
-};
-
-const styleStatus = {
-    color: 'white',
-    display: 'inline-block'
-};

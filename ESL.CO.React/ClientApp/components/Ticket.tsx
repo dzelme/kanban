@@ -15,7 +15,7 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
                 <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
                     <TicketSummary summary={this.props.issue.fields.summary} />
                     <div style={Ticket.PriorityColor(this.props.issue.fields.priority.name)}><TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created} /></div>
-                <TicketInformation issue={this.props.issue} />
+                    <TicketInformation issue={this.props.issue} />
                 </a>
             </article>
         }
@@ -48,29 +48,26 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
     }
 
     private static PriorityCheck(issue: Issue) {
-        let Priority = issue.fields.priority.name;
-        let Style;
+        var Priority = issue.fields.priority.name;
+        var PriorityClassName;
 
         if (Priority == 'Blocker') {
-            Style = 'box blocker';
+            PriorityClassName = 'box blocker';
         }
         else if (Priority == 'Critical') {
-            Style = 'box critical';
+            PriorityClassName = 'box critical';
         }
         else if (Priority == 'Major') {
-            Style = 'box major';
+            PriorityClassName = 'box major';
         }
         else if (Priority == 'Minor') {
-            Style = 'box minor';
+            PriorityClassName = 'box minor';
         }
         else if (Priority == 'Trivial') {
-            Style = 'box trivial';
-        }
-        else {
-            Style = 'box trivial';
+            PriorityClassName = 'box trivial';
         }
 
-        return Style;
+        return PriorityClassName;
     }
 }
 
@@ -103,21 +100,4 @@ const styleProgressTrivial = {
     background: '#607d8b',
     color: 'white',
     width: '100%'
-};
-
-const styleSummary = {
-    color: 'white',
-    paddingRight: '10px',
-    paddingLeft: '10px'
-};
-
-const styleInformation = {
-    color: 'white',
-    paddingRight: '10px',
-    paddingLeft:'10px'
-};
-
-const styleTicket = {
-    display: 'inline-block',
-    width:'100%'
 };

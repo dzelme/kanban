@@ -5,12 +5,10 @@ export default class TicketProgress extends React.Component<{ progress: Progress
     public render() {
 
         
-       
-        return <div>
-            <div style={styleBar}><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
 
-            <h3 style={styleProgress}>Date created: {this.props.created}</h3>
-            <h3 style={styleProgress}>Difference: {TicketProgress.TimeCalculation(this.props.created)}</h3>
+        return <div style={styleSection}>
+            <div style={styleBar}><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
+            <h5>Queue: <strong>{TicketProgress.TimeCalculation(this.props.created)}</strong></h5>
         </div>
     }
 
@@ -42,33 +40,72 @@ export default class TicketProgress extends React.Component<{ progress: Progress
 
         var days = differenceDays;
         var dayHours = differenceHours - (days * 24);
-        var dayMinutes = differenceMinutes - differenceDays - differenceHours/* - (days * 24 * 60)*/;
-
-        var hours = differenceHours;
-        var hourMinutes = differenceMinutes - (hours * 60);
- 
+        var dayMinutes = differenceMinutes - ((days * 24 * 60) + (dayHours * 60));
 
         if (years > 0) {
 
-            if (years > 1) {
-                queued = years + ' gadi ' + yearDays + ' dienas';
+            if (years % 10 == 1 && years % 100 != 11)
+            {
+                if (yearDays % 10 == 1 && yearDays % 100 != 11) {
+                    queued = years + ' gads ' + yearDays + ' diena';
+                }
+                else
+                {
+                    queued = years + ' gads ' + yearDays + ' dienas';
+                }
             }
-            else {
-                queued = years + ' gads ' + yearDays + ' dienas';
+            else
+            {
+                if (yearDays % 10 == 1 && yearDays % 100 != 11) {
+                    queued = years + ' gadi ' + yearDays + ' diena';
+                }
+                else {
+                    queued = years + ' gadi ' + yearDays + ' dienas';
+                }
             }
         }
         else
         {
-            queued = days + ' dienas ' + dayHours + ' stundas ' + dayMinutes + ' minutes';
+            if (days % 10 == 1 && days % 100 != 11) {
+                if (dayHours % 10 == 1 && dayHours % 100 != 11) {
+                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
+                        queued = days + ' diena ' + dayHours + ' stunda ' + dayMinutes + ' minūte';
+                    }
+                    else {
+                        queued = days + ' diena ' + dayHours + ' stunda ' + dayMinutes + ' minūtes';
+                    }
+                }
+                else {
+                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
+                        queued = days + ' diena ' + dayHours + ' stundas ' + dayMinutes + ' minūte';
+                    }
+                    else {
+                        queued = days + ' diena ' + dayHours + ' stundas ' + dayMinutes + ' minūtes';
+                    }
+                }
+            }
+            else {
+                if (dayHours % 10 == 1 && dayHours % 100 != 11) {
+                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
+                        queued = days + ' dienas ' + dayHours + ' stunda ' + dayMinutes + ' minūte';
+                    }
+                    else {
+                        queued = days + ' dienas ' + dayHours + ' stunda ' + dayMinutes + ' minūtes';
+                    }
+                }
+                else {
+                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
+                        queued = days + ' dienas ' + dayHours + ' stundas ' + dayMinutes + ' minūte';
+                    }
+                    else {
+                        queued = days + ' dienas ' + dayHours + ' stundas ' + dayMinutes + ' minūtes';
+                    }
+                }
+            }
         }
 
         return queued;
     }
-}
-
-const styleProgress = {
-    paddingRight: '10px',
-    paddingLeft:'10px'
 }
 
 const stylePercent = {
@@ -80,6 +117,9 @@ const stylePercent = {
 
 const styleBar = {
     background: 'white',
-    margin: '10px',
     height: '10px'
+}
+
+const styleSection = {
+    padding: '10px'
 }
