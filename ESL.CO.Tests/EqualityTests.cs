@@ -12,11 +12,8 @@ namespace ESL.CO.Tests
         [InlineData(-6)]
         public void ReturnTrueGivenSameIds(int id)
         {
-            //var id = 620;
-            //IMemoryCache cache = default(IMemoryCache);
-
-            var board1 = new Board(id); //creator.CreateBoardModel(id, cache).Result;
-            var board2 = new Board(id); //creator.CreateBoardModel(id, cache).Result;
+            var board1 = new Board(id);
+            var board2 = new Board(id);
 
             Assert.True(board1.Equals(board2));
         }

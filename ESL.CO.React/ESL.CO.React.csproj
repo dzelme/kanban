@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\components\TicketInformation.tsx" />
+    <None Remove="ClientApp\components\TicketProgress.tsx" />
+    <None Remove="ClientApp\components\TicketStatusName.tsx" />
     <None Remove="web.config.test" />
   </ItemGroup>
 
@@ -34,6 +37,12 @@
 
   <ItemGroup>
     <Folder Include="data\logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\components\TicketInformation.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\TicketProgress.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\TicketStatusName.tsx" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

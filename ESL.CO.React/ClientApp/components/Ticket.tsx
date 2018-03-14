@@ -1,53 +1,126 @@
 ﻿import * as React from 'react';
-import TicketKey from './TicketKey';
 import TicketSummary from './TicketSummary';
-import TicketAssignee from './TicketAssignee';
-import { Issue, Assignee } from './Interfaces';
+import TicketProgress from './TicketProgress';
+import TicketInformation from './TicketInformation';
+import { Issue } from './Interfaces';
 
 export default class Ticket extends React.Component<{ issue: Issue }> {
     public render() {
-
-        let currentIssue = this.props.issue;
-        let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
-
-        return <div>
-            <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
-            <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
-            <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
-        </div>
-    }
-
-    private static AssigneeCheck(assignee: Assignee) {
-
-        let AssigneeName;
-
-        if (assignee == null) {
-            AssigneeName = "";
+        if (this.props.issue.key == '') {
+            return null;
         }
         else {
-            AssigneeName = assignee.displayName;
+            return <article className={Ticket.PriorityCheck(this.props.issue)}>
+                <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
+                    <TicketSummary desc={this.props.issue.fields.summary} />
+                    <div style={Ticket.PriorityColor(this.props.issue.fields.priority.name)}><TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created} /></div>
+                <TicketInformation issue={this.props.issue} />
+                </a>
+            </article>
+        }
+    }
+
+    private static PriorityColor(priority: string) {
+
+        let ProgressStyle;
+
+        if (priority == 'Blocker') {
+            ProgressStyle = styleProgressBlocker;
+        }
+        else if (priority == 'Critical') {
+            ProgressStyle = styleProgressCritical;
+        }
+        else if (priority == 'Major') {
+            ProgressStyle = styleProgressMajor;
+        }
+        else if (priority == 'Minor') {
+            ProgressStyle = styleProgressMinor;
+        }
+        else if (priority == 'Trivial') {
+            ProgressStyle = styleProgressTrivial;
+        }
+        else {
+            ProgressStyle = styleProgress;
         }
 
-        return AssigneeName;
+        return ProgressStyle;
+
     }
+
+    private static PriorityCheck(issue: Issue) {
+        let Priority = issue.fields.priority.name;
+        let Style;
+
+        if (Priority == 'Blocker') {
+            Style = 'box blocker';
+        }
+        else if (Priority == 'Critical') {
+            Style = 'box critical';
+        }
+        else if (Priority == 'Major') {
+            Style = 'box major';
+        }
+        else if (Priority == 'Minor') {
+            Style = 'box minor';
+        }
+        else if (Priority == 'Trivial') {
+            Style = 'box trivial';
+        }
+        else {
+            Style = 'box trivial';
+        }
+
+        return Style;
+
+    }
+    
 }
 
-const styleLink = {
-    color: 'white'
-};
 
-const styleAssignee = {
-    float: 'right',
-    paddingRight: '2%',
-    color: 'white'
+const styleProgress = {
+    background: '#222',
+    color: 'black',
+    width:'100%'
 };
-
-const styleKey = {
-    float: 'left',
-    color:'white'
+const styleProgressBlocker = {
+    background:'#f44336',
+    color: 'white',
+    width: '100%'
+};
+const styleProgressCritical = {
+    background: '#ff5722',
+    color: 'white',
+    width: '100%'
+};
+const styleProgressMajor = {
+    background: '#9c27b0',
+    color: 'white',
+    width: '100%'
+};
+const styleProgressMinor = {
+    background: '#3f51b5',
+    color: 'white',
+    width: '100%'
+};
+const styleProgressTrivial = {
+    background: '#607d8b',
+    color: 'white',
+    width: '100%'
 };
 
 const styleSummary = {
-    clear: 'both',
-    color: 'white'
+    color: 'white',
+    paddingRight: '10px',
+    paddingLeft: '10px'
+};
+
+const styleInformation = {
+    color: 'white',
+    paddingRight: '10px',
+    paddingLeft:'10px'
+};
+
+const styleTicket = {
+    display: 'inline-block',
+    width:'100%'
 };
