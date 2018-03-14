@@ -17,7 +17,7 @@ namespace ESL.CO.React.JiraIntegration
     /// </summary>
     public class JiraClient : IJiraClient
     {
-        private static HttpClient client = new HttpClient();
+        private HttpClient client = new HttpClient();
 
         public JiraClient()
         {

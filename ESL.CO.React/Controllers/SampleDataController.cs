@@ -129,6 +129,11 @@ namespace ESL.CO.React.Controllers
             return;
         }
 
+        /// <summary>
+        /// Reads connection log from the appropriate file into an object.
+        /// </summary>
+        /// <param name="id">Id of the board whose log entries will be retrieved.</param>
+        /// <returns>A list of connection log entries.</returns>
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {

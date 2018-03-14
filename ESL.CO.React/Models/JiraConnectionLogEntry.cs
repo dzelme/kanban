@@ -14,14 +14,13 @@ namespace ESL.CO.React.Models
 
         public JiraConnectionLogEntry(string link = "", string responseStatus = "", string exception ="", string time = "")
         {
-            this.Time = (time == "") ? DateTime.Now.ToString() : time;
+            //required because javascript date.parse only understands months first (mm.dd.yyyy) format;
+            string pattern = "MM.dd.yyyy HH:mm:ss";
+
+            this.Time = (time == "") ? DateTime.Now.ToString(pattern) : DateTime.Parse(time).ToString(pattern);
             this.Link = link;
             this.ResponseStatus = responseStatus;
             this.Exception = exception;
-
-            //required because javascript date.parse only understands months first (mm/dd/yyyy) format
-            string[] timeParts = Time.Split('.');  //13.03.2018 12:04:19
-            Time = timeParts[1] + "." + timeParts[0] + "." + timeParts[2];  //03.13.2018 12:04:19
         }
     }
 }

@@ -16,7 +16,6 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, Fe
 
     constructor() {
         super();
-        alert( this.props ); //
         this.state = { connectionLog: [], loading: true };
 
         fetch('api/SampleData/NetworkStatistics?id=' + this.id)  // + this.props.match.params.id)
