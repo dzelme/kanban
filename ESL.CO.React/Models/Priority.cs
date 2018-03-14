@@ -6,13 +6,13 @@ namespace ESL.CO.React.Models
     {
         //public string self { get; set; }
         //public string iconUrl { get; set; }
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }  //e.g., critical
         
         public Priority()
         {
             Name = string.Empty;
-            Id = string.Empty;
+            Id = 0;
         }
 
         #region Equality

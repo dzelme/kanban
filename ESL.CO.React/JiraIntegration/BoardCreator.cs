@@ -105,50 +105,7 @@ namespace ESL.CO.React.JiraIntegration
             //sort issues in column by priority
             foreach (BoardColumn column in board.Columns)
             {
-                FullIssueList newIssueList = new FullIssueList();
-
-                foreach (Issue issue in column.Issues)
-                {
-                    if (issue.Fields.Priority.Name == "Blocker")
-                    {
-                        newIssueList.AllIssues.Add(issue);
-                    }
-                }
-                foreach (Issue issue in column.Issues)
-                {
-                    if (issue.Fields.Priority.Name == "Critical")
-                    {
-                        newIssueList.AllIssues.Add(issue);
-                    }
-                }
-                foreach (Issue issue in column.Issues)
-                {
-                    if (issue.Fields.Priority.Name == "Major")
-                    {
-                        newIssueList.AllIssues.Add(issue);
-                    }
-                }
-                foreach (Issue issue in column.Issues)
-                {
-                    if (issue.Fields.Priority.Name == "Minor")
-                    {
-                        newIssueList.AllIssues.Add(issue);
-                    }
-                }
-                foreach (Issue issue in column.Issues)
-                {
-                    if (issue.Fields.Priority.Name == "Trivial")
-                    {
-                        newIssueList.AllIssues.Add(issue);
-                    }
-                }
-
-                column.Issues.Clear();
-
-                foreach (Issue issue in newIssueList.AllIssues)
-                {
-                    column.Issues.Add(issue);
-                }
+                column.Issues = column.Issues.OrderBy(a => a.Fields.Priority.Id).ToList();
             }
 
             //find number of rows in table (maximum)
