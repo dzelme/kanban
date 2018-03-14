@@ -37,9 +37,18 @@ export interface Fields {
     priority: Priority;
     assignee: Assignee;
     status: Status;
+    progress: Progress;
     description: string;
     summary: string;
+    created: Date;
 }
+
+export interface Progress {
+    progress: number;
+    total: number;
+    percent: number;
+}
+
 
 export interface Status {
     name: string;

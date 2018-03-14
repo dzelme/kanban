@@ -54,10 +54,9 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
 
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1>No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 >No boards selected</h1>
     
-
-        return <div id="supercontainer">{boardInfo}</div>
+        return <div>{boardInfo}</div>
 
     }
 } 
