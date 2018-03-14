@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
     <PackageReference Include="NetEscapades.Extensions.Logging.RollingFile" Version="1.0.0" />
+    <PackageReference Include="Novell.Directory.Ldap.NETStandard" Version="2.3.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,24 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\components\TicketInformation.tsx" />
-    <None Remove="ClientApp\components\TicketProgress.tsx" />
-    <None Remove="ClientApp\components\TicketStatusName.tsx" />
-    <None Remove="web.config.test" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="web.config.test" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="data\logs\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\components\TicketInformation.tsx" />
-    <TypeScriptCompile Include="ClientApp\components\TicketProgress.tsx" />
-    <TypeScriptCompile Include="ClientApp\components\TicketStatusName.tsx" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
