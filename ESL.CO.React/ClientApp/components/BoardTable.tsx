@@ -9,74 +9,16 @@ export default class BoardTable extends React.Component<{ board: Board, boardTim
 
         let columnCount = this.props.board.columns.length;
 
-        return <div>
-            <tr>{
+        return <div>{
                 this.props.board.columns.map((column, index) =>
-                    <th /*style={this.whichColumnHeader(index)}*/ key={index}><ColumnTitle name={column.name} /></th>
+                    <section className="column">
+                        <div className="column-wrapper">
+                            <h2 key={index}>{column.name}</h2>
+                            <ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} />
+                        </div>
+                    </section>
                 )
-            }</tr>
-            <tr>
-
-                {
-
-                    this.props.board.columns.map((column, index) =>
-
-                        <td key={index} /*style={this.whichColumn(index)}*/><ColumnFill column={column} board={this.props.board} time={this.props.boardTime} index={index} columnCount={columnCount} /></td>
-                    )
-                }
-            </tr>
+        }
         </div>
     }
-
-    whichColumnHeader(Nr: number) {
-        let HeaderStyle;
-
-        if (Nr == 0) {
-            HeaderStyle = styleColumnNameFirst;
-        }
-        else {
-            HeaderStyle = styleColumnNameOther;
-        }
-
-        return HeaderStyle;
-    }
-
-    whichColumn(Nr: number) {
-        let ColumnStyle;
-
-        if (Nr == 0) {
-            ColumnStyle = styleColumnFirst;
-        }
-        else {
-            ColumnStyle = styleColumnOther;
-        }
-
-        return ColumnStyle;
-    }
 }
-
-const styleColumn = {
-    border: 'solid',
-};
-
-const styleColumnFirst = {
-    border: 'solid',
-};
-
-const styleColumnOther = {
-    borderTop: 'solid',
-    borderBottom: 'solid',
-    borderRight: 'solid'
-};
-
-const styleColumnNameFirst = {
-    borderTop: 'solid',
-    borderRight: 'solid',
-    borderLeft: 'solid'
-};
-
-const styleColumnNameOther = {
-    borderTop: 'solid',
-    borderRight: 'solid'
-};
-

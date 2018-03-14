@@ -127,19 +127,17 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
     public render() {
 
         if (this.state.loading) {
-            return <h1 style={styleText}>Loading...</h1>
+            return <h1>Loading...</h1>
         }
         else {
 
             if (this.state.board.columns.length == 0) {
-                return <h1 style={styleText}>Error loading!</h1>
+                return <h1>Error loading!</h1>
             }
             else {
 
-                return <div>
-
-                    <div /*style={styleCenter}*/>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
-                    <div style={styleCenter}><BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
+                return <div id="container"><BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
+                    <div id="board"> <BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
 
                     {
                         this.slideShow()
@@ -150,16 +148,4 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
         }
 
     }
-}
-
-const styleCenter = {
-    height: '100 %',
-    width: '100 %',
-    display: 'flex',
-    justifyContent: 'center' as 'center',
-    alignItems: 'center' as 'center'
-}
-
-const styleText = {
-    color: 'white'
 }

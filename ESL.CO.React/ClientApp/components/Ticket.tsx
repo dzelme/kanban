@@ -1,7 +1,5 @@
 ﻿import * as React from 'react';
-import TicketKey from './TicketKey';
 import TicketSummary from './TicketSummary';
-import TicketAssignee from './TicketAssignee';
 import { Issue, Assignee } from './Interfaces';
 
 export default class Ticket extends React.Component<{ issue: Issue }> {
@@ -10,11 +8,15 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         let currentIssue = this.props.issue;
         let linkToIssue = "https://jira.returnonintelligence.com/browse/" + currentIssue.key;
 
-        return <div>
-            <div style={styleSummary}><TicketSummary desc={currentIssue.fields.summary} /></div>
-            <div style={styleKey}><a href={linkToIssue} target="_blank" style={styleLink}> <TicketKey keyName={currentIssue.key} /></a></div>
-            <div style={styleAssignee}><TicketAssignee assigneeName={Ticket.AssigneeCheck(currentIssue.fields.assignee)} /></div>
-        </div>
+        return <article className={Ticket.PriorityColor(this.props.issue)}>
+            <TicketSummary summary={currentIssue.fields.summary} />
+
+            <ul className = "information">
+                <li> {currentIssue.fields.status.name} </li>
+                <li><a href={linkToIssue} target="_blank"> {currentIssue.key} </a></li>
+                <li>{Ticket.AssigneeCheck(currentIssue.fields.assignee)} </li>
+            </ul>
+        </article>
     }
 
     private static AssigneeCheck(assignee: Assignee) {
@@ -30,24 +32,31 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
 
         return AssigneeName;
     }
+
+    private static PriorityColor(issue: Issue) {
+        let Priority = issue.fields.priority.name;
+        let className;
+
+        if (Priority == 'Blocker') {
+            className = "box blocker";
+        }
+        else if (Priority == 'Critical') {
+            className = "box critical";
+        }
+        else if (Priority == 'Major') {
+            className = "box major";
+        }
+        else if (Priority == 'Minor') {
+            className = "box minor";
+        }
+        else if (Priority == 'Trivial') {
+            className = "box trivial";
+        }
+        else {
+            //className = styleTicket;
+        }
+
+        return className;
+
+    }
 }
-
-const styleLink = {
-    color: 'white'
-};
-
-const styleAssignee = {
-    float: 'right',
-    paddingRight: '2%',
-    color: 'white'
-};
-
-const styleKey = {
-    float: 'left',
-    color:'white'
-};
-
-const styleSummary = {
-    clear: 'both',
-    color: 'white'
-};

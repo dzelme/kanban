@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
+import { Link } from 'react-router-dom';
 
 interface FetchDataExampleState {
     boardlist: Value[];
@@ -57,7 +58,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                                 : ""
                             }
                             </td>
-                            <td><a href={'/jiraconnectionstats/'+board.id} className="btn btn-default">Show Jira connections</a></td>
+                            <td><Link to={'/jiraconnectionstats/' + board.id} className="btn btn-default">Show Jira connections</Link></td>
                         </tr>
                     )}
                 </tbody>

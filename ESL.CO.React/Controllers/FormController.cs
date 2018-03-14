@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.Models;
 using ESL.CO.React.JiraIntegration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
     /// <summary>
     /// A controller for working with forms.
     /// </summary>
+    //[Authorize]
     [Route("api/[controller]")]
     public class FormController : Controller
     {

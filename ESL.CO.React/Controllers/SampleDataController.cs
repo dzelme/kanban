@@ -6,6 +6,7 @@ using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
 using System.IO;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace ESL.CO.React.Controllers
@@ -33,6 +34,7 @@ namespace ESL.CO.React.Controllers
         /// Obtains the full currently available board list from Jira REST API.
         /// </summary>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
+        //[Authorize]
         [HttpGet("[action]")]
         public async Task<IEnumerable<Value>> BoardList()
         {
@@ -127,6 +129,11 @@ namespace ESL.CO.React.Controllers
             return;
         }
 
+        /// <summary>
+        /// Reads connection log from the appropriate file into an object.
+        /// </summary>
+        /// <param name="id">Id of the board whose log entries will be retrieved.</param>
+        /// <returns>A list of connection log entries.</returns>
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {
