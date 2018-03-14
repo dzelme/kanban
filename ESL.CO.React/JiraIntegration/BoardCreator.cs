@@ -102,6 +102,12 @@ namespace ESL.CO.React.JiraIntegration
                 }
             }
 
+            //sort issues in column by priority
+            foreach (BoardColumn column in board.Columns)
+            {
+                column.Issues = column.Issues.OrderBy(a => a.Fields.Priority.Id).ToList();
+            }
+
             //find number of rows in table (maximum)
             int rowCount = 0;
             foreach (BoardColumn c in board.Columns)

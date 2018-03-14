@@ -135,9 +135,10 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
                 return <h1>Error loading!</h1>
             }
             else {
+                return <div>
 
-                return <div id="container"><BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} />
-                    <div id="board"> <BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
+                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
+                    <div id='board'><BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
 
                     {
                         this.slideShow()
@@ -149,3 +150,4 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
     }
 }
+

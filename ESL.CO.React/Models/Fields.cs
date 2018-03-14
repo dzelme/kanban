@@ -18,7 +18,7 @@ namespace ESL.CO.React.Models
         //public int workratio { get; set; }
         //public DateTime? lastViewed { get; set; }
         //public Watches watches { get; set; }
-        //public DateTime created { get; set; }
+        public DateTime Created { get; set; }
         [JsonProperty(Required = Required.Always)]
         public Priority Priority { get; set; }
         //public List<object> labels { get; set; }
@@ -44,7 +44,7 @@ namespace ESL.CO.React.Models
         //public Aggregateprogress aggregateprogress { get; set; }
         //public object environment { get; set; }
         //public object duedate { get; set; }
-        //public Progress progress { get; set; }
+        public Progress Progress { get; set; }
         //public Comment comment { get; set; }
         //public Votes votes { get; set; }
         //public Worklog worklog { get; set; }
@@ -56,6 +56,8 @@ namespace ESL.CO.React.Models
             Status = new Status();
             Description = string.Empty;
             Summary = string.Empty;
+            Progress = new Progress();
+            Created = new DateTime();
         }
 
         #region Equality
