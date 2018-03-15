@@ -14,7 +14,11 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
         
         this.state = { boardlist: [], loading: true };
 
-        fetch('api/SampleData/BoardList')
+        fetch('api/SampleData/BoardList', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardlist: data, loading: false });

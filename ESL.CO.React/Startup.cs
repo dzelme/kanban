@@ -12,6 +12,12 @@ using ESL.CO.React.LdapCredentialCheck;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Logging;
 using NetEscapades.Extensions.Logging;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ESL.CO.React
 {
@@ -29,6 +35,23 @@ namespace ESL.CO.React
         {
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration.GetSection("JwtSettings").GetValue<string>("Issuer"),
+                        ValidAudience = Configuration.GetSection("JwtSettings").GetValue<string>("Audience"),
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration.GetSection("JwtSettings").GetValue<string>("SigningKey")))
+                    };
+                });
+
 
             services.AddSingleton<IJiraClient, JiraClient>();
             services.AddSingleton<IAppSettings, AppSettings>();
@@ -55,6 +78,7 @@ namespace ESL.CO.React
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseAuthentication();
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

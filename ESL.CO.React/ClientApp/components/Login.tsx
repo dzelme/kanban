@@ -33,8 +33,9 @@ export class Login extends React.Component<RouteComponentProps<{}>, LoginState> 
             },
             body: JSON.stringify(this.state.credentials),
         })
+            .then(response => response.json())
             .then(response => {
-                console.log('response:', response.status);
+                if (response.token != null) { sessionStorage.setItem('JwtToken', response.token); }
             });
     }
 

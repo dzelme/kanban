@@ -13,7 +13,11 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
         
         this.state = { boardlist: [], loading: true };
 
-        fetch('api/SampleData/BoardList')
+        fetch('api/SampleData/BoardList', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardlist: data, loading: false });
@@ -59,7 +63,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
             },
             body: JSON.stringify(this.state.boardlist),
         });

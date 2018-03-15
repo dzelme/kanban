@@ -14,6 +14,7 @@ namespace ESL.CO.React.Controllers
     /// <summary>
     /// A data controller.
     /// </summary>
+    [Authorize]
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
