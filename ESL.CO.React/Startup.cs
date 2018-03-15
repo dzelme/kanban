@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ESL.CO.React.JiraIntegration;
+using ESL.CO.React.LdapCredentialCheck;
+using ESL.CO.React.Models;
 using Microsoft.Extensions.Logging;
 using NetEscapades.Extensions.Logging;
 
@@ -25,12 +27,13 @@ namespace ESL.CO.React
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //needed for windows authentication?
-            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+            services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
 
             services.AddSingleton<IJiraClient, JiraClient>();
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();
+            services.AddSingleton<ILdapClient, LdapClient>();
             services.AddMemoryCache();
             services.AddMvc();
         }

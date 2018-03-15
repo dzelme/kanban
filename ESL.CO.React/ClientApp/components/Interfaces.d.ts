@@ -63,3 +63,8 @@ export interface Priority {
     name: string;
     id: string;
 }
+
+export interface Credentials {
+    username: string;
+    password: string;
+}
