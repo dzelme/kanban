@@ -89,3 +89,7 @@ a:link {
     color: white;
     text-decoration:none;
 }
+
+input, select, textarea {
+    color: #000000;
+}
