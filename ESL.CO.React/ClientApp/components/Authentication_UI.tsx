@@ -7,7 +7,7 @@ interface Auth {
 }
 
 
-export default class Authentication_UI extends React.Component<{ onClick: any }, Auth> {
+export class Authentication_UI extends React.Component<RouteComponentProps<{}>, Auth> {
 
     constructor(props) {
         super(props);
@@ -36,19 +36,24 @@ export default class Authentication_UI extends React.Component<{ onClick: any },
 
     public render() {
 
-
-        const isEnabled = this.state.login.length > 0 && this.state.password.length > 0;
-
         return <form onSubmit={this.handleSubmit}>
+            <div style={styleCenter}>
                 <h1>Autentifikācija</h1>
+            </div>
 
+            <div style={styleCenter}>
                 <h3>Lietotājvārds</h3>
-                <input style={LoginInputStyle} name='login' type="text" value={this.state.login} onChange={this.handleChange} />
+                <input style={LoginInputStyle} name='login' type="text" required value={this.state.login} onChange={this.handleChange} />
+            </div>
 
+            <div style={styleCenter}>
                 <h3>Parole</h3>
-                <input style={LoginInputStyle} name='password' type="password" value={this.state.password} onChange={this.handleChange} />
+                <input style={LoginInputStyle} name='password' type="password" required value={this.state.password} onChange={this.handleChange} />
+            </div>
 
-                <div> <button style={buttonStyle} type="submit" value="Apstiprināt" disabled={!isEnabled} onClick={this.props.onClick}>Apstiprināt</button></div>
+            <div style={styleCenter}>
+                <button style={buttonStyle} type="submit" disabled={!this.state.login || !this.state.password}><strong>Apstiprināt</strong></button>
+            </div>
         </form>
     }
 }
@@ -57,6 +62,7 @@ const buttonStyle = {
     color: 'black',
     width: '150px',
     marginTop: '20px',
+    height:'30px'
 }
 
 const Style = {
@@ -70,4 +76,21 @@ const LoginInputStyle = {
 
 const PasswordInputStyle = {
     width: '150px'
+}
+
+const styleCenter = {
+    height: '100 %',
+    width: '100 %',
+    display: 'flex',
+    justifyContent: 'center' as 'center',
+    alignItems: 'center' as 'center'
+}
+
+const styleCenterTitle = {
+    height: '100 %',
+    width: '100 %',
+    display: 'flex',
+    justifyContent: 'center' as 'center',
+    alignItems: 'center' as 'center',
+
 }
