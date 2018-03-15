@@ -11,7 +11,7 @@ namespace ESL.CO.React.LdapCredentialCheck
         public bool CheckCredentials(string username, string password)
         {
             // Creating an LdapConnection instance 
-            using (var ldapConn = new LdapConnection())
+            using (var ldapConn = new LdapConnection() { })
             {
                 //Connect function will create a socket connection to the server - Port 389 for insecure and 3269 for secure    
                 ldapConn.Connect("RIXMISDC04.internal.corp", 389);
@@ -19,7 +19,7 @@ namespace ESL.CO.React.LdapCredentialCheck
                 try
                 {
                     //Bind function with null user dn and password value will perform anonymous bind to LDAP server 
-                    ldapConn.Bind(username, password);
+                    ldapConn.Bind(@"pm\" + username, password);
                 }
                 catch (LdapException e)
                 {

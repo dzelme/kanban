@@ -1,54 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.LdapCredentialCheck;
-using System.Net.Http;
-using System.Net;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ESL.CO.React.Models;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace ESL.CO.React.Controllers
 {
     [Route("api/account/login")]
     public class AuthenticationController : Controller
     {
-        //private LdapClient ldap = new LdapClient();
+        private readonly ILdapClient ldapClient;
 
-        //public AuthenticationController(LdapClient ldap)
-        //{
-        //    this.ldap = ldap;
-        //}
-
-        //[HttpPost]
-        //public Task<HttpResponseMessage> Login([FromBody]string username, [FromBody]string password)
-        //{
-        //    HttpResponseMessage response = new HttpResponseMessage();
-        //    if (ldap.CheckCredentials(username, password))
-        //    {
-        //        //return 200 + jwt
-        //        response.StatusCode = HttpStatusCode.OK;
-        //    }
-        //    else
-        //    {
-        //        //return 401
-        //        response.StatusCode = HttpStatusCode.Unauthorized;
-        //    }
-
-        //    //response.Content = new StringContent(message);
-        //    return Task.FromResult(response);
-        //}
-
+        public AuthenticationController(ILdapClient ldapClient)
+        {
+            this.ldapClient = ldapClient;
+        }
 
         [HttpPost]
         public IActionResult IssueJwtToken([FromBody] Credentials credentials)
         {
-            if (credentials.Username == "adzelme" && credentials.Password == "0TESTtest")
+            if (ldapClient.CheckCredentials(credentials.Username, credentials.Password))
             {
                 var claims = new[]
                 {
@@ -71,14 +45,7 @@ namespace ESL.CO.React.Controllers
                 });
             }
 
-            return Unauthorized(); //BadRequest instead
-        }
-
-
-
-        public IActionResult Index()
-        {
-            return View();
+            return Unauthorized();
         }
     }
 }
