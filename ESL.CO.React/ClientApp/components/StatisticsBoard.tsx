@@ -18,7 +18,11 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, Fe
         super();
         this.state = { connectionLog: [], loading: true };
 
-        fetch('api/SampleData/NetworkStatistics?id=' + this.id)  // + this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + this.id, {  // + this.props.match.params.id)
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
