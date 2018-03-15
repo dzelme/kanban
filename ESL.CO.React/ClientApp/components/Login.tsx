@@ -13,14 +13,17 @@ export class Login extends React.Component<RouteComponentProps<{}>, LoginState> 
         this.state = {
             credentials: { username: "", password: "" },
         };
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        const name = event.target.name;
+        this.setState({ credentials: { ...this.state.credentials, [event.target.name]: event.target.value } });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-
-        this.state.credentials.username = document.forms['login'].elements["username"].value;
-        this.state.credentials.password = document.forms['login'].elements["password"].value;
 
         fetch(' /api/account/login', {
             method: 'POST',
@@ -36,7 +39,7 @@ export class Login extends React.Component<RouteComponentProps<{}>, LoginState> 
     }
 
     public render() {
-        let contents = Login.renderLogin(this.state.credentials, this.handleSubmit);
+        let contents = Login.renderLogin(this.state.credentials, this.handleSubmit, this.handleChange);
 
         return <div>
             <h1>Login</h1>
@@ -44,12 +47,16 @@ export class Login extends React.Component<RouteComponentProps<{}>, LoginState> 
         </div>;
     }
 
-    private static renderLogin(credentials: Credentials, handleSubmit) {
+    private static renderLogin(credentials: Credentials, handleSubmit, handleChange) {
         return <form name="login" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
-            <input id="username" name="username" type="text" defaultValue={credentials.username} />
-            <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" defaultValue={credentials.password} />
+            <label>
+                Username:
+                <input id="username" name="username" type="text" value={credentials.username} onChange={handleChange} />
+            </label>
+            <label>
+                Password:
+                <input id="password" name="password" type="password" value={credentials.password} onChange={handleChange} />
+            </label>
             <input type="submit" className="btn btn-default" name="Submit" />
         </form>;
     }
