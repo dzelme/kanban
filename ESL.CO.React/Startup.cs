@@ -53,24 +53,6 @@ namespace ESL.CO.React
                     };
                 });
 
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration.GetSection("JwtSettings").GetValue<string>("Issuer"),
-                        ValidAudience = Configuration.GetSection("JwtSettings").GetValue<string>("Audience"),
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration.GetSection("JwtSettings").GetValue<string>("SigningKey")))
-                    };
-                });
-
-
             services.AddSingleton<IJiraClient, JiraClient>();
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();

@@ -39,13 +39,15 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
             },
             body: JSON.stringify(this.state.credentials),
         })
+            .then(response => response.json())
             .then(response => {
-                if (response.status == 401) {
-                    this.setState({ invalidCredentials: true });
-                }
-                else if (response.status == 200) {
+                if (response.token != null) {
+                    sessionStorage.setItem('JwtToken', response.token);
                     this.setState({ invalidCredentials: false });
                     open('/admin','_self');
+                }
+                else {
+                    this.setState({ invalidCredentials: true });
                 }
             });
     }
