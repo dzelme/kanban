@@ -1,18 +1,21 @@
 ﻿import * as React from 'react';
-//import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router';
+import { Credentials } from './Interfaces';
 
 interface Auth {
-    login: string;
-    password: string;
+    credentials: Credentials;
     errorAuth: boolean;
 }
 
 
-export default class Authentication_UI extends React.Component<{},Auth> {
+export class Authentication_UI extends React.Component<RouteComponentProps<{}>,Auth> {
 
     constructor(props) {
         super(props);
-        this.state = { login: '', password: '', errorAuth: false }
+        this.state = {
+            credentials: { username: "", password: "" },
+            errorAuth: false,
+        },
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -20,20 +23,32 @@ export default class Authentication_UI extends React.Component<{},Auth> {
 
     handleChange(event)
     {
-        const target = event.target;
-        const name = target.name;
-
-        this.setState({
-            [name]: target.value
-        });
+        const name = event.target.name;
+        this.setState({ credentials: { ...this.state.credentials, [event.target.name]: event.target.value } });
     }
 
     handleSubmit(event)
     {
-        // alert('Login: ' + this.state.login + ' Password: ' + this.state.password);
-        //window.open('/boardlist');
-
         event.preventDefault();
+
+        fetch(' /api/account/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.credentials),
+        })
+            .then(response => {
+                console.log('response:', response.status);
+                if (response.status == 401) {
+                    this.setState({ errorAuth: true });
+                }
+                else if (response.status == 200) {
+                    this.setState({ errorAuth: false });
+                    open('/admin');
+                }
+            });
     }
 
     public render() {
@@ -42,8 +57,6 @@ export default class Authentication_UI extends React.Component<{},Auth> {
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
             : null
 
-       
-
         return <div>
                 <form onSubmit={this.handleSubmit}>
                         <div style={styleCenter}>
@@ -51,13 +64,13 @@ export default class Authentication_UI extends React.Component<{},Auth> {
                         </div>
 
                         <div style={styleCenter}>
-                            <h3>Lietotājvārds</h3>
-                            <input style={LoginInputStyle} name='login' type="text" required value={this.state.login} onChange={this.handleChange} />
+                    <h3>Lietotājvārds</h3>
+                    <input style={LoginInputStyle} name='username' type="text" required value={this.state.credentials.username} onChange={this.handleChange} />
                         </div>
 
                         <div style={styleCenter}>
-                            <h3>Parole</h3>
-                            <input style={LoginInputStyle} name='password' type="password" required value={this.state.password} onChange={this.handleChange} />
+                    <h3>Parole</h3>
+                    <input style={LoginInputStyle} name='password' type="password" required value={this.state.credentials.password} onChange={this.handleChange} />
                         </div>
 
                         <div style={styleCenter}>

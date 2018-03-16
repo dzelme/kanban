@@ -7,6 +7,7 @@ import { BoardReader } from './components/BoardReader';
 import { StatisticsList } from './components/StatisticsList';
 import { StatisticsBoard } from './components/StatisticsBoard';
 import { Login } from './components/Login';
+import { Authentication_UI } from './components/Authentication_UI';
 
 export const routes = <Layout>
     <Route exact path='/' component={BoardReader} />
@@ -15,5 +16,5 @@ export const routes = <Layout>
     <Route path='/statistics' component={StatisticsList} />
     <Route path="/jiraconnectionstats/:id" component={StatisticsBoard} />
     <Route path='/admin' component={BoardList} />
-    <Route path='/login' component={Login} />
+    <Route path='/login' component={Authentication_UI} />
 </Layout>;
