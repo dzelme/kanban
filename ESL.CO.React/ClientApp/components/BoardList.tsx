@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
+import { Value } from './Interfaces';
 
 interface FetchDataExampleState {
     boardlist: Value[];
@@ -117,16 +118,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     }
 
 
-}
-
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-
-    visibility: boolean;
-    refreshRate: number;
-    timeShown: number;
 }
 
 const styleButton = {

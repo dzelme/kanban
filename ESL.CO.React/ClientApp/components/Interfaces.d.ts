@@ -68,3 +68,15 @@ export interface Credentials {
     username: string;
     password: string;
 }
+
+export interface FullPresentationList {
+    presentationList: BoardPresentation[];
+}
+
+export interface BoardPresentation {
+    id: string;
+    title: string;
+    owner: string;
+    credentials: Credentials;
+    boards: FullPresentationList;
+}
