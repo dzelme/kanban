@@ -43,32 +43,21 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        //this.handleInputChange = this.handleInputChange.bind(this);  //
+        // DELETE: code for testing purposes to see that PresentationsController.cs Presentation works
+        fetch('api/Presentations/1', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ boardPresentation: data, boardList: this.state.boardList, loading: false });
+            });
     }
-
-    /*
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-    */
 
     handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-
-        //alert('Izvēles saglabātas!');
-
-        //this.setState({
-        //    id: parseInt(document.forms['boardlist'].elements["id"].value),
-        //    title: document.forms['boardlist'].elements["title"].value,
-        //    owner: document.forms['boardlist'].elements["owner"].value
-        //})
 
         var val = new Array();
 
