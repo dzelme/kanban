@@ -9,16 +9,12 @@ interface FetchDataExampleState {
 }
 
 //netiek sanemti props (undefined) no routes.tsx
-export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
-    private id = 748; //this.props.match.params.id; // = this.props.location.state.id; //////////////////
-    
-    //private q = querystring.parse(this.props.location.search);
-
-    constructor() {
-        super();
+export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
+    constructor(props: RouteComponentProps<{id: number}>) {
+        super(props);
         this.state = { connectionLog: [], loading: true };
 
-        fetch('api/SampleData/NetworkStatistics?id=' + this.id, {  // + this.props.match.params.id)
+        fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -35,7 +31,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{}>, Fe
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div>
-            <h1>Board #{this.id} : Network Statistics</h1>
+            <h1>Board #{this.props.match.params.id} : Network Statistics</h1>
             {contents}
         </div>;
     }
