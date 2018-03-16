@@ -1,17 +1,19 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
+import Authentication_UI from './Authentication_UI';
 import 'isomorphic-fetch';
 
 interface FetchDataExampleState {
     boardlist: Value[];
     loading: boolean;
+    auth: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
 
-        this.state = { boardlist: [], loading: true};
+        this.state = { boardlist: [], loading: true, auth: true };
 
         fetch('api/SampleData/BoardList')
             .then(response => response.json() as Promise<Value[]>)
@@ -67,10 +69,20 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
 
     public render() {
 
+
+        let contents = this.state.auth
+            ? < Authentication_UI />
+            :this.state.loading
+                ? <p><em>Loading...</em></p>
+                : BoardList.renderBoardList(this.state.boardlist, this.handleSubmit);
+        
+
+
+        /*
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : BoardList.renderBoardList(this.state.boardlist, this.handleSubmit);
-
+        */
         return <div>
 
             {contents}

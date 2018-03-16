@@ -1,17 +1,18 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
+//import { RouteComponentProps } from 'react-router';
 
 interface Auth {
     login: string;
     password: string;
+    errorAuth: boolean;
 }
 
 
-export class Authentication_UI extends React.Component<RouteComponentProps<{}>, Auth> {
+export default class Authentication_UI extends React.Component<{},Auth> {
 
     constructor(props) {
         super(props);
-        this.state = { login: '', password:'' }
+        this.state = { login: '', password: '', errorAuth: false }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,32 +30,44 @@ export class Authentication_UI extends React.Component<RouteComponentProps<{}>, 
 
     handleSubmit(event)
     {
-       // alert('Login: ' + this.state.login + ' Password: ' + this.state.password);
-        
+        // alert('Login: ' + this.state.login + ' Password: ' + this.state.password);
+        //window.open('/boardlist');
+
         event.preventDefault();
     }
 
     public render() {
 
-        return <form onSubmit={this.handleSubmit}>
-            <div style={styleCenter}>
-                <h1>Autentifikācija</h1>
-            </div>
+        let error = this.state.errorAuth
+            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
+            : null
 
-            <div style={styleCenter}>
-                <h3>Lietotājvārds</h3>
-                <input style={LoginInputStyle} name='login' type="text" required value={this.state.login} onChange={this.handleChange} />
-            </div>
+       
 
-            <div style={styleCenter}>
-                <h3>Parole</h3>
-                <input style={LoginInputStyle} name='password' type="password" required value={this.state.password} onChange={this.handleChange} />
-            </div>
+        return <div>
+                <form onSubmit={this.handleSubmit}>
+                        <div style={styleCenter}>
+                            <h1>Autentifikācija</h1>
+                        </div>
 
-            <div style={styleCenter}>
-                <button style={buttonStyle} type="submit"><strong>Apstiprināt</strong></button>
-            </div>
-        </form>
+                        <div style={styleCenter}>
+                            <h3>Lietotājvārds</h3>
+                            <input style={LoginInputStyle} name='login' type="text" required value={this.state.login} onChange={this.handleChange} />
+                        </div>
+
+                        <div style={styleCenter}>
+                            <h3>Parole</h3>
+                            <input style={LoginInputStyle} name='password' type="password" required value={this.state.password} onChange={this.handleChange} />
+                        </div>
+
+                        <div style={styleCenter}>
+                            <button style={buttonStyle} type="submit"><strong>Apstiprināt</strong></button>
+                        </div>
+                </form>
+
+        <div style={styleCenter}>{error}</div>
+
+        </div>
     }
 }
 
