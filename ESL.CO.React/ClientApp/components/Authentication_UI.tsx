@@ -46,7 +46,7 @@ export class Authentication_UI extends React.Component<RouteComponentProps<{}>,A
                 }
                 else if (response.status == 200) {
                     this.setState({ errorAuth: false });
-                    open('/admin');
+                    open('/admin','_self');
                 }
             });
     }
