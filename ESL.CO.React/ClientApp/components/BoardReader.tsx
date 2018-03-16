@@ -11,8 +11,8 @@ interface BoardReaderState {
 //Get all boards in list
 export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardReaderState> {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             boardlist: [],
             loading: true
@@ -55,10 +55,12 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
             : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 >No boards selected</h1>
-    
-        return <div>{boardInfo}</div>
-
+        
+        return<div>{boardInfo}</div>
     }
+
+
+
 } 
 
 

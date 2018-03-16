@@ -10,7 +10,7 @@ interface FetchDataExampleState {
 export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        
+
         this.state = { boardlist: [], loading: true };
 
         fetch('api/SampleData/BoardList')
@@ -66,18 +66,21 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
     }
 
     public render() {
+
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : BoardList.renderBoardList(this.state.boardlist, this.handleSubmit);
 
         return <div>
-            <h1 style={styleTitle}>Board List</h1>
+
             {contents}
         </div>;
     }
 
     private static renderBoardList(boardlist: Value[], handleSubmit) {  //
-        return <form name="boardlist" onSubmit={handleSubmit}>
+        return <div>
+            <h1 style={styleTitle}>Board List</h1>
+        <form name="boardlist" onSubmit={handleSubmit}>
             <p><input type="submit" style={styleButton} name="Submit" /></p>
             <table className='table'>
                 <thead>
@@ -104,7 +107,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                 </tbody>
             </table>
             
-        </form>;
+        </form>
+        </div>
     }
 
 
