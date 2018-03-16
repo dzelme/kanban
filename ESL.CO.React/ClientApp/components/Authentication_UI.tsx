@@ -29,7 +29,7 @@ export class Authentication_UI extends React.Component<RouteComponentProps<{}>, 
 
     handleSubmit(event)
     {
-        //alert('Login: ' + this.state.login + ' Password: ' + this.state.password);
+       // alert('Login: ' + this.state.login + ' Password: ' + this.state.password);
         
         event.preventDefault();
     }
@@ -52,7 +52,7 @@ export class Authentication_UI extends React.Component<RouteComponentProps<{}>, 
             </div>
 
             <div style={styleCenter}>
-                <button style={buttonStyle} type="submit" disabled={!this.state.login || !this.state.password}><strong>Apstiprināt</strong></button>
+                <button style={buttonStyle} type="submit"><strong>Apstiprināt</strong></button>
             </div>
         </form>
     }
