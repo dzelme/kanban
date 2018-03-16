@@ -14,12 +14,12 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.state = { presentationList: [], loading: true };
 
-        fetch('api/SampleData/PresentationList', {
+        fetch('api/presentations', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
-            .then(response => response.json() as Promise<BoardPresentation[]>)
+            .then(response => response.json())
             .then(data => {
                 this.setState({ presentationList: data, loading: false });
             });
@@ -29,7 +29,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : PresentationList.renderBoardList(this.state.presentationList);
+            : PresentationList.renderPresentationList(this.state.presentationList);
 
         return <div>
 
@@ -37,20 +37,32 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
         </div>;
     }
 
-    private static renderBoardList(boardlist: BoardPresentation[]) {
+    private static renderPresentationList(presentationList: BoardPresentation[]) {
         return <div>
-            <h1>Board List</h1>
+            <h1>Presentation List</h1>
             <table className='table'>
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Title</th>
                         <th>Owner</th>
-                        <th>Visibility</th>
                         <th>Boards</th>
                     </tr>
                 </thead>
-
+                <tbody>
+                    {presentationList.map(presentation =>
+                        <tr key={presentation.id + "row"}>
+                            <td key={presentation.id + ""}>{presentation.id}</td>
+                            <td key={presentation.id + "title"}>{presentation.title}</td>
+                            <td key={presentation.id + "owner"}>{presentation.owner}</td>
+                            <td key={presentation.id + "boards"}>
+                                {presentation.boards.values.map(board =>
+                                    board.id + " " 
+                                )}
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
             </table>
         </div>
     }

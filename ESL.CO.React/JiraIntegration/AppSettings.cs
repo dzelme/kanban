@@ -162,10 +162,10 @@ namespace ESL.CO.React.JiraIntegration
         public FullPresentationList GetPresentationList()
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
-            var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"list.json");
+            //var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"list.json");
             var presentationList = new FullPresentationList();
 
-            string[] presentationPaths = Directory.GetFiles(filePath, "p_*.json", SearchOption.TopDirectoryOnly);
+            string[] presentationPaths = Directory.GetFiles(paths.Value.PresentationDirectoryPath, "p_*.json", SearchOption.TopDirectoryOnly);
             foreach (string path in presentationPaths)
             {
                 presentationList.PresentationList.Add(GetPresentation(0, path));

@@ -12,5 +12,14 @@ namespace ESL.CO.React.Models
         public string Owner { get; set; }
         public Credentials Credentials { get; set; }
         public FullBoardList Boards { get; set; }
+
+        public BoardPresentation()
+        {
+            Id = "";
+            Title = "";
+            Owner = "";
+            Credentials = null;
+            Boards = null;
+        }
     }
 }

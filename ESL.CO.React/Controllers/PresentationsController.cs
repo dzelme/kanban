@@ -52,7 +52,7 @@ namespace ESL.CO.React.Controllers
             //Atbilde 200 ok un json BoardPresentation(bez credentials sadaļas)
 
             var presentationList = appSettings.GetPresentationList();
-            return Ok(presentationList);
+            return Ok(presentationList.PresentationList);
         }
 
         [Authorize]
@@ -64,7 +64,7 @@ namespace ESL.CO.React.Controllers
             //Atbilde 404 Not Found, ja norādīts id, bet sistēmā tāds nav atrodams
             //Atbilde 200 OK un saglabātā informācija(bez credentials sadaļas)
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)  // ERROR: only works on second try for some weird reason
             {
                 boardPresentation.Credentials = null;  // better way?
                 appSettings.SavePresentation(boardPresentation);
