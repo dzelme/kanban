@@ -26,15 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\components\Login.tsx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="data\logs\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\components\Login.tsx" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
