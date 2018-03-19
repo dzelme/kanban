@@ -45,7 +45,7 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
                         sessionStorage.setItem('JwtToken', json.token);
                     });
                     this.setState({ invalidCredentials: false });
-                    open('/admin', '_self');
+                    open('./admin', '_self');
                 }
                 else {
                     this.setState({ invalidCredentials: true });

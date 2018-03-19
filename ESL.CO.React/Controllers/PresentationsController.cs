@@ -26,7 +26,7 @@ namespace ESL.CO.React.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public IActionResult Presentation(int id)
+        public IActionResult Presentation(string id)
         {
             //GET / api / presentations /{ id} -atgriež pieprasīto prezentāciju
             //Atbilde 404 Not Found, ja prezentācija nav atrasta
