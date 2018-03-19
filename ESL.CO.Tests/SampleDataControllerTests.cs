@@ -7,6 +7,7 @@ using Moq;
 using ESL.CO.React.JiraIntegration;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace ESL.CO.Tests
 {
@@ -21,6 +22,7 @@ namespace ESL.CO.Tests
         private Board testBoard1;
         private Board testBoard2;
         private SampleDataController controller;
+        private IOptions<Paths> paths;
 
         public SampleDataControllerTests()
         {
@@ -28,6 +30,12 @@ namespace ESL.CO.Tests
             appSettings = new Mock<IAppSettings>();
             jiraClient = new Mock<IJiraClient>();
             boardCreator = new Mock<IBoardCreator>();
+
+            paths = Options.Create(new Paths
+            {
+                LogDirectoryPath = ".\\data\\logs\\",
+                PresentationDirectoryPath = ".\\data\\presentations\\"
+            });
 
             cachedSettings = new FullBoardList
             {
@@ -46,7 +54,7 @@ namespace ESL.CO.Tests
             testBoard2 = new Board(80);
 
             appSettings.Setup(a => a.GetSavedAppSettings()).Returns(cachedSettings);
-            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object, boardCreator.Object);
+            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object, boardCreator.Object, paths);
         }
 
         [Fact]

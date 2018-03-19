@@ -6,7 +6,7 @@ using Moq;
 using ESL.CO.React.JiraIntegration;
 using System.Collections.Generic;
 using System.Linq;
-
+using Microsoft.Extensions.Options;
 
 namespace ESL.CO.Tests
 {
@@ -15,10 +15,12 @@ namespace ESL.CO.Tests
         private AppSettings controller;
         private FullBoardList listSaved;
         private FullBoardList listCurrent;
+        private IOptions<Paths> paths;
 
         public AppSettingsTests()
         {
-            controller = new AppSettings();
+            paths = Options.Create(new Paths());
+            controller = new AppSettings(paths);
         }
 
         ///<Summary>
