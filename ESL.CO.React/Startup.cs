@@ -46,10 +46,10 @@ namespace ESL.CO.React
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration.GetSection("JwtSettings").GetValue<string>("Issuer"),
-                        ValidAudience = Configuration.GetSection("JwtSettings").GetValue<string>("Audience"),
+                        ValidIssuer = Configuration["JwtSettings:Issuer"], //.GetSection("JwtSettings").GetValue<string>("Issuer"),
+                        ValidAudience = Configuration["JwtSettings:Audience"], //.GetSection("JwtSettings").GetValue<string>("Audience"),
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration.GetSection("JwtSettings").GetValue<string>("SigningKey")))
+                            Encoding.UTF8.GetBytes(Configuration["JwtSettings:SigningKey"]))  //.GetSection("JwtSettings").GetValue<string>("SigningKey")))
                     };
                 });
 

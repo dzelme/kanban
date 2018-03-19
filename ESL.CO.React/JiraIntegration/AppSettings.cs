@@ -110,7 +110,7 @@ namespace ESL.CO.React.JiraIntegration
         /// </summary>
         /// <param name="presentationDirectoryPath">The path of the file where presentation settings will be stored. Default path in interface.</param>
         /// <returns>Unique presentation id.</returns>
-        public int GeneratePresentationId()
+        public string GeneratePresentationId()
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
             var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"settings.txt");
@@ -129,7 +129,7 @@ namespace ESL.CO.React.JiraIntegration
             ++id;
             File.WriteAllText(filePath, id.ToString());
 
-            return id;
+            return id.ToString();
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace ESL.CO.React.JiraIntegration
         public string SavePresentation(BoardPresentation boardPresentation)
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
-            boardPresentation.Id = GeneratePresentationId().ToString();
+            boardPresentation.Id = GeneratePresentationId();
             var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"p_" + boardPresentation.Id + @".json");
 
             // overwrites if exists

@@ -14,7 +14,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.state = { presentationList: [], loading: true };
 
-        fetch('api/presentations', {
+        fetch('api/admin/presentations', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }

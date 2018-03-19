@@ -4,7 +4,7 @@ namespace ESL.CO.React.JiraIntegration
 {
     public interface IAppSettings
     {
-        int GeneratePresentationId();
+        string GeneratePresentationId();
         BoardPresentation GetPresentation(int id, string filePath = "");
         FullPresentationList GetPresentationList();
         FullBoardList GetSavedAppSettings();

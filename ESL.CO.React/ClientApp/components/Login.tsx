@@ -31,7 +31,7 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
     {
         event.preventDefault();
 
-        fetch(' /api/account/login', {
+        fetch('./api/account/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

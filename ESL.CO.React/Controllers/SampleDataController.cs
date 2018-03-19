@@ -15,7 +15,7 @@ namespace ESL.CO.React.Controllers
     /// <summary>
     /// A data controller.
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
@@ -38,7 +38,7 @@ namespace ESL.CO.React.Controllers
         /// Obtains the full currently available board list from Jira REST API.
         /// </summary>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
-        //[Authorize]
+        [Authorize]
         [HttpGet("[action]")]
         public async Task<IEnumerable<Value>> BoardList()
         {
@@ -73,6 +73,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="id">Id of the board whose data will be returned</param>
         /// <returns>Board information.</returns>
+        [Authorize]
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
         {     
@@ -138,6 +139,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="id">Id of the board whose log entries will be retrieved.</param>
         /// <returns>A list of connection log entries.</returns>
+        [Authorize]
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {

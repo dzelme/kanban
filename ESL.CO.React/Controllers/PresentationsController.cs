@@ -12,7 +12,7 @@ namespace ESL.CO.React.Controllers
 {
     //[Authorize]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/admin/[controller]")]
     public class PresentationsController : Controller
     {
         private readonly IJiraClient jiraClient;

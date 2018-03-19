@@ -13,7 +13,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     constructor() {
         super();
 
-        //this.state = { id: 0, title: "", owner: "", boardlist: [], loading: true };
         this.state = {
             boardPresentation: {
                 id: "",
@@ -42,17 +41,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             });
 
         this.handleSubmit = this.handleSubmit.bind(this);
-
-        // DELETE: code for testing purposes to see that PresentationsController.cs Presentation works
-        fetch('api/Presentations/1', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ boardPresentation: data, boardList: this.state.boardList, loading: false });
-            });
     }
 
     handleSubmit(event) {
@@ -83,7 +71,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             }
         })
 
-        fetch('api/Presentations/', {
+        fetch('api/admin/Presentations/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

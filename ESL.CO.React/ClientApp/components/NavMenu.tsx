@@ -44,12 +44,12 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/boardlist'} activeClassName='active'>
+                            <NavLink to={'/admin'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-th-list'></span> Boardlist
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/presentationList'} activeClassName='active'>
+                            <NavLink to={'/admin/presentations'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-th-list'></span> PresentationList
                             </NavLink>
                         </li>
