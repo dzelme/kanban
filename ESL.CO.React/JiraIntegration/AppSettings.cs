@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.IO;
 using ESL.CO.React.Models;
+using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -10,6 +11,13 @@ namespace ESL.CO.React.JiraIntegration
     /// </summary>
     public class AppSettings : IAppSettings
     {
+        private readonly IOptions<Paths> paths;
+
+        public AppSettings(IOptions<Paths> paths)
+        {
+            this.paths = paths;
+        }
+
         /// <summary>
         /// Reads application settings from a JSON file to an object.
         /// </summary>
@@ -39,7 +47,7 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="appSettings">An object containing a list of Kanban boards and their settings.</param>
         /// <param name="filePath">Path of the file where application settings will be stored. Default path in interface.</param>
         /// <returns>Path of the file where application settings were stored.</returns>
-        public string SaveAppSettings(FullBoardList appSettings, string filePath)
+        public string SaveAppSettings(FullBoardList appSettings, string filePath = ".\\data\\appSettings.json")
         {
             // serialize JSON directly to a file
             using (StreamWriter file = System.IO.File.CreateText(filePath))
@@ -92,5 +100,102 @@ namespace ESL.CO.React.JiraIntegration
             // the one stored in app settings (old one)??
         }
 
+
+
+
+
+
+        /// <summary>
+        /// Generates a unique presentation id.
+        /// </summary>
+        /// <param name="presentationDirectoryPath">The path of the file where presentation settings will be stored. Default path in interface.</param>
+        /// <returns>Unique presentation id.</returns>
+        public string GeneratePresentationId()
+        {
+            Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
+            var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"settings.txt");
+            int id = 0;
+
+            // reads the current last id
+            if (File.Exists(filePath))
+            {
+                using (StreamReader r = new StreamReader(filePath))
+                {
+                    id = int.Parse(r.ReadLine());
+                }
+            }
+
+            // writes the new last id
+            ++id;
+            File.WriteAllText(filePath, id.ToString());
+
+            return id.ToString();
+        }
+
+        /// <summary>
+        /// Saves a given presentation to JSON file at the specified path.
+        /// </summary>
+        /// <param name="boardPresentation">An object containing presentation data to be saved.</param>
+        /// <param name="presentationDirectoryPath">The path of the file where presentation settings will be stored. Default path in interface.</param>
+        /// <returns>The path of the file where presentation settings were stored.</returns>
+        public string SavePresentation(BoardPresentation boardPresentation)
+        {
+            Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
+            boardPresentation.Id = GeneratePresentationId();
+            var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"p_" + boardPresentation.Id + @".json");
+
+            // overwrites if exists
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(boardPresentation));
+
+            return filePath;
+
+            //consider replacing with a global SaveToJson<type> method
+
+            //consider moving to controller and not having a separate method
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="presentationDirectoryPath"></param>
+        /// <returns></returns>
+        public FullPresentationList GetPresentationList()
+        {
+            Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
+            //var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"list.json");
+            var presentationList = new FullPresentationList();
+
+            string[] presentationPaths = Directory.GetFiles(paths.Value.PresentationDirectoryPath, "p_*.json", SearchOption.TopDirectoryOnly);
+            foreach (string path in presentationPaths)
+            {
+                presentationList.PresentationList.Add(GetPresentation("", path));
+            }
+
+            return presentationList;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filePath"></param>
+        /// <param name="presentationDirectoryPath"></param>
+        /// <returns></returns>
+        public BoardPresentation GetPresentation(string id, string filePath = "")
+        {
+            if (filePath == "")
+            {
+                filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"p_" + id + @".json");
+                if (!File.Exists(filePath)) { return null; }
+            }
+
+            var boardPresentation = new BoardPresentation();
+            using (StreamReader r = new StreamReader(filePath))
+            {
+                string json = r.ReadToEnd();
+                boardPresentation = JsonConvert.DeserializeObject<BoardPresentation>(json);
+            }
+            return boardPresentation;
+        }
     }
 }

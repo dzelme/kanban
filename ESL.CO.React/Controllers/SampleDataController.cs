@@ -7,6 +7,7 @@ using ESL.CO.React.Models;
 using System.IO;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 
 namespace ESL.CO.React.Controllers
@@ -14,6 +15,7 @@ namespace ESL.CO.React.Controllers
     /// <summary>
     /// A data controller.
     /// </summary>
+    //[Authorize]
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
@@ -21,20 +23,22 @@ namespace ESL.CO.React.Controllers
         private readonly IAppSettings appSettings;
         private readonly IMemoryCache cache;
         private readonly IBoardCreator boardCreator;
+        private readonly IOptions<Paths> paths;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator)
+        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator, IOptions<Paths> paths)
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
             this.cache = cache;
             this.boardCreator = boardCreator;
+            this.paths = paths;
         }
 
         /// <summary>
         /// Obtains the full currently available board list from Jira REST API.
         /// </summary>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
-        //[Authorize]
+        [Authorize]
         [HttpGet("[action]")]
         public async Task<IEnumerable<Value>> BoardList()
         {
@@ -69,6 +73,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="id">Id of the board whose data will be returned</param>
         /// <returns>Board information.</returns>
+        [Authorize]
         [HttpGet("[action]")]
         public async Task<Board> BoardData(int id)
         {     
@@ -134,10 +139,11 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="id">Id of the board whose log entries will be retrieved.</param>
         /// <returns>A list of connection log entries.</returns>
+        [Authorize]
         [HttpGet("[action]")]
         public List<JiraConnectionLogEntry> NetworkStatistics(int id)
         {
-            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.txt");
+            var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
             var connectionLog = new List<JiraConnectionLogEntry>();
             if (System.IO.File.Exists(filePath))
             {

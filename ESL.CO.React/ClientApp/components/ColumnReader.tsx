@@ -33,7 +33,11 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
         this.nextSlide = this.nextSlide.bind(this);
 
 
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
+        fetch('api/SampleData/BoardData?ID=' + this.state.boardId, {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
@@ -73,7 +77,11 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
 
         clearInterval(this.refreshTimer);
 
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId)
+        fetch('api/SampleData/BoardData?ID=' + this.state.boardId, {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<Board>)
             .then(data => {
                 if (data.id == this.state.boardId) {                                            //nonem problemu, ja fetch beidzas pec tam, kad jau jauns boards izvelets
@@ -109,7 +117,8 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
             },
             body: JSON.stringify(this.state.boardId),
         });

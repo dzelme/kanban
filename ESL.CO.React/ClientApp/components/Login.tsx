@@ -31,7 +31,7 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
     {
         event.preventDefault();
 
-        fetch(' /api/account/login', {
+        fetch('./api/account/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -40,12 +40,15 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
             body: JSON.stringify(this.state.credentials),
         })
             .then(response => {
-                if (response.status == 401) {
-                    this.setState({ invalidCredentials: true });
-                }
-                else if (response.status == 200) {
+                if (response.ok) {
+                    response.json().then(json => {
+                        sessionStorage.setItem('JwtToken', json.token);
+                    });
                     this.setState({ invalidCredentials: false });
-                    open('/admin','_self');
+                    open('./admin', '_self');
+                }
+                else {
+                    this.setState({ invalidCredentials: true });
                 }
             });
     }

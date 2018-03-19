@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class Value
+    public class Value  //extends BoardProperties.cs
     {
         public int Id { get; set; }
         //public string Self { get; set; }

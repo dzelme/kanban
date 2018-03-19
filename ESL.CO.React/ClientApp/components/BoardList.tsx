@@ -1,67 +1,84 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
+import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
 
-interface FetchDataExampleState {
-    boardlist: Value[];
+interface BoardListState {
+    boardPresentation: BoardPresentation;
+    boardList: Value[];
     loading: boolean;
 }
 
-export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
     constructor() {
         super();
 
-        this.state = { boardlist: [], loading: true };
+        this.state = {
+            boardPresentation: {
+                id: "",
+                title: "",
+                owner: "",
+                credentials: {
+                    username: "",
+                    password: "",
+                },
+                boards: {
+                    values: []
+                }
+            },
+            boardList: [],
+            loading: true
+        };
 
-        fetch('api/SampleData/BoardList')
+        fetch('api/SampleData/BoardList', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
-                this.setState({ boardlist: data, loading: false });
+                this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
 
         this.handleSubmit = this.handleSubmit.bind(this);
-
-        //this.handleInputChange = this.handleInputChange.bind(this);  //
     }
-
-    /*
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-    */
 
     handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
 
-        //alert('Izvēles saglabātas!');
+        var val = new Array();
 
-        this.state.boardlist.map(board => {
+        this.state.boardList.map(board => {
             board.visibility = document.forms['boardlist'].elements[board.id + "visibility"].checked;
+            if (board.visibility == true) { val.push(board); }
             board.timeShown = parseInt(document.forms['boardlist'].elements[board.id + "timeShown"].value);
             board.refreshRate = parseInt(document.forms['boardlist'].elements[board.id + "refreshRate"].value);
         })
 
-        //does not work on Edge, LG browser because data.get() is not supported
-        //this.state.boardlist.map(board => {
-        //    board.visibility = (data.get(board.id + "visibility") == "on") ? true : false;
-        //    board.timeShown = parseInt(data.get(board.id + "timeShown").toString());
-        //    board.refreshRate = parseInt(data.get(board.id + "refreshRate").toString());
-        //})
+        this.setState({
+            boardPresentation: {
+                id: document.forms['boardlist'].elements["id"].value,
+                title: document.forms['boardlist'].elements["title"].value,
+                owner: document.forms['boardlist'].elements["owner"].value,
+                credentials: {
+                    username: "",
+                    password: "",
+                },
+                boards: {
+                    values: val,
+                }
+            }
+        })
 
-        fetch('api/Form', {
+        fetch('api/admin/Presentations/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
             },
-            body: JSON.stringify(this.state.boardlist),
+            body: JSON.stringify(this.state.boardPresentation),
         });
     }
 
@@ -69,7 +86,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
 
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : BoardList.renderBoardList(this.state.boardlist, this.handleSubmit);
+            : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
         return <div>
 
@@ -77,11 +94,24 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
         </div>;
     }
 
-    private static renderBoardList(boardlist: Value[], handleSubmit) {  //
+    private static renderBoardList(boardList: Value[], handleSubmit) {  //
         return <div>
-            <h1 style={styleTitle}>Board List</h1>
+            <h1>Board List</h1>
         <form name="boardlist" onSubmit={handleSubmit}>
-            <p><input type="submit" style={styleButton} name="Submit" /></p>
+            <label key="id">
+                Id:
+                <input id="id" name="id" type="text" />
+            </label>
+            <label key="title">
+                Title:
+                <input id="title" name="title" type="text" />
+            </label>
+            <label key="owner">
+                Owner:
+                <input id="owner" name="owner" type="text" />
+            </label>
+
+
             <table className='table'>
                 <thead>
                     <tr>
@@ -94,7 +124,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                     </tr>
                 </thead>
                 <tbody>
-                    {boardlist.map(board =>
+                    {boardList.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
                             <td key={board.id + "name"}>{board.name}</td>
@@ -106,29 +136,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, FetchDat
                     )}
                 </tbody>
             </table>
+            <p><input type="submit" className="btn btn-default" name="Submit" /></p>
             
         </form>
         </div>
     }
-
-
-}
-
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-
-    visibility: boolean;
-    refreshRate: number;
-    timeShown: number;
-}
-
-const styleButton = {
-    float: 'right',
-    margin: '20px'
-}
-
-const styleTitle = {
-    float: 'left'
 }

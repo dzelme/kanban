@@ -26,7 +26,11 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
             return response;
         }
 
-        fetch('api/SampleData/BoardList')
+        fetch('api/SampleData/BoardList', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
             .then(handleErrors)
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {

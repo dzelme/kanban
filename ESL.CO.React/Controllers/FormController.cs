@@ -9,7 +9,7 @@ namespace ESL.CO.React.Controllers
     /// <summary>
     /// A controller for working with forms.
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class FormController : Controller
     {

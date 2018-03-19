@@ -2,12 +2,13 @@
 
 namespace ESL.CO.React.JiraIntegration
 {
-    /// <summary>
-    /// An interface for AppSettings class???
-    /// </summary>
     public interface IAppSettings
     {
+        string GeneratePresentationId();
+        BoardPresentation GetPresentation(string id, string filePath = "");
+        FullPresentationList GetPresentationList();
         FullBoardList GetSavedAppSettings();
         string SaveAppSettings(FullBoardList appSettings, string filePath = ".\\data\\appSettings.json");
+        string SavePresentation(BoardPresentation boardPresentation);
     }
 }

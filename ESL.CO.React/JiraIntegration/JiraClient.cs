@@ -9,6 +9,7 @@ using System.Text.Encodings;
 using System.Text;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -18,9 +19,12 @@ namespace ESL.CO.React.JiraIntegration
     public class JiraClient : IJiraClient
     {
         private HttpClient client = new HttpClient();
+        private readonly IOptions<Paths> paths;
 
-        public JiraClient()
+        public JiraClient(IOptions<Paths> paths)
         {
+            this.paths = paths;
+
             #region Credentials
             string credentials = "adzelme:0TESTtest";
             #endregion
@@ -66,8 +70,8 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="id">Board id used for saving to the appropriate log file.</param>
         public void SaveToConnectionLog_AsTextFile(string url, HttpResponseMessage response, int id)
         {
-            var filePath = Path.Combine(@".\data\logs\", id.ToString() + "_jiraConnectionLog.txt");
-            Directory.CreateDirectory(@".\data\logs\");
+            Directory.CreateDirectory(paths.Value.LogDirectoryPath);
+            var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
             using (StreamWriter file = File.AppendText(filePath))
             {
                 file.WriteLine(DateTime.Now + "|" + url + "|" + response.StatusCode.ToString());
