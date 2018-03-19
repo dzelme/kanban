@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import { Credentials, FullBoardList, Value } from './Interfaces';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
@@ -15,7 +15,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.state = {
             boardPresentation: {
-                id: "",
                 title: "",
                 owner: "",
                 credentials: {
@@ -69,9 +68,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.setState({
             boardPresentation: {
-                id: document.forms['boardlist'].elements["id"].value,
                 title: document.forms['boardlist'].elements["title"].value,
-                owner: document.forms['boardlist'].elements["owner"].value,
+                owner:"",
                 credentials: {
                     username: "",
                     password: "",
@@ -110,14 +108,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             <h1>Izveidot prezentāciju</h1>
 
             <form name="boardlist" onSubmit={handleSubmit}>
-                <div key="id" style={styleForm}>
-                    ID: <input id="id" name="id" required type="text" />
-                </div>
                 <div key="title" style={styleForm}>
                     Nosaukums: <input id="title" required name="title" type="text" />
-                </div>
-                <div key="owner" style={styleForm}>
-                    Izveidotājs: <input id="owner" required name="owner" type="text" />    
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
 
@@ -169,4 +161,11 @@ const styleForm = {
 const styleButton = {
     display: 'inline-block',
     height:'40px'
+}
+
+interface BoardPresentation {
+    title: string;
+    owner: string;
+    credentials: Credentials;
+    boards: FullBoardList;
 }
