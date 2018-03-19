@@ -31,7 +31,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div>
-            <h1>Board #{this.props.match.params.id} : Network Statistics</h1>
+            <h1>Panelis #{this.props.match.params.id} : Savienojumi</h1>
             {contents}
         </div>;
     }
