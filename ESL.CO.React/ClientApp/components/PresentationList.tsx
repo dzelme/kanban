@@ -14,11 +14,23 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.state = { presentationList: [], loading: true };
 
-        fetch('api/admin/presentations', {
+
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login','_self');
+            }           
+            else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
+        fetch('api/presentations', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
+            .then(handleErrors)
             .then(response => response.json())
             .then(data => {
                 this.setState({ presentationList: data, loading: false });
@@ -32,24 +44,23 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             : PresentationList.renderPresentationList(this.state.presentationList);
 
         return <div>
-
+            <h1>Prezentāciju saraksts</h1>
             {contents}
         </div>;
     }
 
     private static renderPresentationList(presentationList: BoardPresentation[]) {
         return <div>
-            <h1>Presentation List</h1>
             <table className='table'>
-                <thead>
+                <thead style={styleHeader}>
                     <tr>
-                        <th>Id</th>
-                        <th>Title</th>
-                        <th>Owner</th>
-                        <th>Boards</th>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Izveidotājs</th>
+                        <th>Paneļi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={styleContent}>
                     {presentationList.map(presentation =>
                         <tr key={presentation.id + "row"}>
                             <td key={presentation.id + ""}>{presentation.id}</td>
@@ -66,6 +77,12 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             </table>
         </div>
     }
+}
 
+const styleHeader = {
+    fontSize: '20px'
+}
 
+const styleContent = {
+    fontSize: '15px'
 }

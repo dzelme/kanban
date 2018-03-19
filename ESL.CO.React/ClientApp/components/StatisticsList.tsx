@@ -31,23 +31,23 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             : StatisticsList.renderStatisticsList(this.state.boardlist);
 
         return <div>
-            <h1>Statistics</h1>
+            <h1>Statistika</h1>
             {contents}
         </div>;
     }
 
     private static renderStatisticsList(boardlist: Value[]) {  //
         return <table className='table'>
-                <thead>
+            <thead style={styleHeader}>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Times shown</th>
-                        <th>Last shown</th>
-                        <th>Network</th>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Attēlošanas reizes</th>
+                        <th>Pēdējo reizi attēlots</th>
+                        <th>Savienojums</th>
                     </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody style={styleContent}>
                     {boardlist.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
@@ -77,4 +77,12 @@ interface Value {
 
     timesShown: number;
     lastShown: string;
+}
+
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
 }

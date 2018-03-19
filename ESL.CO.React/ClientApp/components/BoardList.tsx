@@ -96,34 +96,33 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
     private static renderBoardList(boardList: Value[], handleSubmit) {  //
         return <div>
-            <h1>Board List</h1>
-        <form name="boardlist" onSubmit={handleSubmit}>
-            <label key="id">
-                Id:
-                <input id="id" name="id" type="text" />
-            </label>
-            <label key="title">
-                Title:
-                <input id="title" name="title" type="text" />
-            </label>
-            <label key="owner">
-                Owner:
-                <input id="owner" name="owner" type="text" />
-            </label>
+            <h1>Izveidot prezentāciju</h1>
+
+            <form name="boardlist" onSubmit={handleSubmit}>
+                <div key="id" style={styleForm}>
+                    ID: <input id="id" name="id" required type="text" />
+                </div>
+                <div key="title" style={styleForm}>
+                    Nosaukums: <input id="title" required name="title" type="text" />
+                </div>
+                <div key="owner" style={styleForm}>
+                    Izveidotājs: <input id="owner" required name="owner" type="text" />    
+                </div>
+                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
 
 
             <table className='table'>
-                <thead>
+                <thead style={styleHeader}>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Visibility</th>
-                        <th>Time shown</th>
-                        <th>Refresh rate</th>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Tips</th>
+                        <th>Iekļaut prezentācijā</th>
+                        <th>Attēlošanas laiks</th>
+                        <th>Atjaunošanas laiks</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={styleContent}>
                     {boardList.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
@@ -136,9 +135,27 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                     )}
                 </tbody>
             </table>
-            <p><input type="submit" className="btn btn-default" name="Submit" /></p>
             
         </form>
         </div>
     }
+}
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
+}
+
+const styleForm = {
+    fontSize: '20px',
+    display: 'inline-block',
+    margin: '10px',
+    marginBottom: '30px'
+}
+
+const styleButton = {
+    display: 'inline-block',
+    height:'40px'
 }
