@@ -14,7 +14,6 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.state = { presentationList: [], loading: true };
 
-
         function handleErrors(response) {
             if (response.status == 401) {
                 open('/login','_self');
@@ -25,7 +24,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             return response;
         }
 
-        fetch('api/presentations', {
+        fetch('api/admin/presentations', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }

@@ -45,7 +45,7 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
                         sessionStorage.setItem('JwtToken', json.token);
                     });
                     this.setState({ invalidCredentials: false });
-                    open('./admin', '_self');
+                    open('./admin/presentations', '_self');
                 }
                 else {
                     this.setState({ invalidCredentials: true });
@@ -93,17 +93,9 @@ const buttonStyle = {
     height:'30px'
 }
 
-const Style = {
-    color: 'black'
-}
-
 const LoginInputStyle = {
     color: 'black',
     width:'150px'
-}
-
-const PasswordInputStyle = {
-    width: '150px'
 }
 
 const styleCenter = {
@@ -112,13 +104,4 @@ const styleCenter = {
     display: 'flex',
     justifyContent: 'center' as 'center',
     alignItems: 'center' as 'center'
-}
-
-const styleCenterTitle = {
-    height: '100 %',
-    width: '100 %',
-    display: 'flex',
-    justifyContent: 'center' as 'center',
-    alignItems: 'center' as 'center',
-
 }
