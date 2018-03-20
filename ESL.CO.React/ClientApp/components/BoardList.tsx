@@ -37,6 +37,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         this.handleForm = this.handleForm.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
+        this.postPresentation = this.postPresentation.bind(this);
     }
 
     handleAuth() {
@@ -112,13 +113,17 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 owner: document.forms['presentation'].elements["username"].value,
                 credentials: {
                     username: document.forms['presentation'].elements["username"].value,
-                    password: document.forms['presentation'].elements["password"].value,
+                    password: document.forms['presentation'].elements["password"].value
                 },
                 boards: {
                     values: val,
                 }
             }
-        })
+        }, this.postPresentation)
+
+    }
+
+    postPresentation() {
 
         fetch('api/admin/Presentations/', {
             method: 'POST',
