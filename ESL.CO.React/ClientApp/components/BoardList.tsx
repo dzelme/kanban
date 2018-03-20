@@ -1,7 +1,8 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { Credentials, FullBoardList, Value } from './Interfaces';
+import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
@@ -137,7 +138,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     public render() {
-
+        if (sessionStorage.getItem('JwtToken') === null) {
+            return null;
+        }
         let contents = this.state.loading
             ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);

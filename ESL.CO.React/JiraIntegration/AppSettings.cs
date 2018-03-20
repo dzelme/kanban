@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.IO;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -162,7 +163,6 @@ namespace ESL.CO.React.JiraIntegration
         public FullPresentationList GetPresentationList()
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
-            //var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"list.json");
             var presentationList = new FullPresentationList();
 
             string[] presentationPaths = Directory.GetFiles(paths.Value.PresentationDirectoryPath, "p_*.json", SearchOption.TopDirectoryOnly);
@@ -171,6 +171,9 @@ namespace ESL.CO.React.JiraIntegration
                 presentationList.PresentationList.Add(GetPresentation("", path));
             }
 
+            // sorts the presentationList by id in ascending order before returning
+            var sorted = presentationList.PresentationList.OrderBy(c => int.Parse(c.Id)).ToList();
+            presentationList.PresentationList = sorted;
             return presentationList;
         }
 
