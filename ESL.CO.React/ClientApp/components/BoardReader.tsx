@@ -20,6 +20,10 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
 
         //client offline error
         function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
             if (!response.ok) {
                 throw Error(response.statusText);
             }
@@ -27,7 +31,6 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
         }
 
         if (this.props.match.params.id == null) {
-            alert('params = null');
             fetch('api/SampleData/BoardList', {
                 headers: {
                     authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')

@@ -24,11 +24,12 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
     }
 
     public render() {
-        if ((this.props.location.pathname != '/statistics') &&
+        if (((this.props.location.pathname != '/statistics') &&
             (this.props.location.pathname.substring(0, 20) != '/jiraconnectionstats') && 
             (this.props.location.pathname.substring(0, 6) != '/admin'))
+            || (sessionStorage.getItem("JwtToken") === null))
         {
-            return <div></div>;
+            return null;
         }
 
         return <div className='main-nav'>

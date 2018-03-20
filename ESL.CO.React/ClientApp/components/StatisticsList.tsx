@@ -8,17 +8,39 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
+interface Value {
+    id: number;
+    name: string;
+    type: string;
+
+    timesShown: number;
+    lastShown: string;
+}
+
 export class StatisticsList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        
         this.state = { boardlist: [], loading: true };
+    }
+
+    componentWillMount() {
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
 
         fetch('api/SampleData/BoardList', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
+            .then(handleErrors)
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardlist: data, loading: false });
@@ -26,6 +48,9 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
     }
 
     public render() {
+        if (sessionStorage.getItem('JwtToken') === null) {
+            return null;
+        }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : StatisticsList.renderStatisticsList(this.state.boardlist);
@@ -68,13 +93,4 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                 </tbody>
             </table>;
     }
-}
-
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-
-    timesShown: number;
-    lastShown: string;
 }

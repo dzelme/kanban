@@ -10,15 +10,29 @@ interface FetchDataExampleState {
 
 //netiek sanemti props (undefined) no routes.tsx
 export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
-    constructor(props: RouteComponentProps<{id: number}>) {
+    constructor(props: RouteComponentProps<{ id: number }>) {
         super(props);
         this.state = { connectionLog: [], loading: true };
+    }
+
+    componentWillMount() {
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
 
         fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
+            .then(handleErrors)
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
@@ -26,6 +40,9 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     }
 
     public render() {
+        if (sessionStorage.getItem('JwtToken') === null) {
+            return null;
+        }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);

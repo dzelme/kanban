@@ -31,11 +31,23 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             loading: true
         };
 
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
         fetch('api/SampleData/BoardList', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
+            .then(handleErrors)
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
@@ -84,7 +96,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     public render() {
-
+        if (sessionStorage.getItem('JwtToken') === null) {
+            return null;
+        }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
