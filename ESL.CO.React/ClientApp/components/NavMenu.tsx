@@ -52,10 +52,25 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                                 <span className='glyphicon glyphicon-home'></span> KanBan React
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to={'/admin'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> Boardlist
-                            </NavLink>
+                        <li className="dropdown">
+                            <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <NavLink to={'/admin'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-th-list'></span> Boardlist
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={'/admin/presentations'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-th-list'></span> PresentationList
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={'/statistics'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-signal'></span> Statistics
+                                    </NavLink>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <NavLink to={'/admin/presentations'} activeClassName='active'>
