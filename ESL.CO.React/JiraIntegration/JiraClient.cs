@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Text;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -19,20 +18,13 @@ namespace ESL.CO.React.JiraIntegration
     {
         private HttpClient client = new HttpClient();
         private readonly IOptions<Paths> paths;
-        public IConfiguration ConfigurationSecret { get; set; }
 
-        public JiraClient(IOptions<Paths> paths, IConfiguration config)
+        public JiraClient(IOptions<Paths> paths)
         {
             this.paths = paths;
-
-            ConfigurationSecret = config;
-
-            string credentials = ConfigurationSecret["Credentials"];
-
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
         }
-
-
+          /*  client.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(auth_info)));*/
+        
             /// <summary>
             /// Makes connections to Atlassian Jira.
             /// </summary>
@@ -40,9 +32,13 @@ namespace ESL.CO.React.JiraIntegration
             /// <param name="url">Part of URL required to make different Jira REST API requests.</param>
             /// <param name="id">Board id required for creating board specific connection logs.</param>
             /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-            public async Task<T> GetBoardDataAsync<T>(string url, int id)
+        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, int id)
         {
-            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            var baseUri = new Uri("https://jira.returnonintelligence.com/rest/agile/1.0/");
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+            
+            var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();

@@ -10,11 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.LdapCredentialCheck;
 using ESL.CO.React.Models;
-using Microsoft.Extensions.Logging;
-using NetEscapades.Extensions.Logging;
-using System.Security.Claims;
-using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -23,22 +18,12 @@ namespace ESL.CO.React
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            var builder = new ConfigurationBuilder();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            ConfigurationSecret = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
-        public IConfigurationRoot ConfigurationSecret { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

@@ -18,7 +18,7 @@ export class AllBoardReader extends React.Component<RouteComponentProps<{}>, Boa
             loading: true
         };
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList/?credentials=service.kosmoss.tv:ZycsakMylp8od6', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }

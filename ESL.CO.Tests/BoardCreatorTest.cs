@@ -235,7 +235,7 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74 )).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s=>s.TryGetValue(74, out board)).Returns(true);
@@ -252,7 +252,7 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Create_New_Board_Because_Jira_Not_Aviable_And_Cache_Empty()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
@@ -269,8 +269,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", "arumka:Dzukste22", 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
@@ -287,8 +287,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", "arumka:Dzukste22", 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
@@ -306,8 +306,8 @@ namespace ESL.CO.Tests
         {
             // Arrange
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", 74)).Returns(Task.FromResult(issueOnlyPage));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", "arumka:Dzukste22", 74)).Returns(Task.FromResult(issueOnlyPage));
 
             // Act
             var actual = controller.CreateBoardModel(74, memoryCache.Object).Result;
@@ -328,9 +328,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), 74)).Returns((string a, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), "arumka:Dzukste22", 74)).Returns((string a, int i) =>
             {
                 switch (a)
                 {
@@ -359,9 +359,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), 74)).Returns((string a, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), "arumka:Dzukste22", 74)).Returns((string a, int i) =>
             {
                 switch (a)
                 {
@@ -388,9 +388,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
            
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), 74)).Returns((string a, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), "arumka:Dzukste22", 74)).Returns((string a, int i) =>
             {
                 switch (a)
                 {

@@ -14,6 +14,8 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.state = { presentationList: [], loading: true };
 
+        this.handleNew = this.handleNew.bind(this);
+
         function handleErrors(response) {
             if (response.status == 401) {
                 open('/login','_self');
@@ -36,20 +38,26 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             });
     }
 
+    handleNew()
+    {
+        open('/admin/createPresentation','_self');
+    }
+
     public render() {
 
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : PresentationList.renderPresentationList(this.state.presentationList);
+            : PresentationList.renderPresentationList(this.state.presentationList, this.handleNew);
 
         return <div>
             {contents}
         </div>;
     }
 
-    private static renderPresentationList(presentationList: BoardPresentation[]) {
+    private static renderPresentationList(presentationList: BoardPresentation[], handleNew) {
         return <div>
             <h1>Prezentāciju saraksts</h1>
+            <button onClick={handleNew} className="btn btn-default">Izveidot jaunu</button>
             <table className='table'>
                 <thead style={styleHeader}>
                     <tr>
@@ -67,7 +75,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                             <td key={presentation.id + "owner"}>{presentation.owner}</td>
                             <td key={presentation.id + "boards"}>
                                 {presentation.boards.values.map(board =>
-                                    board.id + " " 
+                                    board.id + "; " 
                                 )}
                             </td>
                         </tr>

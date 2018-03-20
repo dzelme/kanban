@@ -31,6 +31,7 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
+                        <span className='icon-bar'></span>
                     </button>
                     <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
                     <span className='version-aside'>{this.state.version}</span>
@@ -40,12 +41,7 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                     <ul className='nav navbar-nav'>
                         <li>
                             <NavLink to={'/'} exact activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> KanBan React
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={'/admin'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> Boardlist
+                                <span className='glyphicon glyphicon-home'></span> Presentation
                             </NavLink>
                         </li>
                         <li>

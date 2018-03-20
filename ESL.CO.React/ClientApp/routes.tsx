@@ -12,9 +12,10 @@ import { PresentationList } from './components/PresentationList';
 export const routes = <Layout>
     <Route exact path='/' component={AllBoardReader} />
     <Route path='/login' component={Login} />
-    <Route exact path='/admin' component={BoardList} />
+    <Route exact path='/admin' component={PresentationList} />
     <Route path='/admin/statistics' component={StatisticsList} />
     <Route path="/admin/jiraconnectionstats/:id" component={StatisticsBoard} />
     <Route path='/admin/presentations' component={PresentationList} />
+    <Route path='/admin/createPresentation' component={BoardList} />
     <Route path='/admin/presentations/:id' component={BoardList} />
 </Layout>;

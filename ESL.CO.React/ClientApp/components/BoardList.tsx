@@ -7,6 +7,8 @@ interface BoardListState {
     boardPresentation: BoardPresentation;
     boardList: Value[];
     loading: boolean;
+    credentials: Credentials;
+    invalidCredentials: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
@@ -26,8 +28,49 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 }
             },
             boardList: [],
-            loading: true
+            loading: true,
+            credentials: { username: "", password: "" },
+            invalidCredentials: false
         };
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleForm = this.handleForm.bind(this);
+        this.handleAuth = this.handleAuth.bind(this);
+        this.handleFetch = this.handleFetch.bind(this);
+    }
+
+    handleAuth() {
+        event.preventDefault();
+
+        fetch('./api/account/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.credentials),
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                }
+                else {
+                    this.setState({ invalidCredentials: true });
+                }
+            });
+    }
+
+    handleForm(event) {
+        event.preventDefault();
+
+        var username = document.forms['presentation'].elements["username"].value;
+        var password = document.forms['presentation'].elements["password"].value;
+
+        this.setState({ credentials: { username: username, password: password }, loading: true }, this.handleAuth)
+
+    }
+
+    handleFetch() {
 
         function handleErrors(response) {
             if (response.status == 401) {
@@ -39,7 +82,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -49,13 +92,10 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
-
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
 
         var val = new Array();
 
@@ -68,11 +108,11 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.setState({
             boardPresentation: {
-                title: document.forms['boardlist'].elements["title"].value,
-                owner: "",
+                title: document.forms['presentation'].elements["title"].value,
+                owner: document.forms['presentation'].elements["username"].value,
                 credentials: {
-                    username: "",
-                    password: "",
+                    username: document.forms['presentation'].elements["username"].value,
+                    password: document.forms['presentation'].elements["password"].value,
                 },
                 boards: {
                     values: val,
@@ -94,26 +134,37 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     public render() {
 
         let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
+            ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        return <div>
+        let error = this.state.invalidCredentials
+            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
+            : null
 
+        return <div>
+            <h1>Izveidot prezentāciju</h1>
+
+            <form name="presentation" onSubmit={this.handleForm}>
+                <div key="title" style={styleForm}>
+                    Nosaukums: <input id="title" required name="title" type="text" />
+                </div>
+                <div key="username" style={styleForm}>
+                    Lietotājvārds: <input id="username" required name="username" type="text" />
+                </div>
+                <div key="password" style={styleForm}>
+                    Parole: <input id="password" required name="password" type="password" />
+                </div>
+                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
+            </form>
+                {error}
             {contents}
         </div>;
     }
 
-    private static renderBoardList(boardList: Value[], handleSubmit) {  //
+    private static renderBoardList(boardList: Value[], handleSubmit) {
+
         return <div>
-            <h1>Izveidot prezentāciju</h1>
-
-            <form name="boardlist" onSubmit={handleSubmit}>
-                <div key="title" style={styleForm}>
-                    Nosaukums: <input id="title" required name="title" type="text" />
-                </div>
-                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
-
-
+            <form name='boardlist' onSubmit={handleSubmit}>
             <table className='table'>
                 <thead style={styleHeader}>
                     <tr>
@@ -138,8 +189,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                     )}
                 </tbody>
             </table>
-            
-        </form>
+            <button className="btn btn-default" type="submit">Pievienot prezentāciju</button>
+            </form>
         </div>
     }
 }
