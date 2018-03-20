@@ -52,7 +52,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                 <tbody>
                     {presentationList.map(presentation =>
                         <tr key={presentation.id + "row"}>
-                            <td key={presentation.id + ""}><Link to={"/view/" + presentation.id}>{presentation.id}</Link></td>
+                            <td key={presentation.id + ""}><Link to={"/p/" + presentation.id}>{presentation.id}</Link></td>
                             <td key={presentation.id + "title"}>{presentation.title}</td>
                             <td key={presentation.id + "owner"}>{presentation.owner}</td>
                             <td key={presentation.id + "boards"}>

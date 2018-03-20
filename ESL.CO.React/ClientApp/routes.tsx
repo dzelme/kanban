@@ -15,7 +15,6 @@ import { BoardReaderFromUrl } from './components/BoardReaderFromUrl';
 export const routes = <Layout>
     <Route path='/' component={NavMenu} />
     <Route exact path='/' component={BoardReader} />
-    <Route exact path='/view/:id' component={BoardReader} />
 
     <Route path='/statistics' component={StatisticsList} />
     <Route path="/jiraconnectionstats/:id" component={StatisticsBoard} />
@@ -26,7 +25,8 @@ export const routes = <Layout>
 
     <Route path='/login' component={Login} />
 
-    <Route path='/k/:id' component={BoardReaderFromUrl} />
+    <Route exact path='/p/:id' component={BoardReader} />
+    <Route exact path='/k/:id' component={BoardReaderFromUrl} />
 </Layout>;
 
 // adjust NavMenu accordingly
