@@ -1,74 +1,55 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { Value } from './Interfaces';
+import { Value, BoardPresentation } from './Interfaces';
 
 interface BoardReaderState {
-    boardlist: Value[];
+    boardList: Value[];
     loading: boolean;
 }
 
 //Get all boards in list
-export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardReaderState> {
+export class BoardReader extends React.Component<RouteComponentProps<{ id: number }>, BoardReaderState> {
 
-    constructor(props) {
+    constructor(props: RouteComponentProps<{ id: number }>) {
         super(props);
         this.state = {
-            boardlist: [],
+            boardList: [],
             loading: true
         };
 
         //client offline error
         function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
             if (!response.ok) {
                 throw Error(response.statusText);
             }
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/admin/Presentations/' + this.props.match.params.id, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
             .then(handleErrors)
-            .then(response => response.json() as Promise<Value[]>)
+            .then(response => response.json() as Promise<BoardPresentation>)
             .then(data => {
-                this.setState({ boardlist: data }, this.checkVisibility);
-            })
-            .catch(error => console.log(error));
-    }
-
-    checkVisibility() {
-        var allBoards = this.state.boardlist;
-        const visibleBoardList = [];
-
-        allBoards.map((board) => {
-            if (board.visibility) {
-                visibleBoardList.push(board);
-            }
-
-        })
-
-        this.setState({ boardlist: visibleBoardList, loading: false });
-
+                this.setState({ boardList: data.boards.values, loading: false });
+            });
     }
 
     public render() {
-
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 >No boards selected</h1>
+            : (this.state.boardList.length != 0) ? <ColumnReader boardList={this.state.boardList} /> : <h1>No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }
-
-
-
 } 
-
-
-
 
 
 

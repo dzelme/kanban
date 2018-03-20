@@ -66,7 +66,6 @@ namespace ESL.CO.React.Controllers
 
             if (ModelState.IsValid)  // ERROR: only works on second try for some weird reason
             {
-                boardPresentation.Credentials = null;  // better way?
                 appSettings.SavePresentation(boardPresentation);
             }
             else
@@ -75,6 +74,7 @@ namespace ESL.CO.React.Controllers
                 return BadRequest("invalid data"); //
             }
 
+            boardPresentation.Credentials = null;  // better way?
             return Ok (boardPresentation);
         }
     }

@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { BoardPresentation } from './Interfaces';
+import { Link } from 'react-router-dom';
 
 interface PresentationState {
     presentationList: BoardPresentation[];
@@ -32,13 +33,12 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             : PresentationList.renderPresentationList(this.state.presentationList);
 
         return <div>
-
             {contents}
         </div>;
     }
 
     private static renderPresentationList(presentationList: BoardPresentation[]) {
-        return <div>
+        return <div className="top-padding">
             <h1>Presentation List</h1>
             <table className='table'>
                 <thead>
@@ -52,7 +52,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                 <tbody>
                     {presentationList.map(presentation =>
                         <tr key={presentation.id + "row"}>
-                            <td key={presentation.id + ""}>{presentation.id}</td>
+                            <td key={presentation.id + ""}><Link to={"/p/" + presentation.id}>{presentation.id}</Link></td>
                             <td key={presentation.id + "title"}>{presentation.title}</td>
                             <td key={presentation.id + "owner"}>{presentation.owner}</td>
                             <td key={presentation.id + "boards"}>

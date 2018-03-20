@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
@@ -30,11 +31,23 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             loading: true
         };
 
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('/login', '_self');
+                return response;
+            }
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
         fetch('api/SampleData/BoardList', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
+            .then(handleErrors)
             .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
@@ -83,13 +96,14 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     public render() {
-
+        if (sessionStorage.getItem('JwtToken') === null) {
+            return null;
+        }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        return <div>
-
+        return <div className='top-padding'>
             {contents}
         </div>;
     }
@@ -108,7 +122,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             </label>
             <label key="owner">
                 Owner:
-                <input id="owner" name="owner" type="text" />
+                <input id="owner" name="owner" type="text" defaultValue={jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']} />
             </label>
 
 

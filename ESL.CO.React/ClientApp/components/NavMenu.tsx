@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 
-export class NavMenu extends React.Component<{}, { version: String }> {
+export class NavMenu extends React.Component<RouteComponentProps<{}>, { version: String }> {
 
-    constructor(props, context) {
+    constructor(props: RouteComponentProps<{}>, context) {
         super(props, context)
         this.state = {
             version: ''
@@ -23,6 +24,14 @@ export class NavMenu extends React.Component<{}, { version: String }> {
     }
 
     public render() {
+        if (((this.props.location.pathname != '/statistics') &&
+            (this.props.location.pathname.substring(0, 20) != '/jiraconnectionstats') && 
+            (this.props.location.pathname.substring(0, 6) != '/admin'))
+            || (sessionStorage.getItem("JwtToken") === null))
+        {
+            return null;
+        }
+
         return <div className='main-nav'>
             <div className='navbar navbar-inverse'>
                 <div className='navbar-header'>
@@ -43,10 +52,25 @@ export class NavMenu extends React.Component<{}, { version: String }> {
                                 <span className='glyphicon glyphicon-home'></span> KanBan React
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to={'/admin'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> Boardlist
-                            </NavLink>
+                        <li className="dropdown">
+                            <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
+                            <ul className={["dropdown-menu", "inverse-dropdown"].join(' ')}>
+                                <li>
+                                    <NavLink to={'/admin'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-th-list'></span> Boardlist
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={'/admin/presentations'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-th-list'></span> PresentationList
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={'/statistics'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-signal'></span> Statistics
+                                    </NavLink>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <NavLink to={'/admin/presentations'} activeClassName='active'>
