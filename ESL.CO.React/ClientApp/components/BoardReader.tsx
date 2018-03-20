@@ -1,11 +1,12 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { Value } from './Interfaces';
+import { Value, Credentials } from './Interfaces';
 
 interface BoardReaderState {
     boardlist: Value[];
     loading: boolean;
+    credentials: Credentials;
 }
 
 //Get all boards in list
@@ -15,7 +16,8 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
         super(props);
         this.state = {
             boardlist: [],
-            loading: true
+            loading: true,
+            credentials: { username: "service.kosmoss.tv", password:"ZycsakMylp8od6" }
         };
 
         //client offline error
@@ -26,7 +28,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -58,7 +60,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
 
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 >No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} /> : <h1 >No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }

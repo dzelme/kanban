@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
-import { Value, Board } from './Interfaces';
+import { Value, Board, Credentials } from './Interfaces';
 
 interface ColumnReaderState {
     boardlist: Value[];
@@ -14,7 +14,7 @@ interface ColumnReaderState {
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[] }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials:Credentials }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
