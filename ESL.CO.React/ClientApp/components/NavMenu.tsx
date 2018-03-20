@@ -54,7 +54,7 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                         </li>
                         <li className="dropdown">
                             <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
-                            <ul className="dropdown-menu">
+                            <ul className={["dropdown-menu", "inverse-dropdown"].join(' ')}>
                                 <li>
                                     <NavLink to={'/admin'} activeClassName='active'>
                                         <span className='glyphicon glyphicon-th-list'></span> Boardlist
