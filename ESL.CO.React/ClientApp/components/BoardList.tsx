@@ -69,7 +69,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         this.setState({
             boardPresentation: {
                 title: document.forms['boardlist'].elements["title"].value,
-                owner:"",
+                owner: "",
                 credentials: {
                     username: "",
                     password: "",
