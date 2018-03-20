@@ -30,7 +30,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
             ? <p><em>Loading...</em></p>
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
-        return <div>
+        return <div className='top-padding'>
             <h1>Board #{this.props.match.params.id} : Network Statistics</h1>
             {contents}
         </div>;

@@ -8,8 +8,10 @@ import { StatisticsList } from './components/StatisticsList';
 import { StatisticsBoard } from './components/StatisticsBoard';
 import { Login } from './components/Login';
 import { PresentationList } from './components/PresentationList';
+import { NavMenu } from './components/NavMenu';
 
 export const routes = <Layout>
+    <Route path='/' component={NavMenu} />
     <Route exact path='/' component={BoardReader} />
     <Route path='/kanbanboard' component={KanbanBoard} />
     <Route path='/statistics' component={StatisticsList} />
@@ -18,4 +20,5 @@ export const routes = <Layout>
     <Route path='/admin/presentations/:id' component={BoardList} />
     <Route exact path='/admin' component={BoardList} />
     <Route path='/login' component={Login} />
+    <Route path='/k/:id' component={BoardReader} />
 </Layout>;

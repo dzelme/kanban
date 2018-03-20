@@ -30,7 +30,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             ? <p><em>Loading...</em></p>
             : StatisticsList.renderStatisticsList(this.state.boardlist);
 
-        return <div>
+        return <div className='top-padding'>
             <h1>Statistics</h1>
             {contents}
         </div>;

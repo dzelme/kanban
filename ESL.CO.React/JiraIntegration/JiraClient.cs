@@ -26,7 +26,7 @@ namespace ESL.CO.React.JiraIntegration
             this.paths = paths;
 
             #region Credentials
-            string credentials = "adzelme:0TESTtest";
+            string credentials = "service.kosmoss.tv:ZycsakMylp8od6";
             #endregion
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
         }

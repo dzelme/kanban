@@ -9,9 +9,9 @@ interface BoardReaderState {
 }
 
 //Get all boards in list
-export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardReaderState> {
+export class BoardReader extends React.Component<RouteComponentProps<{ id: number }>, BoardReaderState> {
 
-    constructor(props) {
+    constructor(props: RouteComponentProps<{ id: number }>) {
         super(props);
         this.state = {
             boardlist: [],
@@ -26,17 +26,33 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<Value[]>)
-            .then(data => {
-                this.setState({ boardlist: data }, this.checkVisibility);
+        if (this.props.match.params.id == null) {
+            alert('params = null');
+            fetch('api/SampleData/BoardList', {
+                headers: {
+                    authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+                }
             })
-            .catch(error => console.log(error));
+                .then(handleErrors)
+                .then(response => response.json() as Promise<Value[]>)
+                .then(data => {
+                    this.setState({ boardlist: data }, this.checkVisibility);
+                })
+                .catch(error => console.log(error));
+        }
+        else {
+            this.state = {
+                boardlist: [{
+                    id: this.props.match.params.id,
+                    name: "test",
+                    type: "test",
+                    visibility: true,
+                    timeShown: 10000,
+                    refreshRate: 5000,
+                }],
+                loading: false
+            }
+        }
     }
 
     checkVisibility() {
@@ -55,20 +71,13 @@ export class BoardReader extends React.Component<RouteComponentProps<{}>, BoardR
     }
 
     public render() {
-
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1 >No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} /> : <h1>No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }
-
-
-
 } 
-
-
-
 
 
 

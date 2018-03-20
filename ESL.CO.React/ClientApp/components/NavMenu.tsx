@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 
-export class NavMenu extends React.Component<{}, { version: String }> {
+export class NavMenu extends React.Component<RouteComponentProps<{}>, { version: String }> {
 
-    constructor(props, context) {
+    constructor(props: RouteComponentProps<{}>, context) {
         super(props, context)
         this.state = {
             version: ''
@@ -23,6 +24,13 @@ export class NavMenu extends React.Component<{}, { version: String }> {
     }
 
     public render() {
+        if ((this.props.location.pathname != '/statistics') &&
+            (this.props.location.pathname.substring(0, 20) != '/jiraconnectionstats') && 
+            (this.props.location.pathname.substring(0, 6) != '/admin'))
+        {
+            return <div></div>;
+        }
+
         return <div className='main-nav'>
             <div className='navbar navbar-inverse'>
                 <div className='navbar-header'>

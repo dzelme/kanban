@@ -156,7 +156,5 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[] }
                 </div>;
             }
         }
-
     }
 }
-

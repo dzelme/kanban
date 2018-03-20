@@ -32,13 +32,12 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             : PresentationList.renderPresentationList(this.state.presentationList);
 
         return <div>
-
             {contents}
         </div>;
     }
 
     private static renderPresentationList(presentationList: BoardPresentation[]) {
-        return <div>
+        return <div className="top-padding">
             <h1>Presentation List</h1>
             <table className='table'>
                 <thead>

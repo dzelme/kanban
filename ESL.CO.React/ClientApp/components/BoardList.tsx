@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
@@ -88,8 +89,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? <p><em>Loading...</em></p>
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        return <div>
-
+        return <div className='top-padding'>
             {contents}
         </div>;
     }
@@ -108,7 +108,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             </label>
             <label key="owner">
                 Owner:
-                <input id="owner" name="owner" type="text" />
+                <input id="owner" name="owner" type="text" defaultValue={jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']} />
             </label>
 
 

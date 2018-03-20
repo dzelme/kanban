@@ -19,9 +19,9 @@
     z-index: 1;
 }
 
-    body {
-        padding-top: 100px;
-    }
+.top-padding {
+    padding-top: 100px;
+}
 
 .version-aside {
     color: white;
