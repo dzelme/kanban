@@ -38,15 +38,15 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
 
     private static renderStatisticsBoard(connectionLog: JiraConnectionLogEntry[]) {  //
         return <table className='table'>
-                <thead>
+            <thead style={styleHeader}>
                     <tr>
                         <th>Time</th>
                         <th>Link</th>
                         <th>Response status</th>
                         <th>Exception</th>
                     </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody style={styleContent}>
                     {connectionLog.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
                             <td key={entry.time + "time"}>
@@ -73,4 +73,12 @@ interface JiraConnectionLogEntry {
     link: string;
     responseStatus: string;
     exception: string;
+}
+
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
 }

@@ -33,7 +33,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
         this.nextSlide = this.nextSlide.bind(this);
 
 
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId, {
+        fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -77,16 +77,16 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         clearInterval(this.refreshTimer);
 
-        fetch('api/SampleData/BoardData?ID=' + this.state.boardId, {
+        fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
         })
             .then(response => response.json() as Promise<Board>)
             .then(data => {
-                if (data.id == this.state.boardId) {                                            //nonem problemu, ja fetch beidzas pec tam, kad jau jauns boards izvelets
+                if (data.id == this.state.boardId) {
 
-                    if (this.state.board.id == data.id && data.hasChanged == false) {           //ja tiek nolasits tas pats boards un nav mainijies
+                    if (this.state.board.id == data.id && data.hasChanged == false) {       
 
                         this.setState({ board: data, boardChanged: false }, this.RefreshRate);
 

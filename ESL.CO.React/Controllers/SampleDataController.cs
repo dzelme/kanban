@@ -75,9 +75,9 @@ namespace ESL.CO.React.Controllers
         /// <returns>Board information.</returns>
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<Board> BoardData(int id)
+        public async Task<Board> BoardData(int id, string credentials)
         {     
-            var b = boardCreator.CreateBoardModel(id, cache);
+            var b = boardCreator.CreateBoardModel(id, credentials, cache);
             Board board = null;
             try
             {

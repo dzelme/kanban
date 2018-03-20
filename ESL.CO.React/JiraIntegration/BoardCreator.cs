@@ -23,11 +23,11 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="id">Id of the board whose object will be made.</param>
         /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
         /// <returns>A filled board object.</returns>
-        public async Task<Board> CreateBoardModel(int id, IMemoryCache cache)
+        public async Task<Board> CreateBoardModel(int id, string credentials, IMemoryCache cache)
         {
             var board = new Board(id);
 
-            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", "service.kosmoss.tv:ZycsakMylp8od6", id);
+            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("board/" + id.ToString() + "/configuration", credentials, id);
             if (boardConfig == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
@@ -44,7 +44,7 @@ namespace ESL.CO.React.JiraIntegration
             board.Name = boardConfig.Name;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue", "service.kosmoss.tv:ZycsakMylp8od6", id);
+            IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue", credentials, id);
             if (issueList == null)  //
             {
                 if (!cache.TryGetValue(id, out Board cachedBoard))
@@ -62,7 +62,7 @@ namespace ESL.CO.React.JiraIntegration
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), "service.kosmoss.tv:ZycsakMylp8od6", id);
+                issueList = await jiraClient.GetBoardDataAsync<IssueList>("board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, id);
                 if (issueList == null)  //
                 {
                     if (!cache.TryGetValue(id, out Board cachedBoard))

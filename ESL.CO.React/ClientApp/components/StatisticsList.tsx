@@ -2,19 +2,25 @@
 import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
 import { Link } from 'react-router-dom';
+import { Credentials } from './Interfaces';
 
 interface FetchDataExampleState {
     boardlist: Value[];
     loading: boolean;
+    credentials: Credentials;
 }
 
 export class StatisticsList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
         
-        this.state = { boardlist: [], loading: true };
+        this.state = {
+            boardlist: [],
+            loading: true,
+            credentials: { username:"service.kosmoss.tv", password:"ZycsakMylp8od6" }
+        };
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -62,7 +68,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                                 : ""
                             }
                             </td>
-                            <td><Link to={'/jiraconnectionstats/' + board.id} className="btn btn-default">Savienojums</Link></td>
+                            <td><Link to={'/admin/jiraconnectionstats/' + board.id} className="btn btn-default">Savienojums</Link></td>
                         </tr>
                     )}
                 </tbody>
