@@ -7,6 +7,7 @@ using System.Text;
 using ESL.CO.React.Models;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
@@ -36,6 +37,7 @@ namespace ESL.CO.React.Controllers
         [HttpPost("[action]")]
         public IActionResult Login([FromBody] Credentials credentials)
         {
+            if (credentials.Username == "" || credentials.Password == "") return Unauthorized();
             if (ldapClient.CheckCredentials(credentials.Username, credentials.Password))
             {
                 var claims = new[]
@@ -60,6 +62,13 @@ namespace ESL.CO.React.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [Authorize]
+        [HttpGet("[action]")]
+        public IActionResult CheckCredentials()
+        {
+            return Ok();
         }
     }
 }

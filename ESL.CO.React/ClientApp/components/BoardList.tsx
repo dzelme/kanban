@@ -40,8 +40,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
-
-        this.handleAuth();
     }
 
     handleAuth() {
@@ -142,16 +140,29 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         open('./admin/presentations', '_self');
     }
 
+    // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
-        //if (sessionStorage.getItem('JwtToken') === null) {
-        //    open('./login', '_self');
-        //}
-        //this.state.invalidCredentials = true;
-        this.handleAuth();
+
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('./login', '_self');
+            }
+            else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
+        fetch('api/account/checkcredentials', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
+            .then(handleErrors)
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem('JwtToken') === null) {  //
             return null;
         }
 
