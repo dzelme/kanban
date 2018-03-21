@@ -40,7 +40,6 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
                     </button>
                     <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
                     <span className='version-aside'>{this.state.version}</span>
@@ -50,25 +49,20 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                     <ul className='nav navbar-nav'>
                         <li>
                             <NavLink to={'/'} exact activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> KanBan React
+                                <span className='glyphicon glyphicon-home'></span> KanBan
                             </NavLink>
                         </li>
                         <li className="dropdown">
                             <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
                             <ul className={["dropdown-menu", "inverse-dropdown"].join(' ')}>
                                 <li>
-                                    <NavLink to={'/admin'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-th-list'></span> Boardlist
-                                    </NavLink>
-                                </li>
-                                <li>
                                     <NavLink to={'/admin/presentations'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-th-list'></span> PresentationList
+                                        <span className='glyphicon glyphicon-th-list'></span> Prezentacijas
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to={'/admin/statistics'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-signal'></span> Statistics
+                                        <span className='glyphicon glyphicon-signal'></span> Statistika
                                     </NavLink>
                                 </li>
                             </ul>
