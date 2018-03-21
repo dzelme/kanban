@@ -2,10 +2,12 @@
 import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
 import { Link } from 'react-router-dom';
+import { Credentials } from './Interfaces';
 
 interface FetchDataExampleState {
     boardlist: Value[];
     loading: boolean;
+    credentials: Credentials;
 }
 
 interface Value {
@@ -20,13 +22,18 @@ interface Value {
 export class StatisticsList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        this.state = { boardlist: [], loading: true };
+        
+        this.state = {
+            boardlist: [],
+            loading: true,
+            credentials: { username:"service.kosmoss.tv", password:"ZycsakMylp8od6" }
+        };
     }
 
     componentWillMount() {
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
                 return response;
             }
             if (!response.ok) {
@@ -35,7 +42,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -56,23 +63,23 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             : StatisticsList.renderStatisticsList(this.state.boardlist);
 
         return <div className='top-padding'>
-            <h1>Statistics</h1>
+            <h1>Statistika</h1>
             {contents}
         </div>;
     }
 
     private static renderStatisticsList(boardlist: Value[]) {  //
         return <table className='table'>
-                <thead>
+            <thead style={styleHeader}>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Times shown</th>
-                        <th>Last shown</th>
-                        <th>Network</th>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Attēlošanas reizes</th>
+                        <th>Pēdējo reizi attēlots</th>
+                        <th>Savienojums</th>
                     </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody style={styleContent}>
                     {boardlist.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
@@ -87,10 +94,18 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                                 : ""
                             }
                             </td>
-                            <td><Link to={'/jiraconnectionstats/' + board.id} className="btn btn-default">Show Jira connections</Link></td>
+                            <td><Link to={'/admin/jiraconnectionstats/' + board.id} className="btn btn-default">Savienojums</Link></td>
                         </tr>
                     )}
                 </tbody>
             </table>;
     }
+}
+
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
 }

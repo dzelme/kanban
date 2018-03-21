@@ -1,11 +1,12 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { Value } from './Interfaces';
+import { Value, Credentials } from './Interfaces';
 
 interface BoardReaderState {
-    boardList: Value[];
+    boardlist: Value[];
     loading: boolean;
+    credentials: Credentials;
 }
 
 //Get all boards in list
@@ -14,14 +15,15 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
     constructor(props: RouteComponentProps<{ id: number }>) {
         super(props);
         this.state = {
-            boardList: [],
-            loading: true
+            boardlist: [],
+            loading: true,
+            credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" }
         };
 
         //client offline error
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
                 return response;
             }
             if (!response.ok) {
@@ -31,7 +33,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         }
 
         if (this.props.match.params.id == null) {
-            fetch('api/SampleData/BoardList', {
+            fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
                 headers: {
                     authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
                 }
@@ -39,13 +41,13 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                 .then(handleErrors)
                 .then(response => response.json() as Promise<Value[]>)
                 .then(data => {
-                    this.setState({ boardList: data }, this.checkVisibility);
+                    this.setState({ boardlist: data }, this.checkVisibility);
                 })
                 .catch(error => console.log(error));
         }
         else {
             this.state = {
-                boardList: [{
+                boardlist: [{
                     id: this.props.match.params.id,
                     name: "test",
                     type: "test",
@@ -53,13 +55,14 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                     timeShown: 10000,
                     refreshRate: 5000,
                 }],
-                loading: false
+                loading: false,
+                credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" } //jānomaina, ka paņem credentials no presentation
             }
         }
     }
 
     checkVisibility() {
-        var allBoards = this.state.boardList;
+        var allBoards = this.state.boardlist;
         const visibleBoardList = [];
 
         allBoards.map((board) => {
@@ -69,14 +72,13 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
 
         })
 
-        this.setState({ boardList: visibleBoardList, loading: false });
-
+        this.setState({ boardlist: visibleBoardList, loading: false });
     }
 
     public render() {
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardList.length != 0) ? <ColumnReader boardList={this.state.boardList} /> : <h1>No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} /> : <h1>No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }

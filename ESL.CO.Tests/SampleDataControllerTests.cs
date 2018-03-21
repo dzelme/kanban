@@ -23,6 +23,7 @@ namespace ESL.CO.Tests
         private Board testBoard2;
         private SampleDataController controller;
         private IOptions<Paths> paths;
+        private string credentials;
 
         public SampleDataControllerTests()
         {
@@ -30,6 +31,7 @@ namespace ESL.CO.Tests
             appSettings = new Mock<IAppSettings>();
             jiraClient = new Mock<IJiraClient>();
             boardCreator = new Mock<IBoardCreator>();
+            credentials = "service.kosmoss.tv:ZycsakMylp8od6";
 
             paths = Options.Create(new Paths
             {
@@ -61,10 +63,10 @@ namespace ESL.CO.Tests
         public void BoardList_Should_Retrieve_Values_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", 0)).Returns(Task.FromResult<BoardList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", credentials, 0)).Returns(Task.FromResult<BoardList>(null));
 
             // Act
-            var actual = controller.BoardList().Result;
+            var actual = controller.BoardList(credentials).Result;
 
             // Assert
             Assert.Equal(cachedSettings.Values, actual);
@@ -83,10 +85,10 @@ namespace ESL.CO.Tests
                 }
             };
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", 0)).Returns(Task.FromResult(boardList));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", credentials, 0)).Returns(Task.FromResult(boardList));
 
             // Act
-            var actual = controller.BoardList().Result;
+            var actual = controller.BoardList(credentials).Result;
 
             // Assert
             Assert.Equal(2, actual.Count());
@@ -119,7 +121,7 @@ namespace ESL.CO.Tests
                 MaxResults = 2
             };
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), 0)).Returns((string a, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), credentials, 0)).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
@@ -130,7 +132,7 @@ namespace ESL.CO.Tests
             });
 
             // Act
-            var actual = controller.BoardList().Result;
+            var actual = controller.BoardList(credentials).Result;
 
             // Assert
             Assert.Equal(4, actual.Count());
@@ -155,7 +157,7 @@ namespace ESL.CO.Tests
                 MaxResults = 2
             };
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), 0)).Returns((string a, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), credentials, 0)).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
@@ -166,7 +168,7 @@ namespace ESL.CO.Tests
             });
 
             // Act
-            var actual = controller.BoardList().Result;
+            var actual = controller.BoardList(credentials).Result;
 
             // Assert
             Assert.Equal(2, actual.Count());
@@ -181,13 +183,13 @@ namespace ESL.CO.Tests
         public void BoardData_Should_Return_Board_With_HasChanged_True()
         {
             // Arrange
-            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel(74,credentials,memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedboard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
 
             // Act
-            var actual = controller.BoardData(74).Result;
+            var actual = controller.BoardData(74,credentials).Result;
 
             // Assert
             Assert.True(actual.HasChanged);
@@ -197,13 +199,13 @@ namespace ESL.CO.Tests
         public void BoardData_Should_Return_Board_With_HasChanged_False()
         {
             // Arrange
-            boardCreator.Setup(a => a.CreateBoardModel(74, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel(74,credentials,memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedboard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
 
             // Act
-            var actual = controller.BoardData(74).Result;
+            var actual = controller.BoardData(74,credentials).Result;
 
             // Assert
             Assert.False(actual.HasChanged);

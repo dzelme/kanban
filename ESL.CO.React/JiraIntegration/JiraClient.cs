@@ -5,10 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Text.Encodings;
 using System.Text;
 using ESL.CO.React.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.JiraIntegration
@@ -24,23 +22,23 @@ namespace ESL.CO.React.JiraIntegration
         public JiraClient(IOptions<Paths> paths)
         {
             this.paths = paths;
-
-            #region Credentials
-            string credentials = "service.kosmoss.tv:ZycsakMylp8od6";
-            #endregion
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
         }
-
-        /// <summary>
-        /// Makes connections to Atlassian Jira.
-        /// </summary>
-        /// <typeparam name="T">Determines the type of object whose information will be retrieved.</typeparam>
-        /// <param name="url">Part of URL required to make different Jira REST API requests.</param>
-        /// <param name="id">Board id required for creating board specific connection logs.</param>
-        /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-        public async Task<T> GetBoardDataAsync<T>(string url, int id)
+          /*  client.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(auth_info)));*/
+        
+            /// <summary>
+            /// Makes connections to Atlassian Jira.
+            /// </summary>
+            /// <typeparam name="T">Determines the type of object whose information will be retrieved.</typeparam>
+            /// <param name="url">Part of URL required to make different Jira REST API requests.</param>
+            /// <param name="id">Board id required for creating board specific connection logs.</param>
+            /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
+        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, int id)
         {
-            var response = await client.GetAsync("https://jira.returnonintelligence.com/rest/agile/1.0/" + url);
+            var baseUri = new Uri("https://jira.returnonintelligence.com/rest/agile/1.0/");
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+            
+            var response = await client.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();

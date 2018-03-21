@@ -8,6 +8,13 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
+interface JiraConnectionLogEntry {
+    time: string;
+    link: string;
+    responseStatus: string;
+    exception: string;
+}
+
 //netiek sanemti props (undefined) no routes.tsx
 export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
     constructor(props: RouteComponentProps<{ id: number }>) {
@@ -18,7 +25,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     componentWillMount() {
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
                 return response;
             }
             if (!response.ok) {
@@ -48,22 +55,22 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div className='top-padding'>
-            <h1>Board #{this.props.match.params.id} : Network Statistics</h1>
+            <h1>Paneļa #{this.props.match.params.id} : Savienojumi</h1>
             {contents}
         </div>;
     }
 
     private static renderStatisticsBoard(connectionLog: JiraConnectionLogEntry[]) {  //
         return <table className='table'>
-                <thead>
+            <thead style={styleHeader}>
                     <tr>
-                        <th>Time</th>
-                        <th>Link</th>
-                        <th>Response status</th>
-                        <th>Exception</th>
+                        <th>Laiks</th>
+                        <th>Saite</th>
+                        <th>Atbildes statuss</th>
+                        <th>Izņēmums</th>
                     </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody style={styleContent}>
                     {connectionLog.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
                             <td key={entry.time + "time"}>
@@ -85,9 +92,10 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     }
 }
 
-interface JiraConnectionLogEntry {
-    time: string;
-    link: string;
-    responseStatus: string;
-    exception: string;
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
 }

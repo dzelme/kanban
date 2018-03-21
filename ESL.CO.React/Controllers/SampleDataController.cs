@@ -40,9 +40,9 @@ namespace ESL.CO.React.Controllers
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Value>> BoardList()
+        public async Task<IEnumerable<Value>> BoardList(string credentials)
         {
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/");
+            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentials);
             if (boardList == null)
             {
                 return appSettings.GetSavedAppSettings()?.Values;
@@ -53,7 +53,7 @@ namespace ESL.CO.React.Controllers
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
-                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString());
+                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentials);
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -75,9 +75,9 @@ namespace ESL.CO.React.Controllers
         /// <returns>Board information.</returns>
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<Board> BoardData(int id)
+        public async Task<Board> BoardData(int id, string credentials)
         {     
-            var b = boardCreator.CreateBoardModel(id, cache);
+            var b = boardCreator.CreateBoardModel(id, credentials, cache);
             Board board = null;
             try
             {

@@ -93,3 +93,8 @@ a:link {
 input, select, textarea {
     color: #000000;
 }
+
+.Link {
+    color: white;
+    text-decoration: none;
+}

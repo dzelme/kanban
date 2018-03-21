@@ -24,8 +24,8 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
     }
 
     public render() {
-        if (((this.props.location.pathname != '/statistics') &&
-            (this.props.location.pathname.substring(0, 20) != '/jiraconnectionstats') && 
+        if (((this.props.location.pathname != '/admin/statistics') &&
+            (this.props.location.pathname.substring(0, 20) != '/admin/jiraconnectionstats') && 
             (this.props.location.pathname.substring(0, 6) != '/admin'))
             || (sessionStorage.getItem("JwtToken") === null))
         {
@@ -49,43 +49,23 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                     <ul className='nav navbar-nav'>
                         <li>
                             <NavLink to={'/'} exact activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> KanBan React
+                                <span className='glyphicon glyphicon-home'></span> KanBan
                             </NavLink>
                         </li>
                         <li className="dropdown">
                             <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
                             <ul className={["dropdown-menu", "inverse-dropdown"].join(' ')}>
                                 <li>
-                                    <NavLink to={'/admin'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-th-list'></span> Boardlist
-                                    </NavLink>
-                                </li>
-                                <li>
                                     <NavLink to={'/admin/presentations'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-th-list'></span> PresentationList
+                                        <span className='glyphicon glyphicon-th-list'></span> Prezentacijas
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to={'/statistics'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-signal'></span> Statistics
+                                    <NavLink to={'/admin/statistics'} activeClassName='active'>
+                                        <span className='glyphicon glyphicon-signal'></span> Statistika
                                     </NavLink>
                                 </li>
                             </ul>
-                        </li>
-                        <li>
-                            <NavLink to={'/admin/presentations'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> PresentationList
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={'/statistics'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-signal'></span> Statistics
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={'/login'} activeClassName='active'>
-                                <span className='glyphicon glyphicon-signal'></span> Login
-                            </NavLink>
                         </li>
                     </ul>
                 </div>

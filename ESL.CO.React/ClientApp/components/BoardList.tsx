@@ -1,13 +1,15 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import { Credentials, FullBoardList, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
     boardList: Value[];
     loading: boolean;
+    credentials: Credentials;
+    invalidCredentials: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
@@ -16,7 +18,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.state = {
             boardPresentation: {
-                id: "",
+                id:"",
                 title: "",
                 owner: "",
                 credentials: {
@@ -28,21 +30,62 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 }
             },
             boardList: [],
-            loading: true
+            loading: true,
+            credentials: { username: "", password: "" },
+            invalidCredentials: false
         };
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleForm = this.handleForm.bind(this);
+        this.handleAuth = this.handleAuth.bind(this);
+        this.handleFetch = this.handleFetch.bind(this);
+        this.postPresentation = this.postPresentation.bind(this);
+    }
+
+    handleAuth() {
+        event.preventDefault();
+
+        fetch('./api/account/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.credentials),
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                }
+                else {
+                    this.setState({ invalidCredentials: true });
+                }
+            });
+    }
+
+    handleForm(event) {
+        event.preventDefault();
+
+        var username = document.forms['presentation'].elements["username"].value;
+        var password = document.forms['presentation'].elements["password"].value;
+
+        this.setState({ credentials: { username: username, password: password }, loading: true }, this.handleAuth)
+
+    }
+
+    handleFetch() {
 
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
-                return response;
+                open('./login', '_self');
             }
-            if (!response.ok) {
+            else if (!response.ok) {
                 throw Error(response.statusText);
             }
             return response;
         }
 
-        fetch('api/SampleData/BoardList', {
+        fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -52,13 +95,10 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
-
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
 
         var val = new Array();
 
@@ -71,18 +111,22 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.setState({
             boardPresentation: {
-                id: document.forms['boardlist'].elements["id"].value,
-                title: document.forms['boardlist'].elements["title"].value,
-                owner: document.forms['boardlist'].elements["owner"].value,
+                id:"",
+                title: document.forms['presentation'].elements["title"].value,
+                owner: document.forms['presentation'].elements["username"].value,
                 credentials: {
-                    username: "",
-                    password: "",
+                    username: document.forms['presentation'].elements["username"].value,
+                    password: document.forms['presentation'].elements["password"].value
                 },
                 boards: {
                     values: val,
                 }
             }
-        })
+        }, this.postPresentation)
+
+    }
+
+    postPresentation() {
 
         fetch('api/admin/Presentations/', {
             method: 'POST',
@@ -100,44 +144,49 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             return null;
         }
         let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
+            ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        return <div className='top-padding'>
+        let error = this.state.invalidCredentials
+            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
+            : null
+
+        return <div style={stylePage}>
+            <h1>Izveidot prezentāciju</h1>
+
+            <form name="presentation" onSubmit={this.handleForm}>
+                <div key="title" style={styleForm}>
+                    Nosaukums: <input id="title" required name="title" type="text" />
+                </div>
+                <div key="username" style={styleForm}>
+                    Lietotājvārds: <input id="username" required name="username" type="text" />
+                </div>
+                <div key="password" style={styleForm}>
+                    Parole: <input id="password" required name="password" type="password" />
+                </div>
+                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
+            </form>
+                {error}
             {contents}
         </div>;
     }
 
-    private static renderBoardList(boardList: Value[], handleSubmit) {  //
+    private static renderBoardList(boardList: Value[], handleSubmit) {
+
         return <div>
-            <h1>Board List</h1>
-        <form name="boardlist" onSubmit={handleSubmit}>
-            <label key="id">
-                Id:
-                <input id="id" name="id" type="text" />
-            </label>
-            <label key="title">
-                Title:
-                <input id="title" name="title" type="text" />
-            </label>
-            <label key="owner">
-                Owner:
-                <input id="owner" name="owner" type="text" defaultValue={jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']} />
-            </label>
-
-
+            <form name='boardlist' onSubmit={handleSubmit}>
             <table className='table'>
-                <thead>
+                <thead style={styleHeader}>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Visibility</th>
-                        <th>Time shown</th>
-                        <th>Refresh rate</th>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Tips</th>
+                        <th>Iekļaut prezentācijā</th>
+                        <th>Attēlošanas laiks</th>
+                        <th>Atjaunošanas laiks</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style={styleContent}>
                     {boardList.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
@@ -150,9 +199,31 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                     )}
                 </tbody>
             </table>
-            <p><input type="submit" className="btn btn-default" name="Submit" /></p>
-            
-        </form>
+            <button className="btn btn-default" type="submit">Pievienot prezentāciju</button>
+            </form>
         </div>
     }
+}
+const styleHeader = {
+    fontSize: '20px'
+}
+
+const styleContent = {
+    fontSize: '15px'
+}
+
+const styleForm = {
+    fontSize: '20px',
+    display: 'inline-block',
+    margin: '10px',
+    marginBottom: '30px'
+}
+
+const styleButton = {
+    display: 'inline-block',
+    height:'40px'
+}
+
+const stylePage = {
+    marginTop:'70px'
 }
