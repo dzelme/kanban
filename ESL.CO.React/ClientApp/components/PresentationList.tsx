@@ -19,7 +19,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login','_self');
+                open('./login','_self');
             }           
             else if (!response.ok) {
                 throw Error(response.statusText);
@@ -41,7 +41,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
     handleNew()
     {
-        open('/admin/createPresentation','_self');
+        open('./admin/createPresentation','_self');
     }
 
     public render() {

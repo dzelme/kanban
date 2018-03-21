@@ -33,7 +33,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
     componentWillMount() {
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
                 return response;
             }
             if (!response.ok) {

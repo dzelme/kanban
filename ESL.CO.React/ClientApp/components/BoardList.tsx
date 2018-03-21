@@ -76,7 +76,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
             }
             else if (!response.ok) {
                 throw Error(response.statusText);

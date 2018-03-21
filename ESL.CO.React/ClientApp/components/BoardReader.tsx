@@ -23,7 +23,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
         //client offline error
         function handleErrors(response) {
             if (response.status == 401) {
-                open('/login', '_self');
+                open('./login', '_self');
                 return response;
             }
             if (!response.ok) {
