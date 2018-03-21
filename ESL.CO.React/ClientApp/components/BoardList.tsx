@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { Credentials, FullBoardList, Value } from './Interfaces';
+import { Credentials, FullBoardList, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
@@ -18,6 +18,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.state = {
             boardPresentation: {
+                id:"",
                 title: "",
                 owner: "",
                 credentials: {
@@ -110,6 +111,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         this.setState({
             boardPresentation: {
+                id:"",
                 title: document.forms['presentation'].elements["title"].value,
                 owner: document.forms['presentation'].elements["username"].value,
                 credentials: {
@@ -224,11 +226,4 @@ const styleButton = {
 
 const stylePage = {
     marginTop:'70px'
-}
-
-interface BoardPresentation {
-    title: string;
-    owner: string;
-    credentials: Credentials;
-    boards: FullBoardList;
 }

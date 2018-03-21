@@ -147,7 +147,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                 return <div>
 
                     <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
-                    <div id='board'><BoardTable board={this.state.board} boardTime={this.state.boardlist[this.state.currentIndex].timeShown} /></div>
+                    <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {
                         this.slideShow()

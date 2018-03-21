@@ -5,7 +5,7 @@ import Ticket from './Ticket';
 import { Board } from './Interfaces';
 
 
-export default class BoardTable extends React.Component<{ board: Board, boardTime: number }> {
+export default class BoardTable extends React.Component<{ board: Board }> {
 
     public render() {
 
