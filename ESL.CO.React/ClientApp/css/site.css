@@ -20,11 +20,11 @@
 }
 
 .top-padding {
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 .version-aside {
-    color: white;
+    color: #999;
 }
 
 /* Show dropdown in navbar on hover */

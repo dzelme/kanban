@@ -40,10 +40,11 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
+
+        this.handleAuth();
     }
 
     handleAuth() {
-        event.preventDefault();
 
         fetch('./api/account/login', {
             method: 'POST',
@@ -137,12 +138,23 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             },
             body: JSON.stringify(this.state.boardPresentation),
         });
+
+        open('./admin/presentations', '_self');
+    }
+
+    componentWillMount() {
+        //if (sessionStorage.getItem('JwtToken') === null) {
+        //    open('./login', '_self');
+        //}
+        //this.state.invalidCredentials = true;
+        this.handleAuth();
     }
 
     public render() {
         if (sessionStorage.getItem('JwtToken') === null) {
             return null;
         }
+
         let contents = this.state.loading
             ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
@@ -151,7 +163,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
             : null
 
-        return <div style={stylePage}>
+        return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
             <form name="presentation" onSubmit={this.handleForm}>
@@ -166,7 +178,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
-                {error}
+            {error}
             {contents}
         </div>;
     }
@@ -222,8 +234,4 @@ const styleForm = {
 const styleButton = {
     display: 'inline-block',
     height:'40px'
-}
-
-const stylePage = {
-    marginTop:'70px'
 }
