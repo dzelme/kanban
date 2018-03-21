@@ -34,7 +34,7 @@ export class AllBoardReader extends React.Component<RouteComponentProps<{}>, Boa
     public render() {
 
         let boardInfo = this.state.loading
-            ? <p><em>Loading...</em></p>
+            ? <p><em>Loading all boards</em></p>
             : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} /> : <h1 >No boards</h1>
 
         return <div>{boardInfo}</div>

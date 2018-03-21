@@ -8,6 +8,13 @@ interface FetchDataExampleState {
     loading: boolean;
 }
 
+interface JiraConnectionLogEntry {
+    time: string;
+    link: string;
+    responseStatus: string;
+    exception: string;
+}
+
 //netiek sanemti props (undefined) no routes.tsx
 export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
     constructor(props: RouteComponentProps<{ id: number }>) {
@@ -48,7 +55,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
             : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
 
         return <div className='top-padding'>
-            <h1>Board #{this.props.match.params.id} : Network Statistics</h1>
+            <h1>Paneļa #{this.props.match.params.id} : Savienojumi</h1>
             {contents}
         </div>;
     }
@@ -57,10 +64,10 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
         return <table className='table'>
             <thead style={styleHeader}>
                     <tr>
-                        <th>Time</th>
-                        <th>Link</th>
-                        <th>Response status</th>
-                        <th>Exception</th>
+                        <th>Laiks</th>
+                        <th>Saite</th>
+                        <th>Atbildes statuss</th>
+                        <th>Izņēmums</th>
                     </tr>
             </thead>
             <tbody style={styleContent}>
@@ -83,13 +90,6 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
                 </tbody>
             </table>;
     }
-}
-
-interface JiraConnectionLogEntry {
-    time: string;
-    link: string;
-    responseStatus: string;
-    exception: string;
 }
 
 const styleHeader = {

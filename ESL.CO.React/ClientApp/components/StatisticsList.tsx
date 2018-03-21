@@ -28,7 +28,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             loading: true,
             credentials: { username:"service.kosmoss.tv", password:"ZycsakMylp8od6" }
         };
-        this.state = { boardlist: [], loading: true };
     }
 
     componentWillMount() {
@@ -64,7 +63,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             : StatisticsList.renderStatisticsList(this.state.boardlist);
 
         return <div className='top-padding'>
-            <h1>Statistics</h1>
+            <h1>Statistika</h1>
             {contents}
         </div>;
     }
@@ -101,15 +100,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                 </tbody>
             </table>;
     }
-}
-
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-
-    timesShown: number;
-    lastShown: string;
 }
 
 const styleHeader = {

@@ -1,13 +1,12 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { Value, Credentials } from './Interfaces';
-import { Value, BoardPresentation } from './Interfaces';
+import { Value, Credentials, BoardPresentation } from './Interfaces';
 
 interface BoardReaderState {
-    boardList: Value[];
-    loading: boolean;
+    boardlist: Value[];
     credentials: Credentials;
+    loading: boolean;
 }
 
 //Get all boards in list
@@ -17,8 +16,8 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
         super(props);
         this.state = {
             boardlist: [],
-            loading: true,
-            credentials: { username: "service.kosmoss.tv", password:"ZycsakMylp8od6" }
+            credentials: { username: "", password: "" },
+            loading: true
         };
 
         //client offline error
@@ -34,7 +33,6 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
         }
 
         fetch('api/admin/Presentations/' + this.props.match.params.id, {
-        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }
@@ -42,7 +40,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
             .then(handleErrors)
             .then(response => response.json() as Promise<BoardPresentation>)
             .then(data => {
-                this.setState({ boardList: data.boards.values, loading: false });
+                this.setState({ boardlist: data.boards.values, credentials: { username: data.credentials.username, password: data.credentials.password }, loading: false });
             });
     }
 

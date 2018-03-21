@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { BoardPresentation, Credentials, FullBoardList, Value } from './Interfaces';
+import { Credentials, FullBoardList, Value } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 
 interface BoardListState {
@@ -149,7 +149,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
             : null
 
-        return <div>
+        return <div style={stylePage}>
             <h1>Izveidot prezentāciju</h1>
 
             <form name="presentation" onSubmit={this.handleForm}>
@@ -220,6 +220,10 @@ const styleForm = {
 const styleButton = {
     display: 'inline-block',
     height:'40px'
+}
+
+const stylePage = {
+    marginTop:'70px'
 }
 
 interface BoardPresentation {

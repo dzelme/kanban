@@ -56,7 +56,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
     }
 
     private static renderPresentationList(presentationList: BoardPresentation[], handleNew) {
-        return <div>
+        return <div className="top-padding">
             <h1>Prezentāciju saraksts</h1>
             <button onClick={handleNew} className="btn btn-default">Izveidot jaunu</button>
             <table className='table'>
@@ -71,7 +71,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                 <tbody style={styleContent}>
                     {presentationList.map(presentation =>
                         <tr key={presentation.id + "row"}>
-                            <td key={presentation.id + ""}><Link to={"/p/" + presentation.id}>{presentation.id}</Link></td>
+                            <td key={presentation.id + ""}><Link className="Link" to={"/p/" + presentation.id}>{presentation.id}</Link></td>
                             <td key={presentation.id + "title"}>{presentation.title}</td>
                             <td key={presentation.id + "owner"}>{presentation.owner}</td>
                             <td key={presentation.id + "boards"}>
