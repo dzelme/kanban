@@ -15,7 +15,9 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
         this.state = {
             credentials: { username: "", password: "" },
             invalidCredentials: false,
-        },
+        }
+
+        sessionStorage.removeItem("JwtToken");
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

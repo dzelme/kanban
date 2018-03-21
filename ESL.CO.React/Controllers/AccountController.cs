@@ -47,7 +47,7 @@ namespace ESL.CO.React.Controllers
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
-                    issuer: jwtSettings.Value.Issuer, //http://localhost:58533/
+                    issuer: jwtSettings.Value.Issuer,
                     audience: jwtSettings.Value.Audience,
                     claims: claims,
                     expires: DateTime.Now.AddMinutes(30),
