@@ -15,6 +15,9 @@ namespace ESL.CO.React.LdapCredentialCheck
     public class LdapClient : ILdapClient
     {
         private readonly IOptions<LdapSettings> ldapSettings;
+        private const string MemberOfAttribute = "memberOf";  // used in GetUserData
+        private const string DisplayNameAttribute = "displayName";  // used in GetUserData
+        private const string SAMAccountNameAttribute = "sAMAccountName";  // used in GetUserData
 
         public LdapClient (IOptions<LdapSettings> ldapSettings)
         {
@@ -48,24 +51,21 @@ namespace ESL.CO.React.LdapCredentialCheck
                     }
                     throw;
                 }
-                return true;
+
+                // Returns true only if the user belongs to the group specified in appsettings.json as AdminCn in LdapSettings section
+                return (GetUserData(username, password, ldapConn).IsAdmin);
             }
         }
-
-
-
-
-        private const string MemberOfAttribute = "memberOf";
-        private const string DisplayNameAttribute = "displayName";
-        private const string SAMAccountNameAttribute = "sAMAccountName";
-
-        public AppUser Login(string username, string password)
+        
+        /// <summary>
+        /// Gets LDAP user data.
+        /// </summary>
+        /// <param name="username">LDAP username without domain prefix.</param>
+        /// <param name="password">The password corresponding to the LDAP username.</param>
+        /// <param name="ldapConnection">The active LDAP connection used for checking credential validity.</param>
+        /// <returns>An object containing LDAP user's data including its username, display name and a boolean indicating membership to a specified group. </returns>
+        private LdapUser GetUserData(string username, string password, LdapConnection ldapConnection)
         {
-            var ldapConnection = new LdapConnection(); //
-            ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389); //
-            //ldapConnection.Bind(ldapSettings.Value.DomainPrefix + ldapSettings.Value.DefaultUsername, ldapSettings.Value.DefaultPassword);
-            ldapConnection.Bind(ldapSettings.Value.DomainPrefix + username, password);
-
             var searchFilter = string.Format(ldapSettings.Value.SearchFilter, username);
             var result = ldapConnection.Search(
                 ldapSettings.Value.SearchBase,
@@ -84,7 +84,7 @@ namespace ESL.CO.React.LdapCredentialCheck
                     if (ldapConnection.Bound)
                     {
                         var a = user.getAttribute(MemberOfAttribute).StringValueArray;
-                        return new AppUser
+                        return new LdapUser
                         {
                             DisplayName = user.getAttribute(DisplayNameAttribute).StringValue,
                             Username = user.getAttribute(SAMAccountNameAttribute).StringValue,
@@ -95,85 +95,10 @@ namespace ESL.CO.React.LdapCredentialCheck
             }
             catch
             {
-                throw new Exception("Login failed.");
+                throw new Exception("LDAP user data extraction failed.");
             }
-            ldapConnection.Disconnect();
+
             return null;
         }
-
-
-        //private readonly LdapConnection _ldapConnection;
-
-        // ...
-
-        //public IEnumerable<string> GetGroupsForUser(string username)
-        //{
-        //    var ldapConnection = new LdapConnection(); //
-        //    ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389); //
-        //    ldapConnection.Bind(ldapSettings.Value.DomainPrefix + ldapSettings.Value.DefaultUsername, ldapSettings.Value.DefaultPassword);
-
-        //    var groups = new Stack<string>();
-        //    var uniqueGroups = new HashSet<string>();
-
-        //    foreach (string group in this.GetGroupsForUserCore(ldapSettings.Value.DomainPrefix + username, ldapConnection))
-        //        groups.Push(group);
-
-        //    while (groups.Count > 0)
-        //    {
-        //        string group = groups.Pop();
-        //        if (uniqueGroups.Add(group))
-        //            yield return group;
-
-        //        foreach (string parentGroup in this.GetGroupsForUserCore(group, ldapConnection))
-        //            groups.Push(parentGroup);
-        //    }
-        //}
-
-        //private IEnumerable<string> GetGroupsForUserCore(string user, LdapConnection ldapConnection)
-        //{
-        //    LdapSearchQueue searchQueue = ldapConnection.Search(
-        //        //_config["searchBase"],
-        //        ldapSettings.Value.SearchBase,
-        //        LdapConnection.SCOPE_SUB,
-        //        $"(sAMAccountName={user})",
-        //        new string[] { "cn", "memberOf" },
-        //        false,
-        //        null as LdapSearchQueue);
-
-        //    LdapMessage message;
-        //    while ((message = searchQueue.getResponse()) != null)
-        //    {
-        //        if (message is LdapSearchResult searchResult)
-        //        {
-        //            LdapEntry entry = searchResult.Entry;
-        //            foreach (string value in HandleEntry(entry))
-        //                yield return value;
-        //        }
-        //        else
-        //            continue;
-        //    }
-
-        //    IEnumerable<string> HandleEntry(LdapEntry entry)
-        //    {
-        //        LdapAttribute attr = entry.getAttribute("memberOf");
-
-        //        if (attr == null) yield break;
-
-        //        foreach (string value in attr.StringValueArray)
-        //        {
-        //            string groupName = GetGroup(value);
-        //            yield return groupName;
-        //        }
-        //    }
-
-        //    string GetGroup(string value)
-        //    {
-        //        Match match = Regex.Match(value, "^CN=([^,]*)");
-
-        //        if (!match.Success) return null;
-
-        //        return match.Groups[1].Value;
-        //    }
-        //}
     }
 }
