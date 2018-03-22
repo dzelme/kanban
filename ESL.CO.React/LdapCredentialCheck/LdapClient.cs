@@ -30,15 +30,15 @@ namespace ESL.CO.React.LdapCredentialCheck
         public bool CheckCredentials(string username, string password)
         {
             // Creating an LdapConnection instance 
-            using (var ldapConn = new LdapConnection() { })
+            using (var ldapConnection = new LdapConnection() { })
             {
                 //Connect function will create a socket connection to the server - Port 389 for insecure and 3269 for secure    
-                ldapConn.Connect(ldapSettings.Value.LdapServerUrl, 389);
+                ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389);
 
                 try
                 {
                     //Bind function with null user dn and password value will perform anonymous bind to LDAP server 
-                    ldapConn.Bind(ldapSettings.Value.DomainPrefix + username, password);
+                    ldapConnection.Bind(ldapSettings.Value.DomainPrefix + username, password);
                 }
                 catch (LdapException e)
                 {
@@ -50,7 +50,9 @@ namespace ESL.CO.React.LdapCredentialCheck
                 }
 
                 // Returns true only if the user belongs to the group specified in appsettings.json as AdminCn in LdapSettings section
-                return (GetUserData(username, password, ldapConn).IsAdmin);
+
+                var ldapUser = GetUserData(username, password, ldapConnection);
+                return ldapUser.IsAdmin;
             }
         }
         
@@ -72,30 +74,18 @@ namespace ESL.CO.React.LdapCredentialCheck
                 false
             );
 
-            try
-            {
-                var user = result.next();
-                if (user != null)
-                {
-                    ldapConnection.Bind(user.DN, password);
-                    if (ldapConnection.Bound)
-                    {
-                        var a = user.getAttribute(MemberOfAttribute).StringValueArray;
-                        return new LdapUser
-                        {
-                            DisplayName = user.getAttribute(DisplayNameAttribute).StringValue,
-                            Username = user.getAttribute(SAMAccountNameAttribute).StringValue,
-                            IsAdmin = user.getAttribute(MemberOfAttribute).StringValueArray.Contains(ldapSettings.Value.AdminCn)
-                        };
-                    }
-                }
-            }
-            catch
-            {
-                throw new Exception("LDAP user data extraction failed.");
-            }
+            var hasMore = result.hasMore();
+            var count = result.Count;
+            if(count != 1)
+                throw new ApplicationException($"Unexpected response from LDAP server, found {count} users.");
 
-            return null;
+            var entry = result.next();
+            return new LdapUser
+            {
+                DisplayName = entry.getAttribute(DisplayNameAttribute).StringValue,
+                Username = entry.getAttribute(SAMAccountNameAttribute).StringValue,
+                IsAdmin = entry.getAttribute(MemberOfAttribute).StringValueArray.Contains(ldapSettings.Value.AdminCn)
+            };
         }
     }
 }
