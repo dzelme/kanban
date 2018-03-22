@@ -4,10 +4,8 @@ namespace ESL.CO.React.Models
 {
     public class Priority : IEquatable<Priority>
     {
-        //public string self { get; set; }
-        //public string iconUrl { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }  //e.g., critical
+        public string Name { get; set; } 
         
         public Priority()
         {

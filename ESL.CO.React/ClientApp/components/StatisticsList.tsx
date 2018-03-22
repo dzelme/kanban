@@ -94,7 +94,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
                                 : ""
                             }
                             </td>
-                            <td><Link to={'/admin/jiraconnectionstats/' + board.id} className="btn btn-default">Savienojums</Link></td>
+                            <td><button className="btn btn-default"><Link to={'/admin/jiraconnectionstats/' + board.id}>Savienojums</Link></button></td>
                         </tr>
                     )}
                 </tbody>
