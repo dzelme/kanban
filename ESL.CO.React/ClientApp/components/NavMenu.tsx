@@ -61,7 +61,7 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                             </ul>
                         </li>
                         <li>
-                            <NavLink to={'/login'} activeClassName='active'>
+                            <NavLink to={'/logout'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-log-out'></span> Atteikties
                             </NavLink>
                         </li>
