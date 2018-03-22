@@ -22,11 +22,8 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
-    <Compile Remove="Logs\**" />
     <Content Remove="ClientApp\**" />
     <Content Remove="Logs\**" />
-    <EmbeddedResource Remove="Logs\**" />
-    <None Remove="Logs\**" />
   </ItemGroup>
 
   <ItemGroup>
