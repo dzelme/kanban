@@ -15,10 +15,31 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
         this.state = {
             credentials: { username: "", password: "" },
             invalidCredentials: false,
-        },
+        }
+
+        this.isAuthenticated();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    isAuthenticated() {
+        function handleErrors(response) {
+            if (response.status == 200) {
+                open('./admin', '_self');
+            }
+            else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
+        fetch('api/account/checkcredentials', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
+            .then(handleErrors)
     }
 
     handleChange(event)

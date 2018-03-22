@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
@@ -24,9 +24,7 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
     }
 
     public render() {
-        if (((this.props.location.pathname != '/admin/statistics') &&
-            (this.props.location.pathname.substring(0, 20) != '/admin/jiraconnectionstats') && 
-            (this.props.location.pathname.substring(0, 6) != '/admin'))
+        if ((this.props.location.pathname.substring(0, 6) != '/admin')
             || (sessionStorage.getItem("JwtToken") === null))
         {
             return null;
@@ -41,31 +39,31 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                     </button>
-                    <Link className='navbar-brand' to={'/'}>ESL.CO.React</Link>
+                    <Link className='navbar-brand' to={'/admin'}>ESL.CO.React</Link>
                     <span className='version-aside'>{this.state.version}</span>
                 </div>
-                <div className='clearfix'></div>
                 <div className='navbar-collapse collapse'>
                     <ul className='nav navbar-nav'>
-                        <li>
-                            <NavLink to={'/'} exact activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> KanBan
-                            </NavLink>
-                        </li>
                         <li className="dropdown">
-                            <a className="dropdown-toggle" data-toggle="dropdown" href="#"> Admin <span className="caret"></span></a>
+                            <a className="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span className='glyphicon glyphicon-cog'></span> Admin <span className="caret"></span></a>
                             <ul className={["dropdown-menu", "inverse-dropdown"].join(' ')}>
                                 <li>
                                     <NavLink to={'/admin/presentations'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-th-list'></span> Prezentacijas
+                                        <span className='glyphicon glyphicon-th-list'></span> Prezentācijas
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to={'/admin/statistics'} activeClassName='active'>
-                                        <span className='glyphicon glyphicon-signal'></span> Statistika
+                                        <span className='glyphicon glyphicon-stats'></span> Statistika
                                     </NavLink>
                                 </li>
                             </ul>
+                        </li>
+                        <li>
+                            <NavLink to={'/logout'} activeClassName='active'>
+                                <span className='glyphicon glyphicon-log-out'></span> Atteikties
+                            </NavLink>
                         </li>
                     </ul>
                 </div>

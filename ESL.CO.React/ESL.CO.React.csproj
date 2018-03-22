@@ -23,6 +23,7 @@
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
+    <Content Remove="Logs\**" />
   </ItemGroup>
 
   <ItemGroup>

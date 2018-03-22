@@ -149,9 +149,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                     <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
-                    {
-                        this.slideShow()
-                    }
+                    { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }
 
                 </div>;
             }

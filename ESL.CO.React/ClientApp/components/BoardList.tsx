@@ -43,7 +43,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     handleAuth() {
-        event.preventDefault();
 
         fetch('./api/account/login', {
             method: 'POST',
@@ -137,12 +136,36 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             },
             body: JSON.stringify(this.state.boardPresentation),
         });
+
+        open('./admin/presentations', '_self');
+    }
+
+    // used to redirect to login screen, if invalid JWT token
+    componentWillMount() {
+
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('./login', '_self');
+            }
+            else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
+        fetch('api/account/checkcredentials', {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+            }
+        })
+            .then(handleErrors)
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem('JwtToken') === null) {  //
             return null;
         }
+
         let contents = this.state.loading
             ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
@@ -151,7 +174,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
             : null
 
-        return <div style={stylePage}>
+        return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
             <form name="presentation" onSubmit={this.handleForm}>
@@ -166,7 +189,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
-                {error}
+            {error}
             {contents}
         </div>;
     }
@@ -222,8 +245,4 @@ const styleForm = {
 const styleButton = {
     display: 'inline-block',
     height:'40px'
-}
-
-const stylePage = {
-    marginTop:'70px'
 }

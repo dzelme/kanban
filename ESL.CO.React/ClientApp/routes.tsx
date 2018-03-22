@@ -8,12 +8,14 @@ import { AllBoardReader } from './components/AllBoardReader';
 import { StatisticsList } from './components/StatisticsList';
 import { StatisticsBoard } from './components/StatisticsBoard';
 import { Login } from './components/Login';
+import { Logout } from './components/Logout';
 import { PresentationList } from './components/PresentationList';
 import { NavMenu } from './components/NavMenu';
 import { BoardReaderFromUrl } from './components/BoardReaderFromUrl';
 
 export const routes = <Layout>
     <Route path='/login' component={Login} />
+    <Route path='/logout' component={Logout} />
     <Route exact path='/admin' component={PresentationList} />
     <Route path='/admin/presentations' component={PresentationList} />
     <Route path='/admin/createPresentation' component={BoardList} />
