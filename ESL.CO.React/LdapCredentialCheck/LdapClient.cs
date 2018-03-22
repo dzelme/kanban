@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Novell.Directory.Ldap;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
 
 namespace ESL.CO.React.LdapCredentialCheck
 {
@@ -47,9 +48,132 @@ namespace ESL.CO.React.LdapCredentialCheck
                     }
                     throw;
                 }
-
                 return true;
             }
         }
+
+
+
+
+        private const string MemberOfAttribute = "memberOf";
+        private const string DisplayNameAttribute = "displayName";
+        private const string SAMAccountNameAttribute = "sAMAccountName";
+
+        public AppUser Login(string username, string password)
+        {
+            var ldapConnection = new LdapConnection(); //
+            ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389); //
+            //ldapConnection.Bind(ldapSettings.Value.DomainPrefix + ldapSettings.Value.DefaultUsername, ldapSettings.Value.DefaultPassword);
+            ldapConnection.Bind(ldapSettings.Value.DomainPrefix + username, password);
+
+            var searchFilter = string.Format(ldapSettings.Value.SearchFilter, username);
+            var result = ldapConnection.Search(
+                ldapSettings.Value.SearchBase,
+                LdapConnection.SCOPE_SUB,
+                searchFilter,
+                new[] { MemberOfAttribute, DisplayNameAttribute, SAMAccountNameAttribute },
+                false
+            );
+
+            try
+            {
+                var user = result.next();
+                if (user != null)
+                {
+                    ldapConnection.Bind(user.DN, password);
+                    if (ldapConnection.Bound)
+                    {
+                        var a = user.getAttribute(MemberOfAttribute).StringValueArray;
+                        return new AppUser
+                        {
+                            DisplayName = user.getAttribute(DisplayNameAttribute).StringValue,
+                            Username = user.getAttribute(SAMAccountNameAttribute).StringValue,
+                            IsAdmin = user.getAttribute(MemberOfAttribute).StringValueArray.Contains(ldapSettings.Value.AdminCn)
+                        };
+                    }
+                }
+            }
+            catch
+            {
+                throw new Exception("Login failed.");
+            }
+            ldapConnection.Disconnect();
+            return null;
+        }
+
+
+        //private readonly LdapConnection _ldapConnection;
+
+        // ...
+
+        //public IEnumerable<string> GetGroupsForUser(string username)
+        //{
+        //    var ldapConnection = new LdapConnection(); //
+        //    ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389); //
+        //    ldapConnection.Bind(ldapSettings.Value.DomainPrefix + ldapSettings.Value.DefaultUsername, ldapSettings.Value.DefaultPassword);
+
+        //    var groups = new Stack<string>();
+        //    var uniqueGroups = new HashSet<string>();
+
+        //    foreach (string group in this.GetGroupsForUserCore(ldapSettings.Value.DomainPrefix + username, ldapConnection))
+        //        groups.Push(group);
+
+        //    while (groups.Count > 0)
+        //    {
+        //        string group = groups.Pop();
+        //        if (uniqueGroups.Add(group))
+        //            yield return group;
+
+        //        foreach (string parentGroup in this.GetGroupsForUserCore(group, ldapConnection))
+        //            groups.Push(parentGroup);
+        //    }
+        //}
+
+        //private IEnumerable<string> GetGroupsForUserCore(string user, LdapConnection ldapConnection)
+        //{
+        //    LdapSearchQueue searchQueue = ldapConnection.Search(
+        //        //_config["searchBase"],
+        //        ldapSettings.Value.SearchBase,
+        //        LdapConnection.SCOPE_SUB,
+        //        $"(sAMAccountName={user})",
+        //        new string[] { "cn", "memberOf" },
+        //        false,
+        //        null as LdapSearchQueue);
+
+        //    LdapMessage message;
+        //    while ((message = searchQueue.getResponse()) != null)
+        //    {
+        //        if (message is LdapSearchResult searchResult)
+        //        {
+        //            LdapEntry entry = searchResult.Entry;
+        //            foreach (string value in HandleEntry(entry))
+        //                yield return value;
+        //        }
+        //        else
+        //            continue;
+        //    }
+
+        //    IEnumerable<string> HandleEntry(LdapEntry entry)
+        //    {
+        //        LdapAttribute attr = entry.getAttribute("memberOf");
+
+        //        if (attr == null) yield break;
+
+        //        foreach (string value in attr.StringValueArray)
+        //        {
+        //            string groupName = GetGroup(value);
+        //            yield return groupName;
+        //        }
+        //    }
+
+        //    string GetGroup(string value)
+        //    {
+        //        Match match = Regex.Match(value, "^CN=([^,]*)");
+
+        //        if (!match.Success) return null;
+
+        //        return match.Groups[1].Value;
+        //    }
+        //}
     }
 }

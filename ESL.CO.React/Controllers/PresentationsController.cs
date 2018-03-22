@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Admins")]
     [Produces("application/json")]
     [Route("api/admin/[controller]")]
     public class PresentationsController : Controller

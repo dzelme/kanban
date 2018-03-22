@@ -40,9 +40,13 @@ namespace ESL.CO.React.Controllers
             if (credentials.Username == "" || credentials.Password == "") return Unauthorized();
             if (ldapClient.CheckCredentials(credentials.Username, credentials.Password))
             {
+
+                var user = ldapClient.Login(credentials.Username, credentials.Password);
+
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, credentials.Username)
+                    new Claim(ClaimTypes.Name, credentials.Username),
+                    (user.IsAdmin) ? new Claim(ClaimTypes.Role, "Admins") : null
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Value.SigningKey));
