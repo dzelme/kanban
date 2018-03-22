@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Novell.Directory.Ldap;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
@@ -14,6 +12,9 @@ namespace ESL.CO.React.LdapCredentialCheck
     public class LdapClient : ILdapClient
     {
         private readonly IOptions<LdapSettings> ldapSettings;
+        private const string MemberOfAttribute = "memberOf";  // used in GetUserData
+        private const string DisplayNameAttribute = "displayName";  // used in GetUserData
+        private const string SAMAccountNameAttribute = "sAMAccountName";  // used in GetUserData
 
         public LdapClient (IOptions<LdapSettings> ldapSettings)
         {
@@ -29,15 +30,15 @@ namespace ESL.CO.React.LdapCredentialCheck
         public bool CheckCredentials(string username, string password)
         {
             // Creating an LdapConnection instance 
-            using (var ldapConn = new LdapConnection() { })
+            using (var ldapConnection = new LdapConnection() { })
             {
                 //Connect function will create a socket connection to the server - Port 389 for insecure and 3269 for secure    
-                ldapConn.Connect(ldapSettings.Value.LdapServerUrl, 389);
+                ldapConnection.Connect(ldapSettings.Value.LdapServerUrl, 389);
 
                 try
                 {
                     //Bind function with null user dn and password value will perform anonymous bind to LDAP server 
-                    ldapConn.Bind(ldapSettings.Value.DomainPrefix + username, password);
+                    ldapConnection.Bind(ldapSettings.Value.DomainPrefix + username, password);
                 }
                 catch (LdapException e)
                 {
@@ -48,8 +49,43 @@ namespace ESL.CO.React.LdapCredentialCheck
                     throw;
                 }
 
-                return true;
+                // Returns true only if the user belongs to the group specified in appsettings.json as AdminCn in LdapSettings section
+
+                var ldapUser = GetUserData(username, password, ldapConnection);
+                return ldapUser.IsAdmin;
             }
+        }
+        
+        /// <summary>
+        /// Gets LDAP user data.
+        /// </summary>
+        /// <param name="username">LDAP username without domain prefix.</param>
+        /// <param name="password">The password corresponding to the LDAP username.</param>
+        /// <param name="ldapConnection">The active LDAP connection used for checking credential validity.</param>
+        /// <returns>An object containing LDAP user's data including its username, display name and a boolean indicating membership to a specified group. </returns>
+        private LdapUser GetUserData(string username, string password, LdapConnection ldapConnection)
+        {
+            var searchFilter = string.Format(ldapSettings.Value.SearchFilter, username);
+            var result = ldapConnection.Search(
+                ldapSettings.Value.SearchBase,
+                LdapConnection.SCOPE_SUB,
+                searchFilter,
+                new[] { MemberOfAttribute, DisplayNameAttribute, SAMAccountNameAttribute },
+                false
+            );
+
+            var hasMore = result.hasMore();
+            var count = result.Count;
+            if(count != 1)
+                throw new ApplicationException($"Unexpected response from LDAP server, found {count} users.");
+
+            var entry = result.next();
+            return new LdapUser
+            {
+                DisplayName = entry.getAttribute(DisplayNameAttribute).StringValue,
+                Username = entry.getAttribute(SAMAccountNameAttribute).StringValue,
+                IsAdmin = entry.getAttribute(MemberOfAttribute).StringValueArray.Contains(ldapSettings.Value.AdminCn)
+            };
         }
     }
 }

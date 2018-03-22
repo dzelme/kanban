@@ -1,4 +1,6 @@
-﻿namespace ESL.CO.React.LdapCredentialCheck
+﻿using ESL.CO.React.Models;
+
+namespace ESL.CO.React.LdapCredentialCheck
 {
     public interface ILdapClient
     {

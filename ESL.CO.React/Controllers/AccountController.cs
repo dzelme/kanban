@@ -32,7 +32,7 @@ namespace ESL.CO.React.Controllers
         /// <param name="credentials">User's username and password combination to be checked.</param>
         /// <returns>
         /// A response with status code 401 if credentials were unrecognized and
-        /// a response with status code 200 together with a JWT token if credentials were valid.
+        /// a response with status code 200 together with a JWT token if credentials were valid and user belongs to the "admin" group.
         /// </returns>
         [HttpPost("[action]")]
         public IActionResult Login([FromBody] Credentials credentials)
@@ -42,7 +42,8 @@ namespace ESL.CO.React.Controllers
             {
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, credentials.Username)
+                    new Claim(ClaimTypes.Name, credentials.Username),
+                    new Claim(ClaimTypes.Role, "Admins")
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Value.SigningKey));
@@ -64,6 +65,13 @@ namespace ESL.CO.React.Controllers
             return Unauthorized();
         }
 
+        /// <summary>
+        /// Checks if the current user has a valid JWT token (i.e., is authenticated).
+        /// </summary>
+        /// <returns>
+        /// A response with status code 401 if the received JWT token is invalid and
+        /// a response with status code 200 if the JWT token is valid.
+        /// </returns>
         [Authorize]
         [HttpGet("[action]")]
         public IActionResult CheckCredentials()
