@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Novell.Directory.Ldap;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
-using System.Text.RegularExpressions;
 
 namespace ESL.CO.React.LdapCredentialCheck
 {
