@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { Credentials, FullBoardList, Value, BoardPresentation } from './Interfaces';
+import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 import { ApiClient } from './ApiClient';
 

@@ -90,7 +90,7 @@ a:link {
     text-decoration:none;
 }
 
-input, select, textarea {
+input, select, textarea,button {
     color: #000000;
 }
 
