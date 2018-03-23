@@ -1,20 +1,21 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Credentials } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
 interface AuthenticationState {
     credentials: Credentials;
-    invalidCredentials: boolean;
+    authenticated: boolean;
 }
 
 
-export class Login extends React.Component<RouteComponentProps<{}>,AuthenticationState> {
+export class Login extends React.Component<RouteComponentProps<{}>, AuthenticationState> {
 
     constructor(props) {
         super(props);
         this.state = {
             credentials: { username: "", password: "" },
-            invalidCredentials: false,
+            authenticated: true,
         }
 
         this.isAuthenticated();
@@ -24,61 +25,88 @@ export class Login extends React.Component<RouteComponentProps<{}>,Authenticatio
     }
 
     isAuthenticated() {
-        function handleErrors(response) {
-            if (response.status == 200) {
-                open('./admin', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
+        ApiClient.checkCredentials()
+            .then(response => ApiClient.redirect(200, response, './admin'));
 
-        fetch('api/account/checkcredentials', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
+        //function handleErrors(response) {
+        //    if (response.status == 200) {
+        //        open('./admin', '_self');
+        //    }
+        //    else if (!response.ok) {
+        //        throw Error(response.statusText);
+        //    }
+        //    return response;
+        //}
+
+        //fetch('api/account/checkcredentials', {
+        //    headers: {
+        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+        //    }
+        //})
+        //    .then(handleErrors)
     }
 
-    handleChange(event)
-    {
+    handleChange(event) {
         const name = event.target.name;
         this.setState({ credentials: { ...this.state.credentials, [event.target.name]: event.target.value } });
     }
 
-    handleSubmit(event)
-    {
+    handleSubmit(event) {
         event.preventDefault();
 
-        fetch('./api/account/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.credentials),
-        })
+        ApiClient.login(this.state.credentials)
             .then(response => {
-                if (response.ok) {
-                    response.json().then(json => {
-                        sessionStorage.setItem('JwtToken', json.token);
-                    });
-                    this.setState({ invalidCredentials: false });
+                if (response) {
+                    this.setState({ authenticated: true });
                     open('./admin/presentations', '_self');
                 }
                 else {
-                    this.setState({ invalidCredentials: true });
+                    this.setState({ authenticated: false });
                 }
-            });
+            })
     }
+
+        //fetchPost('./api/account/login', false, this.state.credentials)
+        //    .then(response => {
+        //        if (response.ok) {
+        //            response.json().then(json => {
+        //                sessionStorage.setItem('JwtToken', json.token);
+        //            });
+        //            this.setState({ invalidCredentials: false });
+        //            open('./admin/presentations', '_self');
+        //        }
+        //        else {
+        //            this.setState({ invalidCredentials: true });
+        //        }
+        //    });
+
+        //fetch('./api/account/login', {
+        //    method: 'POST',
+        //    headers: {
+        //        'Accept': 'application/json',
+        //        'Content-Type': 'application/json'
+        //    },
+        //    body: JSON.stringify(this.state.credentials),
+        //})
+        //    .then(response => {
+        //        if (response.ok) {
+        //            response.json().then(json => {
+        //                sessionStorage.setItem('JwtToken', json.token);
+        //            });
+        //            this.setState({ invalidCredentials: false });
+        //            open('./admin/presentations', '_self');
+        //        }
+        //        else {
+        //            this.setState({ invalidCredentials: true });
+        //        }
+        //    });
+    //}
 
     public render() {
 
-        let error = this.state.invalidCredentials
-            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-            : null
+        let error = this.state.authenticated
+            ? null
+            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
         return <div>
                 <form onSubmit={this.handleSubmit}>

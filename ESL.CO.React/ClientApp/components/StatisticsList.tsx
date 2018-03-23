@@ -3,11 +3,11 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
 import { Link } from 'react-router-dom';
 import { Credentials } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
 interface FetchDataExampleState {
     boardlist: Value[];
     loading: boolean;
-    credentials: Credentials;
 }
 
 interface Value {
@@ -26,7 +26,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username:"service.kosmoss.tv", password:"ZycsakMylp8od6" }
         };
     }
 
@@ -42,7 +41,8 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Fet
             return response;
         }
 
-        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
+        // JABUT PILNIGI CITAI METODEI KA IEGUT STATISTIKU - StatisticsList ieks sample controller
+        fetch('api/SampleData/BoardList', {
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
             }

@@ -40,7 +40,11 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: numbe
             .then(handleErrors)
             .then(response => response.json() as Promise<BoardPresentation>)
             .then(data => {
-                this.setState({ boardlist: data.boards.values, credentials: { username: data.credentials.username, password: data.credentials.password }, loading: false });
+                this.setState({
+                    boardlist: data.boards.values,
+                    credentials: { username: data.credentials.username, password: data.credentials.password },
+                    loading: false
+                });
             });
     }
 

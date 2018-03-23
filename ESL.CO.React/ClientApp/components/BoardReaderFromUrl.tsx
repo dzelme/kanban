@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
 import { Value, Credentials } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
 interface BoardReaderState {
     boardlist: Value[];
@@ -17,7 +18,10 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" }
+            credentials: {
+                username: "",
+                password: ""
+            }
         };
 
         //client offline error
@@ -32,6 +36,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
             return response;
         }
 
+        // shows all presentations marked as visible, if no id specified
         if (this.props.match.params.id == null) {
             fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
                 headers: {
@@ -56,7 +61,10 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                     refreshRate: 5000,
                 }],
                 loading: false,
-                credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" } //jānomaina, ka paņem credentials no presentation
+                credentials: {
+                    username: "",
+                    password: ""
+                } //jānomaina, ka paņem credentials no presentation
             }
         }
     }

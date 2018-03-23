@@ -2,6 +2,7 @@
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
 import { Value, Board, Credentials } from './Interfaces';
+import { ApiClient, fetchPost } from './ApiClient';
 
 interface ColumnReaderState {
     boardlist: Value[];
@@ -113,15 +114,18 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
     //AD: increments timesShown board statistic
     increment() {
-        fetch('api/SampleData/IncrementTimesShown', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
-            },
-            body: JSON.stringify(this.state.boardId),
-        });
+
+        fetchPost('api/SampleData/IncrementTimesShown', true, this.state.boardId);
+
+        //fetch('api/SampleData/IncrementTimesShown', {
+        //    method: 'POST',
+        //    headers: {
+        //        'Accept': 'application/json',
+        //        'Content-Type': 'application/json',
+        //        'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
+        //    },
+        //    body: JSON.stringify(this.state.boardId),
+        //});
     }
 
     shouldComponentUpdate(nextProps, nextState) {

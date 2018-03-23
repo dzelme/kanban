@@ -25,7 +25,13 @@ namespace ESL.CO.React.Controllers
         private readonly IBoardCreator boardCreator;
         private readonly IOptions<Paths> paths;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator, IOptions<Paths> paths)
+        public SampleDataController(
+            IMemoryCache cache, 
+            IJiraClient jiraClient, 
+            IAppSettings appSettings, 
+            IBoardCreator boardCreator, 
+            IOptions<Paths> paths
+            )
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
@@ -39,10 +45,12 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [Authorize]
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<Value>> BoardList(string credentials)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<Value>> BoardList([FromBody] Credentials credentials)
         {
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentials);
+            var credentialsString = credentials.Username + ":" + credentials.Password;
+
+            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
             if (boardList == null)
             {
                 return appSettings.GetSavedAppSettings()?.Values;
@@ -53,7 +61,7 @@ namespace ESL.CO.React.Controllers
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
-                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentials);
+                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
