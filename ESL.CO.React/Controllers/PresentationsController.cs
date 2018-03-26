@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
-    [Authorize(Roles = "Admins")]
     [Produces("application/json")]
     [Route("api/admin/[controller]")]
     public class PresentationsController : Controller
@@ -24,7 +23,7 @@ namespace ESL.CO.React.Controllers
             this.appSettings = appSettings;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         [HttpGet]
         public IActionResult GetPresentations()
         {
@@ -36,7 +35,6 @@ namespace ESL.CO.React.Controllers
             return Ok(presentationList.PresentationList);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetAPresentation(string id)
         {
@@ -55,7 +53,7 @@ namespace ESL.CO.React.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         public IActionResult SavePresentation([FromBody] BoardPresentation boardPresentation)
         {

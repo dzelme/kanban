@@ -83,7 +83,6 @@ namespace ESL.CO.React.Controllers
         /// <param name="id">Id of the board whose data will be returned.</param>
         /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>Board information.</returns>
-        [Authorize]
         [HttpPost("[action]")]
         public async Task<Board> BoardData(int id, [FromBody] Credentials credentials)
         {

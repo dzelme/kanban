@@ -120,7 +120,7 @@ export class ApiClient {
                 authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
-            .then(response => ApiClient.redirect(response, 401, './login'))
+            .then(response => ApiClient.redirect(response, 400, './login'))  //NB! 400
             .then(response => response.json())
     }
 
