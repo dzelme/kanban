@@ -64,7 +64,7 @@ namespace ESL.CO.React.Controllers
             //Atbilde 404 Not Found, ja norādīts id, bet sistēmā tāds nav atrodams
             //Atbilde 200 OK un saglabātā informācija(bez credentials sadaļas)
 
-            if (ModelState.IsValid)  // ERROR: only works on second try for some weird reason
+            if (ModelState.IsValid)
             {
                 appSettings.SavePresentation(boardPresentation);
             }
@@ -76,6 +76,22 @@ namespace ESL.CO.React.Controllers
 
             boardPresentation.Credentials = null;  // better way?
             return Ok (boardPresentation);
+        }
+
+        [Authorize]
+        [HttpGet("[Action]")]
+        public IActionResult DeletePresentation(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                appSettings.DeletePresentation(id);
+            }
+            else
+            {
+                return BadRequest("invalid data"); 
+            }
+
+            return Ok(id);
         }
     }
 }

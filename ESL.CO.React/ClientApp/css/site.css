@@ -1,5 +1,6 @@
 .main-nav li .glyphicon {
     margin-right: 10px;
+
 }
 
 /* Highlighting rules for nav menu items */
@@ -17,6 +18,7 @@
     left: 0;
     right: 0;
     z-index: 1;
+    font-size: 20px;
 }
 
 .top-padding {
