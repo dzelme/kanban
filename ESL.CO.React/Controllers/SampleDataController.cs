@@ -114,7 +114,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="board">Board data to be compared with the cached version.</param>
         /// <returns>True or false.</returns>
-        private bool NeedsRedraw(Board board)
+        public bool NeedsRedraw(Board board)
         {
             if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
