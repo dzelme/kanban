@@ -117,6 +117,8 @@ const stylePercent = {
 
 const styleBar = {
     background: 'white',
+    border: 'solid',
+    borderColor:'black',
     height: '10px'
 }
 

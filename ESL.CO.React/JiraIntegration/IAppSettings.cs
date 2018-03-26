@@ -10,5 +10,6 @@ namespace ESL.CO.React.JiraIntegration
         FullBoardList GetSavedAppSettings();
         string SaveAppSettings(FullBoardList appSettings, string filePath = ".\\data\\appSettings.json");
         string SavePresentation(BoardPresentation boardPresentation);
+        void DeletePresentation(string id);
     }
 }

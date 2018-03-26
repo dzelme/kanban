@@ -8,7 +8,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn}> 
     public render() {
 
         return <div className='column-wrapper'>
-            <ColumnTitle name={this.props.column.name} issueCount={this.props.column.issues.length} />
+            <div><ColumnTitle name={this.props.column.name} issueCount={this.props.column.issues.length} /></div>
 
             {
                 this.props.column.issues.map((issue, index) =>
