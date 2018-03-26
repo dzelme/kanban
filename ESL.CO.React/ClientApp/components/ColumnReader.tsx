@@ -11,11 +11,12 @@ interface ColumnReaderState {
     board: Board;
     boardChanged: boolean;
     loading: boolean;
+    titleList: string[];
 }
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials: Credentials }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials: Credentials, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
@@ -28,7 +29,8 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
-            loading: true
+            loading: true,
+            titleList: this.props.titleList
         };
 
         this.nextSlide = this.nextSlide.bind(this);
@@ -36,8 +38,21 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         ApiClient.boardData(this.state.boardId, this.props.credentials)
             .then(data => {
-                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
+                if (this.state.titleList.length == 0) {
+                    this.setState({ board: data, boardChanged: true }, this.makeTitleList);
+                }
+                else {
+                    this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
+                }
             });
+    }
+
+    makeTitleList() {
+        let list = [];
+
+        list.push(this.state.board.name);
+        
+        this.setState({ titleList: list, loading: false }, this.RefreshRate);
     }
 
     nextSlide() {
@@ -116,7 +131,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
+                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} allNames={this.state.titleList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }

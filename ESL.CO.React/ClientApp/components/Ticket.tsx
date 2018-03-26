@@ -14,9 +14,9 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         else {
             return <article className={Ticket.PriorityCheck(this.props.issue)}>
                 <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
-                    <div><TicketKey keyName={this.props.issue.key} /></div>
+                    <TicketKey keyName={this.props.issue.key} />
                     <TicketSummary summary={this.props.issue.fields.summary} />
-                    <div style={styleProgress}><TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created} /></div>
+                    <TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created}/>
                     <TicketInformation issue={this.props.issue} />
                 </a>
             </article>
@@ -46,12 +46,3 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         return PriorityClassName;
     }
 }
-
-const styleProgress = {
-    background: 'white',
-    color: 'black',
-};
-
-const style = {
-    color: 'black',
-};

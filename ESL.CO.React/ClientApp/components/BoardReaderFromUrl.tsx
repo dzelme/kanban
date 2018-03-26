@@ -8,6 +8,7 @@ interface BoardReaderState {
     boardlist: Value[];
     loading: boolean;
     credentials: Credentials;
+    titleList: string[];
 }
 
 //Get all boards in list
@@ -18,16 +19,14 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: {
-                username: "",
-                password: ""
-            }
+            credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" },
+            titleList:[]
         };
 
         if (this.props.match.params.id == null) {
             ApiClient.boardList(this.state.credentials)
                 .then(data => {
-                    this.setState({ boardlist: data }, this.checkVisibility);
+                    this.setState({ boardlist: data, loading: false });
                 })
                 .catch(error => console.log(error));
         }
@@ -44,32 +43,16 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                     lastShown: ""
                 }],
                 loading: false,
-                credentials: {
-                    username: "",
-                    password: ""
-                } //jānomaina, ka paņem credentials no presentation
+                credentials: this.state.credentials,
+                titleList:[]
             }
         }
-    }
-
-    checkVisibility() {
-        var allBoards = this.state.boardlist;
-        const visibleBoardList = [];
-
-        allBoards.map((board) => {
-            if (board.visibility) {
-                visibleBoardList.push(board);
-            }
-
-        })
-
-        this.setState({ boardlist: visibleBoardList, loading: false });
     }
 
     public render() {
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} /> : <h1>No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} titleList={this.state.titleList} /> : <h1>No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }

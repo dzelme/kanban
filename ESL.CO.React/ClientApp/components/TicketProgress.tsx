@@ -111,17 +111,18 @@ export default class TicketProgress extends React.Component<{ progress: Progress
 const stylePercent = {
     width: '',
     height: '10px',
-    background: 'blue',
-
+    background: 'blue'
 }
 
 const styleBar = {
-    background: 'white',
     border: 'solid',
-    borderColor:'black',
-    height: '10px'
+    borderWidth:'2px',
+    borderColor: 'black',
+    height: '14px'
 }
 
 const styleSection = {
-    padding: '10px'
+    padding: '10px',
+    background: 'white',
+    color: 'black'
 }
