@@ -43,6 +43,7 @@ namespace ESL.CO.React.Controllers
         /// <summary>
         /// Obtains the full currently available board list from Jira REST API.
         /// </summary>
+        /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [Authorize]
         [HttpPost("[action]")]
@@ -79,13 +80,15 @@ namespace ESL.CO.React.Controllers
         /// <summary>
         /// Gets board data, checks if the data has changed (compared to cached version), saves to cache if it has.
         /// </summary>
-        /// <param name="id">Id of the board whose data will be returned</param>
+        /// <param name="id">Id of the board whose data will be returned.</param>
+        /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>Board information.</returns>
         [Authorize]
-        [HttpGet("[action]")]
-        public async Task<Board> BoardData(int id, string credentials)
-        {     
-            var b = boardCreator.CreateBoardModel(id, credentials, cache);
+        [HttpPost("[action]")]
+        public async Task<Board> BoardData(int id, [FromBody] Credentials credentials)
+        {
+            var credentialsString = credentials.Username + ":" + credentials.Password;
+            var b = boardCreator.CreateBoardModel(id, credentialsString, cache);
             Board board = null;
             try
             {
@@ -111,7 +114,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="board">Board data to be compared with the cached version.</param>
         /// <returns>True or false.</returns>
-        public bool NeedsRedraw(Board board)
+        private bool NeedsRedraw(Board board)
         {
             if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }

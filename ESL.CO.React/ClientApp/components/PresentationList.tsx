@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { BoardPresentation } from './Interfaces';
 import { Link } from 'react-router-dom';
+import { ApiClient } from './ApiClient';
 
 interface PresentationState {
     presentationList: BoardPresentation[];
@@ -27,16 +28,21 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             return response;
         }
 
-        fetch('api/admin/presentations', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json())
+        ApiClient.getPresentations()
             .then(data => {
                 this.setState({ presentationList: data, loading: false });
             });
+
+        //fetch('api/admin/presentations', {
+        //    headers: {
+        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+        //    }
+        //})
+        //    .then(handleErrors)
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        this.setState({ presentationList: data, loading: false });
+        //    });
     }
 
     handleNew()

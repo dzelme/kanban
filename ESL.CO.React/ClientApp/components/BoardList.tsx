@@ -3,14 +3,14 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { Credentials, FullBoardList, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
-import { fetchPost, ApiClient } from './ApiClient';
+import { ApiClient } from './ApiClient';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
     boardList: Value[];
     loading: boolean;
     credentials: Credentials;
-    invalidCredentials: boolean;
+    authenticated: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
@@ -33,7 +33,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             boardList: [],
             loading: true,
             credentials: { username: "", password: "" },
-            invalidCredentials: false
+            authenticated: true
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,13 +47,23 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     handleAuth() {
 
         //ApiClient.login(this.state.credentials)
-        fetchPost('./api/account/login', false, this.state.credentials)
+        //fetchPost('./api/account/login', false, this.state.credentials)
+        //    .then(response => {
+        //        if (response.ok) {
+        //            this.setState({ invalidCredentials: false }, this.handleFetch);
+        //        }
+        //        else {
+        //            this.setState({ invalidCredentials: true });
+        //        }
+        //    })
+
+        ApiClient.login(this.state.credentials)
             .then(response => {
-                if (response.ok) {
-                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                if (response) {
+                    this.setState({ authenticated: true }, this.handleFetch);
                 }
                 else {
-                    this.setState({ invalidCredentials: true });
+                    this.setState({ authenticated: false });
                 }
             })
 
@@ -94,7 +104,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     handleFetch() {
 
         ApiClient.boardList(this.state.credentials)
-            .then(response => response.json() as Promise<Value[]>)
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
@@ -142,7 +151,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
     postPresentation() {
 
-        fetchPost('api/admin/Presentations/', true, this.state.boardPresentation)
+        ApiClient.savePresentation(this.state.boardPresentation);
 
         //fetch('api/admin/Presentations/', {
         //    method: 'POST',
@@ -159,7 +168,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
     // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
-        ApiClient.checkCredentials()
+        ApiClient.hasValidJwt()
             .then(response => ApiClient.redirect(response, 401, './login'));
     }
 
@@ -172,9 +181,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        let error = this.state.invalidCredentials
-            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-            : null
+        let error = this.state.authenticated
+            ? null
+            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>

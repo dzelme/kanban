@@ -74,7 +74,7 @@ namespace ESL.CO.React.Controllers
         /// </returns>
         [Authorize]
         [HttpGet("[action]")]
-        public IActionResult CheckCredentials()
+        public IActionResult HasValidJwt()
         {
             return Ok();
         }

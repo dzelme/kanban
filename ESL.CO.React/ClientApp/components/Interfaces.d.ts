@@ -7,6 +7,8 @@ export interface Value {
     visibility: boolean;
     timeShown: number;
     refreshRate: number;
+    timesShown: number;
+    lastShown: string;
 }
 
 export interface Board {
@@ -83,4 +85,11 @@ export interface BoardPresentation {
     owner: string;
     credentials: Credentials;
     boards: FullBoardList;
+}
+
+interface JiraConnectionLogEntry {
+    time: string;
+    link: string;
+    responseStatus: string;
+    exception: string;
 }

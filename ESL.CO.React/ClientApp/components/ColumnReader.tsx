@@ -2,7 +2,7 @@
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
 import { Value, Board, Credentials } from './Interfaces';
-import { ApiClient, fetchPost } from './ApiClient';
+import { ApiClient } from './ApiClient';
 
 interface ColumnReaderState {
     boardlist: Value[];
@@ -15,7 +15,7 @@ interface ColumnReaderState {
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials:Credentials }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials: Credentials }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
@@ -34,15 +34,20 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
         this.nextSlide = this.nextSlide.bind(this);
 
 
-        fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(response => response.json() as Promise<Board>)
+        ApiClient.boardData(this.state.boardId, this.props.credentials)
             .then(data => {
                 this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
             });
+
+        //fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
+        //    headers: {
+        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+        //    }
+        //})
+        //    .then(response => response.json() as Promise<Board>)
+        //    .then(data => {
+        //        this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
+        //    });
     }
 
     nextSlide() {
@@ -78,28 +83,34 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         clearInterval(this.refreshTimer);
 
-        fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(response => response.json() as Promise<Board>)
+
+        ApiClient.boardData(this.state.boardId, this.props.credentials)
             .then(data => {
                 if (data.id == this.state.boardId) {
-
-                    if (this.state.board.id == data.id && data.hasChanged == false) {       
-
+                    if (this.state.board.id == data.id && data.hasChanged == false) {
                         this.setState({ board: data, boardChanged: false }, this.RefreshRate);
-
                     }
                     else {
-
                         this.setState({ board: data, boardChanged: true }, this.RefreshRate);
                     }
-
                 }
-
             });
+        //fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
+        //    headers: {
+        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+        //    }
+        //})
+        //    .then(response => response.json() as Promise<Board>)
+        //    .then(data => {
+        //        if (data.id == this.state.boardId) {
+        //            if (this.state.board.id == data.id && data.hasChanged == false) {       
+        //                this.setState({ board: data, boardChanged: false }, this.RefreshRate);
+        //            }
+        //            else {
+        //                this.setState({ board: data, boardChanged: true }, this.RefreshRate);
+        //            }
+        //        }
+        //    });
 
     }
 
@@ -115,7 +126,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
     //AD: increments timesShown board statistic
     increment() {
 
-        fetchPost('api/SampleData/IncrementTimesShown', true, this.state.boardId);
+        ApiClient.incrementTimesShown(this.state.boardId);
 
         //fetch('api/SampleData/IncrementTimesShown', {
         //    method: 'POST',
