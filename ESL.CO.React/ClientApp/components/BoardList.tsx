@@ -45,18 +45,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
     // SEIT NAV JABUT ADMINAM, LAI REDZETU
     handleAuth() {
-
-        //ApiClient.login(this.state.credentials)
-        //fetchPost('./api/account/login', false, this.state.credentials)
-        //    .then(response => {
-        //        if (response.ok) {
-        //            this.setState({ invalidCredentials: false }, this.handleFetch);
-        //        }
-        //        else {
-        //            this.setState({ invalidCredentials: true });
-        //        }
-        //    })
-
         ApiClient.login(this.state.credentials)
             .then(response => {
                 if (response) {
@@ -66,23 +54,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                     this.setState({ authenticated: false });
                 }
             })
-
-        //fetch('./api/account/login', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json',
-        //        'Content-Type': 'application/json'
-        //    },
-        //    body: JSON.stringify(this.state.credentials),
-        //})
-        //    .then(response => {
-        //        if (response.ok) {
-        //            this.setState({ invalidCredentials: false }, this.handleFetch);
-        //        }
-        //        else {
-        //            this.setState({ invalidCredentials: true });
-        //        }
-        //    });
     }
 
     handleForm(event) {
@@ -102,22 +73,10 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     handleFetch() {
-
         ApiClient.boardList(this.state.credentials)
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
-
-        //fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(response => ApiClient.redirect(response, 401, './login'))
-        //    .then(response => response.json() as Promise<Value[]>)
-        //    .then(data => {
-        //        this.setState({ boardPresentation: null, boardList: data, loading: false });
-        //    });
     }
 
     handleSubmit(event) {
@@ -150,19 +109,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     postPresentation() {
-
         ApiClient.savePresentation(this.state.boardPresentation);
-
-        //fetch('api/admin/Presentations/', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json',
-        //        'Content-Type': 'application/json',
-        //        'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    },
-        //    body: JSON.stringify(this.state.boardPresentation),
-        //});
-
         open('./admin/presentations', '_self');
     }
 
@@ -173,7 +120,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {  //
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {  //
             return null;
         }
 

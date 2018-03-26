@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import { Credentials, Board, Value, JiraConnectionLogEntry, BoardPresentation } from './Interfaces';
 
 export class ApiClient {
-    private tokenName = 'JwtToken'; //?
+    static tokenName = 'JwtToken';
 
     // Redirects if response has a specified status code
     static redirect(response, statusCode, redirectLink) {
@@ -17,27 +17,24 @@ export class ApiClient {
     }
 
     // AccountController: Checks the credentials submitted by user.
-    static login(credentials: Credentials) : Promise<boolean> { // : Promise<string> {
+    static login(credentials: Credentials) : Promise<boolean> {
         return fetch('/api/account/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem('JwtToken'),
+                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
             },
             body: JSON.stringify(credentials)
         })
             .then(response => {
                 if (response.ok) {
                     response.json().then(json => {
-                        sessionStorage.setItem('JwtToken', json.token);
+                        sessionStorage.setItem(ApiClient.tokenName, json.token);
                     });
                     return true;
-                    //this.setState({ invalidCredentials: false });
-                    //open('./admin/presentations', '_self');
                 }
                 else {
-                    //this.setState({ invalidCredentials: true });
                     return false;
                 }
             })
@@ -47,11 +44,10 @@ export class ApiClient {
     static hasValidJwt() : Promise<Response> {
         return fetch('api/account/hasValidJwt', {
             headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
     }
-
 
     // SampleDataController: Gets board list
     static boardList(credentials: Credentials) : Promise<Value[]> {
@@ -60,7 +56,7 @@ export class ApiClient {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem('JwtToken'),
+                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
             },
             body: JSON.stringify(credentials)
         })
@@ -75,7 +71,7 @@ export class ApiClient {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem('JwtToken'),
+                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
             },
             body: JSON.stringify(credentials)
         })
@@ -89,7 +85,7 @@ export class ApiClient {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
+                'Authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             },
             body: JSON.stringify(id),
         })
@@ -99,7 +95,7 @@ export class ApiClient {
     static networkStatistics(id: number) : Promise<JiraConnectionLogEntry[]> {
         return fetch('api/SampleData/NetworkStatistics?id=' + id.toString(), {
             headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
             .then(response => ApiClient.redirect(response, 401, './login'))
@@ -110,7 +106,7 @@ export class ApiClient {
     static getPresentations(): Promise<BoardPresentation[]> {
         return fetch('api/admin/presentations', {
             headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
             .then(response => ApiClient.redirect(response, 401, './login'))
@@ -121,7 +117,7 @@ export class ApiClient {
     static getAPresentation(id: string) : Promise<BoardPresentation> {
         return fetch('api/admin/presentations/' + id, {
             headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
             .then(response => ApiClient.redirect(response, 401, './login'))
@@ -135,7 +131,7 @@ export class ApiClient {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
+                'Authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             },
             body: JSON.stringify(boardPresentation)
         })

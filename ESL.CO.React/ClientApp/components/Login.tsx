@@ -8,7 +8,6 @@ interface AuthenticationState {
     authenticated: boolean;
 }
 
-
 export class Login extends React.Component<RouteComponentProps<{}>, AuthenticationState> {
 
     constructor(props) {
@@ -27,23 +26,6 @@ export class Login extends React.Component<RouteComponentProps<{}>, Authenticati
     isAuthenticated() {
         ApiClient.hasValidJwt()
             .then(response => ApiClient.redirect(200, response, './admin'));
-
-        //function handleErrors(response) {
-        //    if (response.status == 200) {
-        //        open('./admin', '_self');
-        //    }
-        //    else if (!response.ok) {
-        //        throw Error(response.statusText);
-        //    }
-        //    return response;
-        //}
-
-        //fetch('api/account/checkcredentials', {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(handleErrors)
     }
 
     handleChange(event) {
@@ -65,42 +47,6 @@ export class Login extends React.Component<RouteComponentProps<{}>, Authenticati
                 }
             })
     }
-
-        //fetchPost('./api/account/login', false, this.state.credentials)
-        //    .then(response => {
-        //        if (response.ok) {
-        //            response.json().then(json => {
-        //                sessionStorage.setItem('JwtToken', json.token);
-        //            });
-        //            this.setState({ invalidCredentials: false });
-        //            open('./admin/presentations', '_self');
-        //        }
-        //        else {
-        //            this.setState({ invalidCredentials: true });
-        //        }
-        //    });
-
-        //fetch('./api/account/login', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json',
-        //        'Content-Type': 'application/json'
-        //    },
-        //    body: JSON.stringify(this.state.credentials),
-        //})
-        //    .then(response => {
-        //        if (response.ok) {
-        //            response.json().then(json => {
-        //                sessionStorage.setItem('JwtToken', json.token);
-        //            });
-        //            this.setState({ invalidCredentials: false });
-        //            open('./admin/presentations', '_self');
-        //        }
-        //        else {
-        //            this.setState({ invalidCredentials: true });
-        //        }
-        //    });
-    //}
 
     public render() {
 

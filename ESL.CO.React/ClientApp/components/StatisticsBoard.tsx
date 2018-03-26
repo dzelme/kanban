@@ -18,36 +18,14 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     }
 
     componentWillMount() {
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-                return response;
-            }
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
         ApiClient.networkStatistics(this.props.match.params.id)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
             });
-
-        //fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id, {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(handleErrors)
-        //    .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
-        //    .then(data => {
-        //        this.setState({ connectionLog: data, loading: false });
-        //    });
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {
             return null;
         }
         let contents = this.state.loading

@@ -30,32 +30,6 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                     this.setState({ boardlist: data }, this.checkVisibility);
                 })
                 .catch(error => console.log(error));
-
-        //client offline error
-        //function handleErrors(response) {
-        //    if (response.status == 401) {
-        //        open('./login', '_self');
-        //        return response;
-        //    }
-        //    if (!response.ok) {
-        //        throw Error(response.statusText);
-        //    }
-        //    return response;
-        //}
-
-        //// shows all presentations marked as visible, if no id specified
-        //if (this.props.match.params.id == null) {
-        //    fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-        //        headers: {
-        //            authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //        }
-        //    })
-        //        .then(handleErrors)
-        //        .then(response => response.json() as Promise<Value[]>)
-        //        .then(data => {
-        //            this.setState({ boardlist: data }, this.checkVisibility);
-        //        })
-        //        .catch(error => console.log(error));
         }
         else {
             this.state = {

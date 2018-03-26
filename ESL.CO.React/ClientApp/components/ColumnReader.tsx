@@ -38,16 +38,6 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             .then(data => {
                 this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
             });
-
-        //fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(response => response.json() as Promise<Board>)
-        //    .then(data => {
-        //        this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
-        //    });
     }
 
     nextSlide() {
@@ -73,17 +63,13 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
 
     slideShow() {
-
         this.increment();  //AD: increments timesShown board statistic
         setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
-
     }
 
     boardLoad() {
-
         clearInterval(this.refreshTimer);
-
-
+        
         ApiClient.boardData(this.state.boardId, this.props.credentials)
             .then(data => {
                 if (data.id == this.state.boardId) {
@@ -95,52 +81,21 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                     }
                 }
             });
-        //fetch('api/SampleData/BoardData?id=' + this.state.boardId + "&credentials=" + this.props.credentials.username + ":" + this.props.credentials.password, {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(response => response.json() as Promise<Board>)
-        //    .then(data => {
-        //        if (data.id == this.state.boardId) {
-        //            if (this.state.board.id == data.id && data.hasChanged == false) {       
-        //                this.setState({ board: data, boardChanged: false }, this.RefreshRate);
-        //            }
-        //            else {
-        //                this.setState({ board: data, boardChanged: true }, this.RefreshRate);
-        //            }
-        //        }
-        //    });
-
     }
 
     RefreshRate() {
-
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
             this.state.boardlist[this.state.currentIndex].refreshRate
         );
-
     }
 
     //AD: increments timesShown board statistic
     increment() {
-
         ApiClient.incrementTimesShown(this.state.boardId);
-
-        //fetch('api/SampleData/IncrementTimesShown', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json',
-        //        'Content-Type': 'application/json',
-        //        'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    },
-        //    body: JSON.stringify(this.state.boardId),
-        //});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-
         return nextState.boardChanged;
     }
 

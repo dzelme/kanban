@@ -40,33 +40,10 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                     }
                 })
             });
-
-        //function handleErrors(response) {
-        //    if (response.status == 401) {
-        //        open('./login', '_self');
-        //        return response;
-        //    }
-        //    if (!response.ok) {
-        //        throw Error(response.statusText);
-        //    }
-        //    return response;
-        //}
-
-        // JABUT PILNIGI CITAI METODEI KA IEGUT STATISTIKU - StatisticsList ieks sample controller
-        //fetch('api/SampleData/BoardList', {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(handleErrors)
-        //    .then(response => response.json() as Promise<Value[]>)
-        //    .then(data => {
-        //        this.setState({ boardlist: data, loading: false });
-        //    });
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {
             return null;
         }
         let contents = this.state.loading

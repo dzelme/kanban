@@ -25,16 +25,6 @@ export class AllBoardReader extends React.Component<RouteComponentProps<{}>, Boa
             .then(data => {
                 this.setState({ boardlist: data, loading: false });
             })
-
-        //fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-        //    headers: {
-        //        authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-        //    }
-        //})
-        //    .then(response => response.json() as Promise<Value[]>)
-        //    .then(data => {
-        //        this.setState({ boardlist: data, loading: false });
-        //    })
     }
 
     public render() {

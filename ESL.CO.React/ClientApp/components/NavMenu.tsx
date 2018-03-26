@@ -21,16 +21,6 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, { version:
                         return { version: data }
                     });
                 })
-
-            //fetch('api/version')
-            //    .then(res => res.json() as Promise<string>)
-            //    .then(data => {
-            //        this.setState((prevState) => {
-            //            if (prevState.version != '' && prevState.version != data)
-            //                window.location.reload();
-            //            return { version: data }
-            //        });
-            //    })
         }, 5000); // todo: make this pretty
     }
 
