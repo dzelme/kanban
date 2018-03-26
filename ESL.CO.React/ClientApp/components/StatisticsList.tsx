@@ -82,7 +82,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                                 : ""
                             }
                             </td>
-                            <td><button className="btn btn-default"><Link to={'/admin/jiraconnectionstats/' + board.id}>Savienojums</Link></button></td>
+                            <td><Link to={'/admin/jiraconnectionstats/' + board.id}><button className="btn btn-default">Savienojums</button></Link></td>
                         </tr>
                     )}
                 </tbody>

@@ -13,9 +13,9 @@ interface BoardListState {
     authenticated: boolean;
 }
 
-export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
-    constructor() {
-        super();
+export class BoardList extends React.Component<RouteComponentProps<{ id: number }>, BoardListState> {
+    constructor(props: RouteComponentProps<{ id: number }>) {
+        super(props);
 
         this.state = {
             boardPresentation: {
@@ -95,7 +95,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             boardPresentation: {
                 id:"",
                 title: document.forms['presentation'].elements["title"].value,
-                owner: document.forms['presentation'].elements["username"].value,
+                owner: document.forms['presentation'].elements["owner"].value,
                 credentials: {
                     username: document.forms['presentation'].elements["username"].value,
                     password: document.forms['presentation'].elements["password"].value
@@ -129,7 +129,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
         let error = this.state.authenticated
-            ? null
+            ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
             : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
         return <div className="top-padding">
@@ -139,6 +139,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 <div key="title" style={styleForm}>
                     Nosaukums: <input id="title" required name="title" type="text" />
                 </div>
+                <div key="owner" style={styleForm}>
+                    Izveidotājs: <input id="owner" required name="owner" type="text" />
+                </div>
                 <div key="username" style={styleForm}>
                     Lietotājvārds: <input id="username" required name="username" type="text" />
                 </div>
@@ -147,6 +150,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
+
             {error}
             {contents}
         </div>;
