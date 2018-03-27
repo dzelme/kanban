@@ -2,17 +2,12 @@
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router';
 import 'isomorphic-fetch';
+import { ApiClient } from './ApiClient';
+import { JiraConnectionLogEntry } from './Interfaces';
 
 interface FetchDataExampleState {
     connectionLog: JiraConnectionLogEntry[];
     loading: boolean;
-}
-
-interface JiraConnectionLogEntry {
-    time: string;
-    link: string;
-    responseStatus: string;
-    exception: string;
 }
 
 //netiek sanemti props (undefined) no routes.tsx
@@ -23,31 +18,14 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     }
 
     componentWillMount() {
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-                return response;
-            }
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/SampleData/NetworkStatistics?id=' + this.props.match.params.id, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
+        ApiClient.networkStatistics(this.props.match.params.id)
             .then(data => {
                 this.setState({ connectionLog: data, loading: false });
             });
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {
             return null;
         }
         let contents = this.state.loading

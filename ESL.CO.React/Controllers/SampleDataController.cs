@@ -25,7 +25,13 @@ namespace ESL.CO.React.Controllers
         private readonly IBoardCreator boardCreator;
         private readonly IOptions<Paths> paths;
 
-        public SampleDataController(IMemoryCache cache, IJiraClient jiraClient, IAppSettings appSettings, IBoardCreator boardCreator, IOptions<Paths> paths)
+        public SampleDataController(
+            IMemoryCache cache, 
+            IJiraClient jiraClient, 
+            IAppSettings appSettings, 
+            IBoardCreator boardCreator, 
+            IOptions<Paths> paths
+            )
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
@@ -37,12 +43,15 @@ namespace ESL.CO.React.Controllers
         /// <summary>
         /// Obtains the full currently available board list from Jira REST API.
         /// </summary>
+        /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [Authorize]
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<Value>> BoardList(string credentials)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<Value>> BoardList([FromBody] Credentials credentials)
         {
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentials);
+            var credentialsString = credentials.Username + ":" + credentials.Password;
+
+            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
             if (boardList == null)
             {
                 return appSettings.GetSavedAppSettings()?.Values;
@@ -53,7 +62,7 @@ namespace ESL.CO.React.Controllers
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
-                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentials);
+                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -71,13 +80,14 @@ namespace ESL.CO.React.Controllers
         /// <summary>
         /// Gets board data, checks if the data has changed (compared to cached version), saves to cache if it has.
         /// </summary>
-        /// <param name="id">Id of the board whose data will be returned</param>
+        /// <param name="id">Id of the board whose data will be returned.</param>
+        /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>Board information.</returns>
-        [Authorize]
-        [HttpGet("[action]")]
-        public async Task<Board> BoardData(int id, string credentials)
-        {     
-            var b = boardCreator.CreateBoardModel(id, credentials, cache);
+        [HttpPost("[action]")]
+        public async Task<Board> BoardData(int id, [FromBody] Credentials credentials)
+        {
+            var credentialsString = credentials.Username + ":" + credentials.Password;
+            var b = boardCreator.CreateBoardModel(id, credentialsString, cache);
             Board board = null;
             try
             {

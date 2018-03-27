@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { BoardPresentation } from './Interfaces';
 import { Link } from 'react-router-dom';
+import { ApiClient } from './ApiClient';
 
 interface PresentationState {
     presentationList: BoardPresentation[];
@@ -17,35 +18,17 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
         this.handleNew = this.handleNew.bind(this);
 
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login','_self');
-            }           
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/admin/presentations', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json())
+        ApiClient.getPresentations()
             .then(data => {
                 this.setState({ presentationList: data, loading: false });
             });
     }
 
-    handleNew()
-    {
+    handleNew() {
         open('./admin/createPresentation','_self');
     }
 
     public render() {
-
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : PresentationList.renderPresentationList(this.state.presentationList, this.handleNew);

@@ -74,6 +74,7 @@ namespace ESL.CO.React.LdapCredentialCheck
                 false
             );
 
+            // Needed because of LDAP library imperfections (result.count sometimes won't register properly)
             var hasMore = result.hasMore();
             var count = result.Count;
             if(count != 1)

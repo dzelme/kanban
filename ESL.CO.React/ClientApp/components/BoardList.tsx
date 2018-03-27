@@ -3,13 +3,14 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { Credentials, FullBoardList, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
+import { ApiClient } from './ApiClient';
 
 interface BoardListState {
     boardPresentation: BoardPresentation;
     boardList: Value[];
     loading: boolean;
     credentials: Credentials;
-    invalidCredentials: boolean;
+    authenticated: boolean;
 }
 
 export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
@@ -32,7 +33,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             boardList: [],
             loading: true,
             credentials: { username: "", password: "" },
-            invalidCredentials: false
+            authenticated: true
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,24 +43,17 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         this.postPresentation = this.postPresentation.bind(this);
     }
 
+    // SEIT NAV JABUT ADMINAM, LAI REDZETU
     handleAuth() {
-
-        fetch('./api/account/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.credentials),
-        })
+        ApiClient.login(this.state.credentials)
             .then(response => {
-                if (response.ok) {
-                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                if (response) {
+                    this.setState({ authenticated: true }, this.handleFetch);
                 }
                 else {
-                    this.setState({ invalidCredentials: true });
+                    this.setState({ authenticated: false });
                 }
-            });
+            })
     }
 
     handleForm(event) {
@@ -68,29 +62,18 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         var username = document.forms['presentation'].elements["username"].value;
         var password = document.forms['presentation'].elements["password"].value;
 
-        this.setState({ credentials: { username: username, password: password }, loading: true }, this.handleAuth)
+        this.setState({
+            credentials: {
+                username: username,
+                password: password
+            },
+            loading: true
+        }, this.handleAuth)
 
     }
 
     handleFetch() {
-
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<Value[]>)
+        ApiClient.boardList(this.state.credentials)
             .then(data => {
                 this.setState({ boardPresentation: null, boardList: data, loading: false });
             });
@@ -126,43 +109,18 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
     }
 
     postPresentation() {
-
-        fetch('api/admin/Presentations/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
-            },
-            body: JSON.stringify(this.state.boardPresentation),
-        });
-
+        ApiClient.savePresentation(this.state.boardPresentation);
         open('./admin/presentations', '_self');
     }
 
     // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
-
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/account/checkcredentials', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
+        ApiClient.hasValidJwt()
+            .then(response => ApiClient.redirect(response, 401, './login'));
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {  //
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {  //
             return null;
         }
 
@@ -170,9 +128,9 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             ? null
             : BoardList.renderBoardList(this.state.boardList, this.handleSubmit);
 
-        let error = this.state.invalidCredentials
-            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-            : null
+        let error = this.state.authenticated
+            ? null
+            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>

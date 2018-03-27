@@ -2,60 +2,48 @@
 import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
 import { Link } from 'react-router-dom';
-import { Credentials } from './Interfaces';
+import { Credentials, Value } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
-interface FetchDataExampleState {
+interface StatisticsListState {
     boardlist: Value[];
     loading: boolean;
     credentials: Credentials;
 }
 
-interface Value {
-    id: number;
-    name: string;
-    type: string;
-
-    timesShown: number;
-    lastShown: string;
-}
-
-export class StatisticsList extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
+export class StatisticsList extends React.Component<RouteComponentProps<{}>, StatisticsListState> {
     constructor() {
         super();
         
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username:"service.kosmoss.tv", password:"ZycsakMylp8od6" }
+            credentials: {
+                username: "",
+                password: ""
+            }
         };
     }
 
     componentWillMount() {
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-                return response;
-            }
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
+        ApiClient.hasValidJwt()
+            .then(response => ApiClient.redirect(response, 401, './login'));
 
-        fetch('api/SampleData/BoardList?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<Value[]>)
+        ApiClient.boardList(this.state.credentials)
             .then(data => {
-                this.setState({ boardlist: data, loading: false });
+                this.setState({
+                    boardlist: data,
+                    loading: false,
+                    credentials: {
+                        username: "",
+                        password: ""
+                    }
+                })
             });
     }
 
     public render() {
-        if (sessionStorage.getItem('JwtToken') === null) {
+        if (sessionStorage.getItem(ApiClient.tokenName) === null) {
             return null;
         }
         let contents = this.state.loading

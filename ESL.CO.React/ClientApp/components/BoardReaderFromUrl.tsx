@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
 import { Value, Credentials } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
 interface BoardReaderState {
     boardlist: Value[];
@@ -17,29 +18,14 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" }
+            credentials: {
+                username: "",
+                password: ""
+            }
         };
 
-        //client offline error
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-                return response;
-            }
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
         if (this.props.match.params.id == null) {
-            fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-                headers: {
-                    authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-                }
-            })
-                .then(handleErrors)
-                .then(response => response.json() as Promise<Value[]>)
+            ApiClient.boardList(this.state.credentials)
                 .then(data => {
                     this.setState({ boardlist: data }, this.checkVisibility);
                 })
@@ -54,9 +40,14 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                     visibility: true,
                     timeShown: 10000,
                     refreshRate: 5000,
+                    timesShown: 0,
+                    lastShown: ""
                 }],
                 loading: false,
-                credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" } //jānomaina, ka paņem credentials no presentation
+                credentials: {
+                    username: "",
+                    password: ""
+                } //jānomaina, ka paņem credentials no presentation
             }
         }
     }

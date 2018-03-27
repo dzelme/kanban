@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
-    [Authorize(Roles = "Admins")]
     [Produces("application/json")]
     [Route("api/admin/[controller]")]
     public class PresentationsController : Controller
@@ -24,9 +23,20 @@ namespace ESL.CO.React.Controllers
             this.appSettings = appSettings;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admins")]
+        [HttpGet]
+        public IActionResult GetPresentations()
+        {
+            //GET / api / presentations - atgriež sarakstu ar prezentācijām(sākotnēji bez paging un limitiem, par to domās vēlāk ja būs nepieciešams)
+            //Atbilde 401 Unauthorized, gadījumos ja lietotājs nav autorizēts
+            //Atbilde 200 ok un json BoardPresentation(bez credentials sadaļas)
+
+            var presentationList = appSettings.GetPresentationList();
+            return Ok(presentationList.PresentationList);
+        }
+
         [HttpGet("{id}")]
-        public IActionResult Presentation(string id)
+        public IActionResult GetAPresentation(string id)
         {
             //GET / api / presentations /{ id} -atgriež pieprasīto prezentāciju
             //Atbilde 404 Not Found, ja prezentācija nav atrasta
@@ -43,19 +53,7 @@ namespace ESL.CO.React.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult PresentationList()
-        {
-            //GET / api / presentations - atgriež sarakstu ar prezentācijām(sākotnēji bez paging un limitiem, par to domās vēlāk ja būs nepieciešams)
-            //Atbilde 401 Unauthorized, gadījumos ja lietotājs nav autorizēts
-            //Atbilde 200 ok un json BoardPresentation(bez credentials sadaļas)
-
-            var presentationList = appSettings.GetPresentationList();
-            return Ok(presentationList.PresentationList);
-        }
-
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         [HttpPost]
         public IActionResult SavePresentation([FromBody] BoardPresentation boardPresentation)
         {

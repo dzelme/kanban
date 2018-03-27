@@ -2,6 +2,7 @@
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
 import { Value, Credentials } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
 interface BoardReaderState {
     boardlist: Value[];
@@ -20,12 +21,7 @@ export class AllBoardReader extends React.Component<RouteComponentProps<{}>, Boa
             credentials: { username: "service.kosmoss.tv", password:"ZycsakMylp8od6" }
         };
 
-        fetch('api/SampleData/BoardList/?credentials=' + this.state.credentials.username + ":" + this.state.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(response => response.json() as Promise<Value[]>)
+        ApiClient.boardList(this.state.credentials)
             .then(data => {
                 this.setState({ boardlist: data, loading: false });
             })
