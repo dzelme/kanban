@@ -40,7 +40,7 @@ export class ApiClient {
 
     // AccountController: Checks the credentials submitted by user.
     static login(credentials: Credentials): Promise<boolean> {
-        return ApiClient.post('/api/account/login', credentials)
+        return ApiClient.post('api/account/login', credentials)
             .then(response => {
                 if (response.ok) {
                     response.json().then(json => {
@@ -61,7 +61,7 @@ export class ApiClient {
 
     // SampleDataController: Gets board list
     static boardList(credentials: Credentials): Promise<Value[]> {
-        return ApiClient.post('/api/SampleData/BoardList', credentials)
+        return ApiClient.post('api/SampleData/BoardList', credentials)
             .then(response => ApiClient.redirect(response, 401, './login'))
             .then(response => response.json() as Promise<Value[]>)
     }
