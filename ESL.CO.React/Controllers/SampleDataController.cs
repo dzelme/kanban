@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
+using ESL.CO.React.DbConnection;
 
 namespace ESL.CO.React.Controllers
 {
@@ -38,6 +39,28 @@ namespace ESL.CO.React.Controllers
             this.cache = cache;
             this.boardCreator = boardCreator;
             this.paths = paths;
+
+            //var db = new DbClient();
+            //db.SaveStatisticsEntry(new StatisticsEntry
+            //{
+            //    BoardId = 7357,
+            //    Name = "test",
+            //    TimesShown = 999,
+            //    LastShown = null,
+            //    NetworkStats = new JiraConnectionLogEntry[] {
+            //        new JiraConnectionLogEntry
+            //        {
+            //            Link = "asd.asd",
+            //            ResponseStatus = "200",
+            //            Exception = "no",
+            //            Time = ""
+            //        }
+            //    }
+            //});
+            //var asd = db.GetStatisticsEntry(7357);
+            //var a1 = "asd";
+            //db.RemoveStatisticsEntry(7357);
+            //var a2 = "asd";
         }
 
         /// <summary>

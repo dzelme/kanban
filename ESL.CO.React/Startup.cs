@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.LdapCredentialCheck;
+using ESL.CO.React.DbConnection;
 using ESL.CO.React.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -52,6 +53,7 @@ namespace ESL.CO.React
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();
             services.AddSingleton<ILdapClient, LdapClient>();
+            services.AddSingleton<IDbClient, DbClient>();
             services.AddMemoryCache();
             services.AddMvc();
         }
