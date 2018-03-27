@@ -93,9 +93,9 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
 
         this.setState({
             boardPresentation: {
-                id:"",
+                id: this.state.boardPresentation.id,
                 title: document.forms['presentation'].elements["title"].value,
-                owner: document.forms['presentation'].elements["owner"].value,
+                owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
                 credentials: {
                     username: document.forms['presentation'].elements["username"].value,
                     password: document.forms['presentation'].elements["password"].value
@@ -138,9 +138,6 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
             <form name="presentation" onSubmit={this.handleForm}>
                 <div key="title" style={styleForm}>
                     Nosaukums: <input id="title" required name="title" type="text" />
-                </div>
-                <div key="owner" style={styleForm}>
-                    Izveidotājs: <input id="owner" required name="owner" type="text" />
                 </div>
                 <div key="username" style={styleForm}>
                     Lietotājvārds: <input id="username" required name="username" type="text" />
