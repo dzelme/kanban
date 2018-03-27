@@ -20,17 +20,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
         this.handleErrors = this.handleErrors.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
 
-
-        fetch('api/admin/presentations', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(this.handleErrors)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ presentationList: data, loading: false });
-            });
+        ApiClient.getPresentations()
     }
 
 
@@ -58,8 +48,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             },
         })
             .then(this.handleErrors) 
-            open('./admin/presentations', '_self');
-          
+            open('./admin/presentations', '_self');         
     }
 
     public render() {
