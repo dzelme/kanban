@@ -79,19 +79,10 @@ namespace ESL.CO.React.Controllers
         }
 
         [Authorize]
-        [HttpGet("[Action]")]
-        public IActionResult DeletePresentation(string id)
+        [HttpDelete("{id}")]
+        public void DeletePresentation(string id)
         {
-            if (ModelState.IsValid)
-            {
-                appSettings.DeletePresentation(id);
-            }
-            else
-            {
-                return BadRequest("invalid data"); 
-            }
-
-            return Ok(id);
+            appSettings.DeletePresentation(id);
         }
     }
 }

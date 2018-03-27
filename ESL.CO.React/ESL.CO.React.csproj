@@ -25,11 +25,6 @@
     <Content Remove="ClientApp\**" />
     <Content Remove="Logs\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\components\EditPresentation.tsx" />
-  </ItemGroup>
-
   <ItemGroup>
     <Folder Include="data\logs\" />
   </ItemGroup>

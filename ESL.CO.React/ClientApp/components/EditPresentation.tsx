@@ -10,7 +10,6 @@ interface EditPresentationState {
     loading: boolean;
     credentials: Credentials;
     invalidCredentials: boolean;
-    presentationList: Value[];
 }
 
 export class EditPresentation extends React.Component<RouteComponentProps<{ id: number }>, EditPresentationState> {
@@ -31,31 +30,20 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 }
             },
             boardlist: [],
-            presentationList:[],
             credentials: { username: "", password: "" },
             loading: true,
             invalidCredentials: false
         };
 
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleFetch = this.handleFetch.bind(this);
+        this.handleVisibility = this.handleVisibility.bind(this);
         this.handleForm = this.handleForm.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
-        this.handleFetch = this.handleFetch.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleVisibility = this.handleVisibility.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
-
-        
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
+        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
+        this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
 
         fetch('api/admin/Presentations/' + this.props.match.params.id, {
             headers: {
@@ -67,57 +55,18 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             .then(data => {
                 this.setState({ boardPresentation: data, credentials: data.credentials }, this.handleFetch);
             });
+
+        function handleErrors(response) {
+            if (response.status == 401) {
+                open('./login', '_self');
+            }
+            else if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }
+
     }
-
-    handleAuth() {
-
-        fetch('./api/account/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.credentials),
-        })
-            .then(response => {
-                if (response.ok) {
-                    this.setState({ invalidCredentials: false }, this.handleFetch);
-                }
-                else {
-                    this.setState({ invalidCredentials: true });
-                }
-            });
-    }
-
-    handleForm(event) {
-        event.preventDefault();
-
-        var username = document.forms['presentation'].elements["username"].value;
-        var password = document.forms['presentation'].elements["password"].value;
-
-        if (username == this.state.credentials.username && password == this.state.credentials.password) {
-            this.setState({ loading: false });
-        }
-        else {
-            this.setState({ credentials: { username: username, password: password }, presentationList: null, loading: true }, this.handleAuth)
-        }
-    }
-
-    handleChange(event) {
-        const target = event.target;
-        const name = target.name;
-
-        if (name == 'title') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
-        }
-        else if (name == 'username') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: target.value, password: this.state.boardPresentation.credentials.password }, boards: this.state.boardPresentation.boards } });
-        }
-        else {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: this.state.boardPresentation.credentials.username, password: target.value }, boards: this.state.boardPresentation.boards } });
-        }
-    }
-
 
     handleFetch() {
 
@@ -145,7 +94,41 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
     handleVisibility() {
         var newList = EditPresentation.checkVisibility(this.state.boardlist, this.state.boardPresentation.boards.values);
-        this.setState({ presentationList: newList, loading: false });
+        this.setState({ boardlist: newList, loading: false });
+    }
+
+    handleForm(event) {
+        event.preventDefault();
+
+        var username = document.forms['presentation'].elements["username"].value;
+        var password = document.forms['presentation'].elements["password"].value;
+
+        if (username == this.state.credentials.username && password == this.state.credentials.password) {
+            this.setState({ loading: false });
+        }
+        else {
+            this.setState({ boardlist: null, credentials: { username: username, password: password }, loading: true }, this.handleAuth)
+        }
+    }
+
+    handleAuth() {
+
+        fetch('./api/account/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.credentials),
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                }
+                else {
+                    this.setState({ invalidCredentials: true });
+                }
+            });
     }
 
     handleSubmit(event) {
@@ -154,21 +137,15 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         var val = new Array();
 
         this.state.boardlist.map(board => {
-            board.visibility = document.forms['boardlist'].elements[board.id + "visibility"].checked;
             if (board.visibility == true) { val.push(board); }
-            board.timeShown = parseInt(document.forms['boardlist'].elements[board.id + "timeShown"].value);
-            board.refreshRate = parseInt(document.forms['boardlist'].elements[board.id + "refreshRate"].value);
         })
 
         this.setState({
             boardPresentation: {
                 id: this.state.boardPresentation.id,
-                title: document.forms['presentation'].elements["title"].value,
+                title: this.state.boardPresentation.title,
                 owner: this.state.boardPresentation.owner,
-                credentials: {
-                    username: this.state.boardPresentation.credentials.username,
-                    password: this.state.boardPresentation.credentials.password
-                },
+                credentials: this.state.boardPresentation.credentials,
                 boards: {
                     values: val,
                 }
@@ -190,6 +167,66 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         });
 
         open('./admin/presentations', '_self');
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const name = target.name;
+
+        if (name == 'title') {
+            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
+        }
+        else if (name == 'username') {
+            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: target.value, password: this.state.boardPresentation.credentials.password }, boards: this.state.boardPresentation.boards } });
+        }
+        else {
+            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: this.state.boardPresentation.credentials.username, password: target.value }, boards: this.state.boardPresentation.boards } });
+        }
+    }
+
+    handleChangeBoardVisibility(id: string) {
+        var newBoardlist = this.state.boardlist;
+ 
+        this.state.boardlist.map((board, index) => {
+            if (board.id.toString() == id) {
+                newBoardlist[index].visibility = !newBoardlist[index].visibility
+    
+                this.setState({
+                    boardlist: newBoardlist
+                });
+            }
+        }) 
+    }
+
+    handleChangeBoardTimes(id: string, name: string, e) {
+        var newBoardlist = this.state.boardlist;
+        var value = parseInt(e.target.value);
+
+        if (name == 'timeShown') {
+
+            this.state.boardlist.map((board, index) => {
+
+                if (board.id.toString() == id) {
+                    newBoardlist[index].timeShown = value
+
+                    this.setState({
+                        boardlist: newBoardlist
+                    });
+                }
+            })
+        }
+        else {
+            this.state.boardlist.map((board, index) => {
+
+                if (board.id.toString() == id) {
+                    newBoardlist[index].refreshRate = value
+
+                    this.setState({
+                        boardlist: newBoardlist
+                    });
+                }
+            })
+        }
     }
 
     // used to redirect to login screen, if invalid JWT token
@@ -220,7 +257,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
         let contents = this.state.loading
             ? null
-            : EditPresentation.renderBoardList(this.state.presentationList, this.state.boardPresentation, this.handleSubmit);
+            : EditPresentation.renderBoardList(this.state.boardlist, this.state.boardPresentation, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.invalidCredentials
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
@@ -257,14 +294,16 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         presentationBoards.map(presBoard =>
             allBoards.map(board => {
                 if (board.id == presBoard.id) {
-                    board.visibility = true
+                    board.visibility = true,
+                        board.timeShown = presBoard.timeShown,
+                        board.refreshRate = presBoard.refreshRate
                 }
             })
         )
         return allBoards;
     }
 
-    private static renderBoardList(boardList: Value[], boardPresentation: BoardPresentation, handleSubmit) {
+    private static renderBoardList(boardList: Value[], boardPresentation: BoardPresentation, handleSubmit, handleChangeBoardVisibility, handleChangeBoardTimes) {
 
         return <div>
             <form name='boardlist' onSubmit={handleSubmit}>
@@ -280,14 +319,14 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                         </tr>
                     </thead>
                     <tbody style={styleContent}>
-                        {boardList.map(board =>
+                        {boardList.map((board, index) =>
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
-                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
+                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={boardList[index].timeShown} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate',e)}/></td>
                             </tr>
                         )}
                     </tbody>
