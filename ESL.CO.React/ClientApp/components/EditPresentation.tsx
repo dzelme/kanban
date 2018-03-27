@@ -13,8 +13,8 @@ interface EditPresentationState {
     authenticated: boolean;
 }
 
-export class EditPresentation extends React.Component<RouteComponentProps<{ id: number }>, EditPresentationState> {
-    constructor(props: RouteComponentProps<{ id: number }>) {
+export class EditPresentation extends React.Component<RouteComponentProps<{ id: string }>, EditPresentationState> {
+    constructor(props: RouteComponentProps<{ id: string }>) {
         super(props);
 
         this.state = {
@@ -46,26 +46,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
         this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
 
-        fetch('api/admin/Presentations/' + this.props.match.params.id, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<BoardPresentation>)
+        ApiClient.getAPresentation(this.props.match.params.id)
             .then(data => {
                 this.setState({ boardPresentation: data, credentials: data.credentials }, this.handleFetch);
             });
-
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
     }
 
     handleFetch() {
@@ -266,13 +250,13 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                         </tr>
                     </thead>
                     <tbody style={styleContent}>
-                        {boardList.map((board, index) =>
+                        {boardList.map(board =>
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
                                 <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={boardList[index].timeShown} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
                                 <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}

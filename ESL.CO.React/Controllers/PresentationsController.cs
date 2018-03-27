@@ -76,7 +76,7 @@ namespace ESL.CO.React.Controllers
             return Ok (boardPresentation);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admins")]
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {

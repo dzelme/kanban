@@ -17,7 +17,6 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
         this.state = { presentationList: [], loading: true };
 
         this.handleNew = this.handleNew.bind(this);
-        this.handleErrors = this.handleErrors.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
 
         ApiClient.getPresentations()
@@ -26,31 +25,14 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             });
     }
 
-    handleErrors(response) {
-        if (response.status == 401) {
-            open('./login', '_self');
-        }
-        else if (!response.ok) {
-            throw Error(response.statusText);
-        }
-        return response;
-    }
-
     handleNew()
     {
         open('./admin/createPresentation','_self');
     }
 
     handleDelete(id: string) {
-
-        fetch('api/admin/presentations/' + id, {
-            method:'DELETE',
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken'),
-            },
-        })
-            .then(this.handleErrors) 
-            open('./admin/presentations', '_self');         
+        ApiClient.deletePresentation(id)
+        open('./admin/presentations', '_self');         
     }
 
     public render() {
