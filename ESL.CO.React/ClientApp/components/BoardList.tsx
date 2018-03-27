@@ -13,13 +13,13 @@ interface BoardListState {
     authenticated: boolean;
 }
 
-export class BoardList extends React.Component<RouteComponentProps<{ id: number }>, BoardListState> {
-    constructor(props: RouteComponentProps<{ id: number }>) {
-        super(props);
+export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
+    constructor() {
+        super();
 
         this.state = {
             boardPresentation: {
-                id:"",
+                id: "",
                 title: "",
                 owner: "",
                 credentials: {
@@ -37,14 +37,14 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleForm = this.handleForm.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
-    // SEIT NAV JABUT ADMINAM, LAI REDZETU
     handleAuth() {
+
         ApiClient.login(this.state.credentials)
             .then(response => {
                 if (response) {
@@ -53,7 +53,7 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
                 else {
                     this.setState({ authenticated: false });
                 }
-            })
+            });
     }
 
     handleForm(event) {
@@ -62,13 +62,7 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         var username = document.forms['presentation'].elements["username"].value;
         var password = document.forms['presentation'].elements["password"].value;
 
-        this.setState({
-            credentials: {
-                username: username,
-                password: password
-            },
-            loading: true
-        }, this.handleAuth)
+        this.setState({ credentials: { username: username, password: password }, loading: true }, this.handleAuth)
 
     }
 
@@ -94,34 +88,24 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         this.setState({
             boardPresentation: {
                 id: this.state.boardPresentation.id,
-                title: this.state.boardPresentation.title,
+                title: document.forms['presentation'].elements["title"].value,
                 owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-                credentials: this.state.credentials,
+                credentials: {
+                    username: document.forms['presentation'].elements["username"].value,
+                    password: document.forms['presentation'].elements["password"].value
+                },
                 boards: {
                     values: val,
                 }
             }
         }, this.postPresentation)
+
     }
 
     postPresentation() {
+
         ApiClient.savePresentation(this.state.boardPresentation);
         open('./admin/presentations', '_self');
-    }
-
-    handleChange(event) {
-        const target = event.target;
-        const name = target.name;
-
-        if (name == 'title') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
-        }
-        else if (name == 'username') {
-            this.setState({ credentials: { username: event.target.value, password: this.state.credentials.password } });
-        }
-        else {
-            this.setState({ credentials: { username: this.state.credentials.username, password: event.target.value } });
-        }
     }
 
     // used to redirect to login screen, if invalid JWT token
@@ -131,7 +115,7 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
     }
 
     public render() {
-        if (sessionStorage.getItem(ApiClient.tokenName) === null) {  //
+        if (sessionStorage.getItem('JwtToken') === null) {
             return null;
         }
 
@@ -146,15 +130,15 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
-            <form name="presentation" onSubmit={this.handleAuth}>
+            <form name="presentation" onSubmit={this.handleForm}>
                 <div key="title" style={styleForm}>
-                    Nosaukums: <input id="title" required name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
+                    Nosaukums: <input id="title" required name="title" type="text" />
                 </div>
                 <div key="username" style={styleForm}>
-                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
+                    Lietotājvārds: <input id="username" required name="username" type="text" />
                 </div>
                 <div key="password" style={styleForm}>
-                    Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
+                    Parole: <input id="password" required name="password" type="password" />
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
@@ -168,31 +152,31 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
 
         return <div>
             <form name='boardlist' onSubmit={handleSubmit}>
-            <table className='table'>
-                <thead style={styleHeader}>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nosaukums</th>
-                        <th>Tips</th>
-                        <th>Iekļaut prezentācijā</th>
-                        <th>Attēlošanas laiks</th>
-                        <th>Atjaunošanas laiks</th>
-                    </tr>
-                </thead>
-                <tbody style={styleContent}>
-                    {boardList.map(board =>
-                        <tr key={board.id + "row"}>
-                            <td key={board.id + ""}>{board.id}</td>
-                            <td key={board.id + "name"}>{board.name}</td>
-                            <td key={board.id + "type"}>{board.type}</td>
-                            <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
-                            <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
-                            <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
+                <table className='table'>
+                    <thead style={styleHeader}>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nosaukums</th>
+                            <th>Tips</th>
+                            <th>Iekļaut prezentācijā</th>
+                            <th>Attēlošanas laiks</th>
+                            <th>Atjaunošanas laiks</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
-            <button className="btn btn-default" type="submit">Pievienot prezentāciju</button>
+                    </thead>
+                    <tbody style={styleContent}>
+                        {boardList.map(board =>
+                            <tr key={board.id + "row"}>
+                                <td key={board.id + ""}>{board.id}</td>
+                                <td key={board.id + "name"}>{board.name}</td>
+                                <td key={board.id + "type"}>{board.type}</td>
+                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" defaultValue={board.timeShown.toString()} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" defaultValue={board.refreshRate.toString()} /></td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+                <button className="btn btn-default" type="submit">Pievienot prezentāciju</button>
             </form>
         </div>
     }
@@ -214,5 +198,5 @@ const styleForm = {
 
 const styleButton = {
     display: 'inline-block',
-    height:'40px'
+    height: '40px'
 }

@@ -3,13 +3,14 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
+import { ApiClient } from './ApiClient';
 
-interface EditPresentationState{
+interface EditPresentationState {
     boardPresentation: BoardPresentation;
     boardlist: Value[];
     loading: boolean;
     credentials: Credentials;
-    invalidCredentials: boolean;
+    authenticated: boolean;
 }
 
 export class EditPresentation extends React.Component<RouteComponentProps<{ id: number }>, EditPresentationState> {
@@ -32,7 +33,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             boardlist: [],
             credentials: { username: "", password: "" },
             loading: true,
-            invalidCredentials: false
+            authenticated: false
         };
 
         this.handleFetch = this.handleFetch.bind(this);
@@ -65,28 +66,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             }
             return response;
         }
-
     }
 
     handleFetch() {
-
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/SampleData/BoardList/?credentials=' + this.state.boardPresentation.credentials.username + ":" + this.state.boardPresentation.credentials.password, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
-            .then(response => response.json() as Promise<Value[]>)
+        ApiClient.boardList(this.state.boardPresentation.credentials)
             .then(data => {
                 this.setState({ boardPresentation: this.state.boardPresentation, boardlist: data }, this.handleVisibility);
             });
@@ -109,21 +92,13 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleAuth() {
-
-        fetch('./api/account/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.credentials),
-        })
+        ApiClient.login(this.state.credentials)
             .then(response => {
-                if (response.ok) {
-                    this.setState({ invalidCredentials: false }, this.handleFetch);
+                if (response) {
+                    this.setState({ authenticated: true }, this.handleFetch);
                 }
                 else {
-                    this.setState({ invalidCredentials: true });
+                    this.setState({ authenticated: false });
                 }
             });
     }
@@ -152,17 +127,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     postPresentation() {
-
-        fetch('api/admin/Presentations/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('JwtToken')
-            },
-            body: JSON.stringify(this.state.boardPresentation),
-        });
-
+        ApiClient.savePresentation(this.state.boardPresentation);
         open('./admin/presentations', '_self');
     }
 
@@ -183,16 +148,16 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
     handleChangeBoardVisibility(id: string) {
         var newBoardlist = this.state.boardlist;
- 
+
         this.state.boardlist.map((board, index) => {
             if (board.id.toString() == id) {
                 newBoardlist[index].visibility = !newBoardlist[index].visibility
-    
+
                 this.setState({
                     boardlist: newBoardlist
                 });
             }
-        }) 
+        })
     }
 
     handleChangeBoardTimes(id: string, name: string, e) {
@@ -228,23 +193,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
     // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
-
-        function handleErrors(response) {
-            if (response.status == 401) {
-                open('./login', '_self');
-            }
-            else if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response;
-        }
-
-        fetch('api/account/checkcredentials', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
-        })
-            .then(handleErrors)
+        ApiClient.hasValidJwt()
+            .then(response => ApiClient.redirect(response, 401, './login'));
     }
 
     public render() {
@@ -256,9 +206,9 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             ? null
             : EditPresentation.renderBoardList(this.state.boardlist, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
-        let error = this.state.invalidCredentials
-            ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-            : <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+        let error = this.state.authenticated
+            ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
 
         return <div className="top-padding">
@@ -278,7 +228,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 <div key="password" style={styleForm}>
                     Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
                 </div>
-                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br/> autentifikācijas datos</button></div>
+                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>
 
             {error}
@@ -323,7 +273,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                                 <td key={board.id + "type"}>{board.type}</td>
                                 <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
                                 <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={boardList[index].timeShown} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate',e)}/></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>

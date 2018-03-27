@@ -21,8 +21,10 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
         this.handleDelete = this.handleDelete.bind(this);
 
         ApiClient.getPresentations()
+            .then(data => {
+                this.setState({ presentationList: data, loading: false });
+            });
     }
-
 
     handleErrors(response) {
         if (response.status == 401) {
