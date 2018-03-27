@@ -27,6 +27,16 @@ export class ApiClient {
         })
     }
 
+    // helper delete method
+    static delete(link) {
+        return fetch(link, {
+            method: 'DELETE',
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
+            }
+        })
+    }
+
     // helper redirects if response has a specified status code
     static redirect(response, statusCode, redirectLink) {
         if (response.status == statusCode) {
@@ -102,6 +112,11 @@ export class ApiClient {
     static savePresentation(boardPresentation: BoardPresentation): Promise<BoardPresentation> {
         return ApiClient.post('api/admin/presentations/', boardPresentation)
             .then(response => response.json() as Promise<BoardPresentation>)
+    }
+
+    // PresentationsController
+    static deletePresentation(id: string){
+        ApiClient.delete('api/admin/presentations/' + id)
     }
 
     // VersionController

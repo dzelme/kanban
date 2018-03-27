@@ -5,17 +5,17 @@ import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 import { ApiClient } from './ApiClient';
 
-interface BoardListState {
+interface EditPresentationState {
     boardPresentation: BoardPresentation;
-    boardList: Value[];
+    boardlist: Value[];
     loading: boolean;
-
+    credentials: Credentials;
     authenticated: boolean;
 }
 
-export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
-    constructor() {
-        super();
+export class EditPresentation extends React.Component<RouteComponentProps<{ id: string }>, EditPresentationState> {
+    constructor(props: RouteComponentProps<{ id: string }>) {
+        super(props);
 
         this.state = {
             boardPresentation: {
@@ -30,24 +30,53 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                     values: []
                 }
             },
-            boardList: [],
+            boardlist: [],
+            credentials: { username: "", password: "" },
             loading: true,
-            authenticated: true
+            authenticated: false
         };
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
+        this.handleVisibility = this.handleVisibility.bind(this);
+        this.handleForm = this.handleForm.bind(this);
+        this.handleAuth = this.handleAuth.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
         this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
 
+        ApiClient.getAPresentation(this.props.match.params.id)
+            .then(data => {
+                this.setState({ boardPresentation: data, credentials: data.credentials }, this.handleFetch);
+            });
     }
 
-    handleAuth(event) {
+    handleFetch() {
+        ApiClient.boardList(this.state.boardPresentation.credentials)
+            .then(data => {
+                this.setState({ boardPresentation: this.state.boardPresentation, boardlist: data }, this.handleVisibility);
+            });
+    }
+
+    handleVisibility() {
+        var newList = EditPresentation.checkVisibility(this.state.boardlist, this.state.boardPresentation.boards.values);
+        this.setState({ boardlist: newList, loading: false });
+    }
+
+    handleForm(event) {
         event.preventDefault();
-        ApiClient.login(this.state.boardPresentation.credentials)
+
+        if (this.state.boardPresentation.credentials.username == this.state.credentials.username && this.state.boardPresentation.credentials.password == this.state.credentials.password) {
+            this.setState({ loading: false });
+        }
+        else {
+            this.setState({ boardlist: null, loading: true }, this.handleAuth)
+        }
+    }
+
+    handleAuth() {
+        ApiClient.login(this.state.credentials)
             .then(response => {
                 if (response) {
                     this.setState({ authenticated: true }, this.handleFetch);
@@ -58,19 +87,12 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             });
     }
 
-    handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
-            .then(data => {
-                this.setState({ boardList: data, loading: false });
-            });
-    }
-
     handleSubmit(event) {
         event.preventDefault();
 
         var val = new Array();
 
-        this.state.boardList.map(board => {
+        this.state.boardlist.map(board => {
             if (board.visibility == true) { val.push(board); }
         })
 
@@ -78,17 +100,17 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             boardPresentation: {
                 id: this.state.boardPresentation.id,
                 title: this.state.boardPresentation.title,
-                owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-                credentials: this.state.boardPresentation.credentials,
+                owner: this.state.boardPresentation.owner,
+                credentials: this.state.credentials,
                 boards: {
                     values: val,
                 }
             }
         }, this.postPresentation)
+
     }
 
     postPresentation() {
-
         ApiClient.savePresentation(this.state.boardPresentation);
         open('./admin/presentations', '_self');
     }
@@ -101,58 +123,57 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
         }
         else if (name == 'username') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: event.target.value, password: this.state.boardPresentation.credentials.password }, boards: this.state.boardPresentation.boards } });
+            this.setState({ credentials: { username: event.target.value, password: this.state.credentials.password } });
         }
         else {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: this.state.boardPresentation.credentials.username, password: event.target.value }, boards: this.state.boardPresentation.boards } });
+            this.setState({ credentials: { username: this.state.credentials.username, password: event.target.value } });
         }
     }
 
     handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardList;
+        var newBoardlist = this.state.boardlist;
 
-        this.state.boardList.map((board, index) => {
+        this.state.boardlist.map((board, index) => {
             if (board.id.toString() == id) {
                 newBoardlist[index].visibility = !newBoardlist[index].visibility
 
                 this.setState({
-                    boardList: newBoardlist
+                    boardlist: newBoardlist
                 });
             }
         })
     }
 
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardlist = this.state.boardList;
+        var newBoardlist = this.state.boardlist;
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
 
-            this.state.boardList.map((board, index) => {
+            this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
                     newBoardlist[index].timeShown = value
 
                     this.setState({
-                        boardList: newBoardlist
+                        boardlist: newBoardlist
                     });
                 }
             })
         }
         else {
-            this.state.boardList.map((board, index) => {
+            this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
                     newBoardlist[index].refreshRate = value
 
                     this.setState({
-                        boardList: newBoardlist
+                        boardlist: newBoardlist
                     });
                 }
             })
         }
     }
-
 
     // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
@@ -167,30 +188,50 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         let contents = this.state.loading
             ? null
-            : BoardList.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
+            : EditPresentation.renderBoardList(this.state.boardlist, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.authenticated
             ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
             : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
-        return <div className="top-padding">
-            <h1>Izveidot prezentāciju</h1>
 
-            <form name="presentation" onSubmit={this.handleAuth}>
+        return <div className="top-padding">
+
+            <h1>Rediģēt prezentāciju</h1>
+
+            <form name="presentation" onSubmit={this.handleForm}>
                 <div key="title" style={styleForm}>
-                    Nosaukums: <input id="title" required name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
+                    Nosaukums: <input id="title" name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
+                </div>
+                <div key="owner" style={styleForm}>
+                    Izveidotājs: <input id="owner" name="owner" type="text" disabled value={this.state.boardPresentation.owner} />
                 </div>
                 <div key="username" style={styleForm}>
-                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.boardPresentation.credentials.username} onChange={this.handleChange} />
+                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
                 </div>
                 <div key="password" style={styleForm}>
-                    Parole: <input id="password" required name="password" type="password" value={this.state.boardPresentation.credentials.password} onChange={this.handleChange} />
+                    Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
                 </div>
-                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
+                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>
+
             {error}
             {contents}
         </div>;
+    }
+
+    private static checkVisibility(allBoards: Value[], presentationBoards: Value[]) {
+
+        presentationBoards.map(presBoard =>
+            allBoards.map(board => {
+                if (board.id == presBoard.id) {
+                    board.visibility = true,
+                        board.timeShown = presBoard.timeShown,
+                        board.refreshRate = presBoard.refreshRate
+                }
+            })
+        )
+        return allBoards;
     }
 
     private static renderBoardList(boardList: Value[], handleSubmit, handleChangeBoardVisibility, handleChangeBoardTimes) {
@@ -214,14 +255,14 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
-                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)}/></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
+                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-                <button className="btn btn-default" type="submit">Pievienot prezentāciju</button>
+                <button className="btn btn-default" type="submit">Saglabāt izmaiņas</button>
             </form>
         </div>
     }

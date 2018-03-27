@@ -9,7 +9,6 @@ namespace ESL.CO.React.Models
 
     public class IssueList
     {
-        //public string expand { get; set; }
         public int StartAt { get; set; }
         public int MaxResults { get; set; }
         public int Total { get; set; }

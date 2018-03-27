@@ -101,11 +101,6 @@ namespace ESL.CO.React.JiraIntegration
             // the one stored in app settings (old one)??
         }
 
-
-
-
-
-
         /// <summary>
         /// Generates a unique presentation id.
         /// </summary>
@@ -142,7 +137,11 @@ namespace ESL.CO.React.JiraIntegration
         public string SavePresentation(BoardPresentation boardPresentation)
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
-            boardPresentation.Id = GeneratePresentationId();
+
+            if (string.IsNullOrEmpty(boardPresentation.Id)) {
+                boardPresentation.Id = GeneratePresentationId();
+            }
+            
             var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, @"p_" + boardPresentation.Id + @".json");
 
             // overwrites if exists
@@ -153,6 +152,13 @@ namespace ESL.CO.React.JiraIntegration
             //consider replacing with a global SaveToJson<type> method
 
             //consider moving to controller and not having a separate method
+        }
+
+        public void DeletePresentation(string id)
+        {
+            var filePath = Path.Combine(paths.Value.PresentationDirectoryPath, "p_" + id + ".json"); 
+
+            File.Delete(filePath);
         }
 
         /// <summary>

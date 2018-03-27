@@ -8,11 +8,9 @@ namespace ESL.CO.React.Models
 {
     public class Issue : IEquatable<Issue>
     {
-        //public string expand { get; set; }
-        //public string id { get; set; }
-        //public string self { get; set; }
         [JsonProperty(Required = Required.Always)]
-        public string Key { get; set; }  //used to generate link to the particular issue
+        public string Key { get; set; }
+
         public Fields Fields { get; set; }
 
         public Issue()
