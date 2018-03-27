@@ -99,7 +99,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 }
             }
         }, this.postPresentation)
-
     }
 
     postPresentation() {
@@ -142,7 +141,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
-
             {error}
             {contents}
         </div>;
