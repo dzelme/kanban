@@ -254,7 +254,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
         let contents = this.state.loading
             ? null
-            : EditPresentation.renderBoardList(this.state.boardlist, this.state.boardPresentation, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
+            : EditPresentation.renderBoardList(this.state.boardlist, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.invalidCredentials
             ? <h4>Nekorekts lietotājvārds un/vai parole!</h4>
@@ -300,7 +300,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         return allBoards;
     }
 
-    private static renderBoardList(boardList: Value[], boardPresentation: BoardPresentation, handleSubmit, handleChangeBoardVisibility, handleChangeBoardTimes) {
+    private static renderBoardList(boardList: Value[], handleSubmit, handleChangeBoardVisibility, handleChangeBoardTimes) {
 
         return <div>
             <form name='boardlist' onSubmit={handleSubmit}>

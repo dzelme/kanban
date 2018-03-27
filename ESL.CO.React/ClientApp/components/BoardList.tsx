@@ -37,10 +37,10 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleForm = this.handleForm.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
         this.handleFetch = this.handleFetch.bind(this);
         this.postPresentation = this.postPresentation.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     // SEIT NAV JABUT ADMINAM, LAI REDZETU
@@ -75,7 +75,7 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
     handleFetch() {
         ApiClient.boardList(this.state.credentials)
             .then(data => {
-                this.setState({ boardPresentation: null, boardList: data, loading: false });
+                this.setState({ boardList: data, loading: false });
             });
     }
 
@@ -94,23 +94,34 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         this.setState({
             boardPresentation: {
                 id: this.state.boardPresentation.id,
-                title: document.forms['presentation'].elements["title"].value,
+                title: this.state.boardPresentation.title,
                 owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-                credentials: {
-                    username: document.forms['presentation'].elements["username"].value,
-                    password: document.forms['presentation'].elements["password"].value
-                },
+                credentials: this.state.credentials,
                 boards: {
                     values: val,
                 }
             }
         }, this.postPresentation)
-
     }
 
     postPresentation() {
         ApiClient.savePresentation(this.state.boardPresentation);
         open('./admin/presentations', '_self');
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const name = target.name;
+
+        if (name == 'title') {
+            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
+        }
+        else if (name == 'username') {
+            this.setState({ credentials: { username: event.target.value, password: this.state.credentials.password } });
+        }
+        else {
+            this.setState({ credentials: { username: this.state.credentials.username, password: event.target.value } });
+        }
     }
 
     // used to redirect to login screen, if invalid JWT token
@@ -135,15 +146,15 @@ export class BoardList extends React.Component<RouteComponentProps<{ id: number 
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
-            <form name="presentation" onSubmit={this.handleForm}>
+            <form name="presentation" onSubmit={this.handleAuth}>
                 <div key="title" style={styleForm}>
-                    Nosaukums: <input id="title" required name="title" type="text" />
+                    Nosaukums: <input id="title" required name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
                 </div>
                 <div key="username" style={styleForm}>
-                    Lietotājvārds: <input id="username" required name="username" type="text" />
+                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
                 </div>
                 <div key="password" style={styleForm}>
-                    Parole: <input id="password" required name="password" type="password" />
+                    Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
