@@ -25,7 +25,7 @@ export class Login extends React.Component<RouteComponentProps<{}>, Authenticati
 
     isAuthenticated() {
         ApiClient.hasValidJwt()
-            .then(response => ApiClient.redirect(200, response, './admin'));
+            .then(response => ApiClient.redirect(response, 200, './admin'));
     }
 
     handleChange(event) {

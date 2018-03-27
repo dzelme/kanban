@@ -32,11 +32,7 @@ namespace ESL.CO.Tests
             appSettings = new Mock<IAppSettings>();
             jiraClient = new Mock<IJiraClient>();
             boardCreator = new Mock<IBoardCreator>();
-            credentials = new Credentials
-            {
-                Username = "service.kosmoss.tv",
-                Password = "ZycsakMylp8od6"
-            };
+            credentials = new Credentials { Username = "", Password = "" };
             credentialsString = credentials.Username + ":" + credentials.Password;
 
             paths = Options.Create(new Paths

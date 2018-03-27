@@ -5,7 +5,29 @@ import { Credentials, Board, Value, JiraConnectionLogEntry, BoardPresentation } 
 export class ApiClient {
     static tokenName = 'JwtToken';
 
-    // Redirects if response has a specified status code
+    // helper post method
+    static post(link, data): Promise<Response> {
+        return fetch(link, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
+            },
+            body: JSON.stringify(data)
+        })
+    }
+
+    // helper get method
+    static get(link): Promise<Response> {
+        return fetch(link, {
+            headers: {
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
+            }
+        })
+    }
+
+    // helper redirects if response has a specified status code
     static redirect(response, statusCode, redirectLink) {
         if (response.status == statusCode) {
             open(redirectLink, '_self');
@@ -17,16 +39,8 @@ export class ApiClient {
     }
 
     // AccountController: Checks the credentials submitted by user.
-    static login(credentials: Credentials) : Promise<boolean> {
-        return fetch('/api/account/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
-            },
-            body: JSON.stringify(credentials)
-        })
+    static login(credentials: Credentials): Promise<boolean> {
+        return ApiClient.post('/api/account/login', credentials)
             .then(response => {
                 if (response.ok) {
                     response.json().then(json => {
@@ -41,106 +55,58 @@ export class ApiClient {
     }
 
     // AccountController: Checks if the current user has a valid JWT token
-    static hasValidJwt() : Promise<Response> {
-        return fetch('api/account/hasValidJwt', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            }
-        })
+    static hasValidJwt(): Promise<Response> {
+        return ApiClient.get('api/account/hasValidJwt');
     }
 
     // SampleDataController: Gets board list
-    static boardList(credentials: Credentials) : Promise<Value[]> {
-        return fetch('/api/SampleData/BoardList', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
-            },
-            body: JSON.stringify(credentials)
-        })
+    static boardList(credentials: Credentials): Promise<Value[]> {
+        return ApiClient.post('/api/SampleData/BoardList', credentials)
             .then(response => ApiClient.redirect(response, 401, './login'))
             .then(response => response.json() as Promise<Value[]>)
     }
 
     // SampleDataController: Gets board data
     static boardData(id: number, credentials: Credentials): Promise<Board> {
-        return fetch('api/SampleData/BoardData?id=' + id.toString(), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
-            },
-            body: JSON.stringify(credentials)
-        })
+        return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials)
             .then(response => response.json() as Promise<Board>)
     }
 
     // SampleDataController: Increases the statistics counter each time the board is shown.
     static incrementTimesShown(id: number) {
-        fetch('api/SampleData/IncrementTimesShown', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            },
-            body: JSON.stringify(id),
-        })
+        return ApiClient.post('api/SampleData/IncrementTimesShown', id)
     }
 
     // SampleDataController: Reads connection log from the appropriate file into an object.
-    static networkStatistics(id: number) : Promise<JiraConnectionLogEntry[]> {
-        return fetch('api/SampleData/NetworkStatistics?id=' + id.toString(), {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            }
-        })
+    static networkStatistics(id: number): Promise<JiraConnectionLogEntry[]> {
+        return ApiClient.get('api/SampleData/NetworkStatistics?id=' + id.toString())
             .then(response => ApiClient.redirect(response, 401, './login'))
             .then(response => response.json() as Promise<JiraConnectionLogEntry[]>)
     }
 
     // PresentationsController
     static getPresentations(): Promise<BoardPresentation[]> {
-        return fetch('api/admin/presentations', {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            }
-        })
+        return ApiClient.get('api/admin/presentations')
             .then(response => ApiClient.redirect(response, 401, './login'))
-            .then(response => response.json())
+            .then(response => response.json() as Promise<BoardPresentation[]>)
     }
 
     // PresentationsController
-    static getAPresentation(id: string) : Promise<BoardPresentation> {
-        return fetch('api/admin/presentations/' + id, {
-            headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            }
-        })
+    static getAPresentation(id: string): Promise<BoardPresentation> {
+        return ApiClient.get('api/admin/presentations/' + id)
             .then(response => ApiClient.redirect(response, 400, './login'))  //NB! 400
-            .then(response => response.json())
+            .then(response => response.json() as Promise<BoardPresentation>)
     }
 
     // PresentationsController
     static savePresentation(boardPresentation: BoardPresentation): Promise<BoardPresentation> {
-        return fetch('api/admin/presentations/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
-            },
-            body: JSON.stringify(boardPresentation)
-        })
-            .then(response => response.json())
+        return ApiClient.post('api/admin/presentations/', boardPresentation)
+            .then(response => response.json() as Promise<BoardPresentation>)
     }
 
     // VersionController
-    static getVersion() : Promise<string> {
+    static getVersion(): Promise<string> {
         return fetch('api/version')
-            .then(res => res.json() as Promise<string>)
+            .then(response => response.json() as Promise<string>)
     }
 }
