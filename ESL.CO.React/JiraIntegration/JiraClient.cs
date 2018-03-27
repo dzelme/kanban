@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
 using ESL.CO.React.Models;
+using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.JiraIntegration
@@ -18,6 +19,7 @@ namespace ESL.CO.React.JiraIntegration
     {
         private HttpClient client = new HttpClient();
         private readonly IOptions<Paths> paths;
+        private readonly IDbClient dbClient;
 
         public JiraClient(IOptions<Paths> paths)
         {
@@ -46,6 +48,9 @@ namespace ESL.CO.React.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
+                    //var entry = dbClient.GetStatisticsEntry(id.ToString());
+                    //entry.NetworkStats = 
+                    //dbClient.UpdateStatisticsEntry(id.ToString(), entry);
                     SaveToConnectionLog_AsTextFile(url, response, id);
                     return serializer.Deserialize<T>(jsonReader);
                 }

@@ -90,7 +90,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
     //AD: increments timesShown board statistic
     increment() {
-        ApiClient.incrementTimesShown(this.state.boardId);
+        ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
     }
 
     shouldComponentUpdate(nextProps, nextState) {

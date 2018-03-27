@@ -103,6 +103,14 @@ interface JiraConnectionLogEntry {
     exception: string;
 }
 
+interface StatisticsEntry {
+    boardId: string;
+    name: string;
+    timesShown: number;
+    lastShown: string;
+    networkStats: JiraConnectionLogEntry[];
+}
+
 interface BoardReaderState {
     boardlist: Value[];
     titleList: string[];

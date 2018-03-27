@@ -19,6 +19,7 @@ namespace ESL.CO.React.DbConnection
             client = new MongoClient("mongodb://localhost:27017");
             db = client.GetDatabase("StatisticsDB");
             collection = db.GetCollection<StatisticsEntry>("StatisticsList");
+            //db.createCollection("collectionName",{capped:true,size:10000,max:5}) //bytes, count
         }
 
         public IEnumerable<StatisticsEntry> GetStatisticsList()
@@ -30,7 +31,7 @@ namespace ESL.CO.React.DbConnection
         public StatisticsEntry GetStatisticsEntry(string id)
         {
             var filter = Builders<StatisticsEntry>.Filter.Eq("BoardId", id);
-            var document = collection.Find(filter).First();
+            var document = collection.Find(filter).FirstOrDefault();  //returns null if no match
             return document;
             //var res = Query<StatisticsList>.EQ(p => p.Id, id);
             //return db.GetCollection<StatisticsList>("StatisticsList").FindOne(res);
@@ -42,7 +43,7 @@ namespace ESL.CO.React.DbConnection
             return entry;
         }
 
-        // unnecessary if save can does the same + makes new if doesnt exist
+        // unnecessary if save can do the same + makes new if doesnt exist
         public void UpdateStatisticsEntry(string id, StatisticsEntry entry)
         {
             var filter = Builders<StatisticsEntry>.Filter.Eq("BoardId", id);
@@ -60,6 +61,11 @@ namespace ESL.CO.React.DbConnection
             //var operation = Update<StatisticsList>.Replace(p);
             //db.GetCollection<StatisticsList>("StatisticsList").Update(res, operation);
         }
+
+        //public void UpdateNetworkStats(string id)
+        //{
+
+        //}
 
         public void RemoveStatisticsEntry(string id)
         {

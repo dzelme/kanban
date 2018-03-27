@@ -26,7 +26,7 @@ namespace ESL.CO.React.Models
             Name = name;
             TimesShown = 0;
             LastShown = null;
-            NetworkStats = null;
+            NetworkStats = new JiraConnectionLogEntry[] { };
         }
     }
 }

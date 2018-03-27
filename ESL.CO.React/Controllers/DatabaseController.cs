@@ -21,22 +21,25 @@ namespace ESL.CO.React.Controllers
             this.dbClient = dbClient;
         }
 
-        /// <summary>
-        /// Increases the statistics counter each time the board is shown.
-        /// </summary>
-        /// <param name="id">Id of the board whose counter will be increased.</param>
+
         [HttpPost("[action]")]
-        public void IncrementTimesShown([FromBody] string id, [FromBody] string name)
+        public void SaveToStatistics(string id, [FromBody] string name)
         {
+            // inefficient, finds entry once here, once in update => make update return bool
             var entry = dbClient.GetStatisticsEntry(id);
             if (entry == null)
             {
                 entry = new StatisticsEntry(id, name);
+                UpdateStatisticsEntry(entry);
+                dbClient.SaveStatisticsEntry(entry);
+            }
+            else
+            {
+                UpdateStatisticsEntry(entry);
+                dbClient.UpdateStatisticsEntry(id, entry);
             }
 
-            checked { entry.TimesShown++; }  // checked...
-            entry.LastShown = DateTime.Now;
-            dbClient.SaveStatisticsEntry(entry);
+            return;
 
             //var boardList = new FullBoardList();
             //boardList = appSettings.GetSavedAppSettings();
@@ -56,46 +59,38 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// Reads connection log from the appropriate file into an object.
+        /// Helper method that updates a statistics entry's times shown counter and last shown date.
         /// </summary>
-        /// <param name="id">Id of the board whose log entries will be retrieved.</param>
-        /// <returns>A list of connection log entries.</returns>
-        [Authorize(Roles = "Admins")]
-        [HttpGet("[action]")]
-        public JiraConnectionLogEntry[] NetworkStatistics(string id)
+        /// <param name="entry">Statistics entry object whose properties will be updated.</param>
+        private void UpdateStatisticsEntry(StatisticsEntry entry)
         {
-            var entry = dbClient.GetStatisticsEntry(id);
-            return entry.NetworkStats;
-
-            //var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
-            //var connectionLog = new List<JiraConnectionLogEntry>();
-            //if (System.IO.File.Exists(filePath))
-            //{
-            //    using (StreamReader r = new StreamReader(filePath))
-            //    {
-            //        var logEntry = r.ReadLine();
-            //        while (logEntry != null)
-            //        {
-            //            string[] logEntryField = logEntry.Split('|');
-            //            connectionLog.Add(new JiraConnectionLogEntry(
-            //                logEntryField[1],
-            //                logEntryField[2],
-            //                (logEntryField.Length > 3) ? logEntryField[3] : "",
-            //                logEntryField[0]
-            //            ));
-            //            logEntry = r.ReadLine();
-            //        }
-            //    }
-            //}
-            //return connectionLog;
+            checked { entry.TimesShown++; }  // checked...
+            entry.LastShown = DateTime.Now;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Admins")]
         [HttpGet("[action]")]
         public IEnumerable<StatisticsEntry> StatisticsList()
         {
             var list = dbClient.GetStatisticsList();
             return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admins")]
+        [HttpPost("[action]")]
+        public JiraConnectionLogEntry[] NetworkStatistics([FromBody] string id)
+        {
+            var entry = dbClient.GetStatisticsEntry(id);
+            return entry.NetworkStats;
         }
     }
 }
