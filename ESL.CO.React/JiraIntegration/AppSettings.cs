@@ -138,7 +138,7 @@ namespace ESL.CO.React.JiraIntegration
         {
             Directory.CreateDirectory(paths.Value.PresentationDirectoryPath);
 
-            if (boardPresentation.Id == "") {
+            if (string.IsNullOrEmpty(boardPresentation.Id)) {
                 boardPresentation.Id = GeneratePresentationId();
             }
             
