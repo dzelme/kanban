@@ -104,3 +104,16 @@ input, select, textarea,button {
     color: white;
     text-decoration: none;
 }
+
+.LinkText:link {
+    color: white;
+}
+
+
+.LinkText:visited {
+    color: white;
+}
+
+.LinkText:hover {
+    color: wheat;
+}

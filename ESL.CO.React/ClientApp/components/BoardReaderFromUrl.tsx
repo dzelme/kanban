@@ -11,7 +11,6 @@ interface BoardReaderState {
     titleList: string[];
 }
 
-//Get all boards in list
 export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id: number }>, BoardReaderState> {
 
     constructor(props: RouteComponentProps<{ id: number }>) {

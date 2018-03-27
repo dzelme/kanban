@@ -203,7 +203,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                             <th>ID</th>
                             <th>Nosaukums</th>
                             <th>Tips</th>
-                            <th>Iekļaut prezentācijā</th>
+                            <th style={styleCheckBoxTitle}>Iekļaut prezentācijā</th>
                             <th>Attēlošanas laiks</th>
                             <th>Atjaunošanas laiks</th>
                         </tr>
@@ -214,7 +214,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
-                                <td key={board.id + "visibility"}><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)}/></td>
+                                <td key={board.id + "visibility"}><input style={styleCheckBox} name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
                                 <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
                                 <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
                             </tr>
@@ -244,4 +244,12 @@ const styleForm = {
 const styleButton = {
     display: 'inline-block',
     height: '40px'
+}
+
+const styleCheckBox = {
+    marginLeft:'50%'
+}
+
+const styleCheckBoxTitle = {
+    textAlign: 'center'
 }

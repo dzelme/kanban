@@ -40,6 +40,7 @@ const styleList = {
     border: 'solid',
     borderColor: 'white',
     textAlign: 'center',
+    marginBottom:'30px'
 }
 
 const styleActive = {
@@ -48,6 +49,7 @@ const styleActive = {
     border: 'solid',
     borderColor: 'white',
     textAlign: 'center',
-    background: 'white',
-    color:'black'
+    background: 'grey',
+    color: 'white',
+    marginBottom: '30px'
 }
