@@ -4,7 +4,7 @@ import 'isomorphic-fetch';
 import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
 
-interface EditPresentationState {
+interface EditPresentationState{
     boardPresentation: BoardPresentation;
     boardlist: Value[];
     loading: boolean;
