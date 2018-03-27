@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ESL.CO.React.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Net.Http;
 
 namespace ESL.CO.React.DbConnection
 {
@@ -13,6 +14,10 @@ namespace ESL.CO.React.DbConnection
         private MongoClient client;
         private IMongoDatabase db;
         private IMongoCollection<StatisticsEntry> collection;
+
+        //FIX: same const located in 2 places - StatisticsEntry and here
+        private const int NETWORK_STATS_ENTRY_LIMIT = 3; // should be somewhere else..
+
 
         public DbClient()
         {
@@ -44,9 +49,9 @@ namespace ESL.CO.React.DbConnection
         }
 
         // unnecessary if save can do the same + makes new if doesnt exist
-        public void UpdateStatisticsEntry(string id, StatisticsEntry entry)
+        public void UpdateStatisticsEntry(StatisticsEntry entry)
         {
-            var filter = Builders<StatisticsEntry>.Filter.Eq("BoardId", id);
+            var filter = Builders<StatisticsEntry>.Filter.Eq("BoardId", entry.BoardId);
             var update = Builders<StatisticsEntry>.Update
                 .Set("Name", entry.Name)
                 .Set("TimesShown", entry.TimesShown)
@@ -62,10 +67,17 @@ namespace ESL.CO.React.DbConnection
             //db.GetCollection<StatisticsList>("StatisticsList").Update(res, operation);
         }
 
-        //public void UpdateNetworkStats(string id)
-        //{
+        public void UpdateNetworkStats(string id, string url, HttpResponseMessage response)
+        {
+            var entry = GetStatisticsEntry(id);
+            var networkStats = entry.NetworkStats;
+            var networkStatsEntry = new JiraConnectionLogEntry(url, response.StatusCode.ToString());
 
-        //}
+            if (networkStats.Count() >= NETWORK_STATS_ENTRY_LIMIT) { networkStats.Dequeue(); }
+            networkStats.Enqueue(networkStatsEntry);
+
+            UpdateStatisticsEntry(entry);
+        }
 
         public void RemoveStatisticsEntry(string id)
         {

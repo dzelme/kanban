@@ -36,7 +36,7 @@ namespace ESL.CO.React.Controllers
             else
             {
                 UpdateStatisticsEntry(entry);
-                dbClient.UpdateStatisticsEntry(id, entry);
+                dbClient.UpdateStatisticsEntry(entry);
             }
 
             return;
@@ -87,7 +87,7 @@ namespace ESL.CO.React.Controllers
         /// <returns></returns>
         [Authorize(Roles = "Admins")]
         [HttpPost("[action]")]
-        public JiraConnectionLogEntry[] NetworkStatistics([FromBody] string id)
+        public Queue<JiraConnectionLogEntry> NetworkStatistics([FromBody] string id)
         {
             var entry = dbClient.GetStatisticsEntry(id);
             return entry.NetworkStats;

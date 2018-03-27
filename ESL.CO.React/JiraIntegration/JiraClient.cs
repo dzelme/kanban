@@ -21,9 +21,10 @@ namespace ESL.CO.React.JiraIntegration
         private readonly IOptions<Paths> paths;
         private readonly IDbClient dbClient;
 
-        public JiraClient(IOptions<Paths> paths)
+        public JiraClient(IOptions<Paths> paths, IDbClient dbClient)
         {
             this.paths = paths;
+            this.dbClient = dbClient;
         }
           /*  client.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(auth_info)));*/
         
@@ -48,10 +49,9 @@ namespace ESL.CO.React.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    //var entry = dbClient.GetStatisticsEntry(id.ToString());
-                    //entry.NetworkStats = 
-                    //dbClient.UpdateStatisticsEntry(id.ToString(), entry);
-                    SaveToConnectionLog_AsTextFile(url, response, id);
+                    dbClient.UpdateNetworkStats(id.ToString(), url, response);
+
+                    //SaveToConnectionLog_AsTextFile(url, response, id);
                     return serializer.Deserialize<T>(jsonReader);
                 }
             }
@@ -60,7 +60,8 @@ namespace ESL.CO.React.JiraIntegration
                 //HttpError error = response.Content.ReadAsStringAsync().Result;
             }
 
-            SaveToConnectionLog_AsTextFile(url, response, id);
+            dbClient.UpdateNetworkStats(id.ToString(), url, response);
+            //SaveToConnectionLog_AsTextFile(url, response, id);
             return default(T);  //null
             //throw new InvalidOperationException();
         }

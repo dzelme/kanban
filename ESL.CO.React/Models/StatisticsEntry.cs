@@ -9,6 +9,9 @@ namespace ESL.CO.React.Models
 {
     public class StatisticsEntry
     {
+        //FIX: same const located in 2 places - DbClient and here
+        private const int NETWORK_STATS_ENTRY_LIMIT = 3;
+
         [BsonId]
         public string BoardId { get; set; }
         [BsonElement("Name")]
@@ -18,7 +21,7 @@ namespace ESL.CO.React.Models
         [BsonElement("LastShown")]
         public DateTime? LastShown { get; set; }
         [BsonElement("NetworkStats")]
-        public JiraConnectionLogEntry[] NetworkStats { get; set; }
+        public Queue<JiraConnectionLogEntry> NetworkStats { get; set; }
 
         public StatisticsEntry(string id = "0", string name = "")
         {
@@ -26,7 +29,7 @@ namespace ESL.CO.React.Models
             Name = name;
             TimesShown = 0;
             LastShown = null;
-            NetworkStats = new JiraConnectionLogEntry[] { };
+            NetworkStats = new Queue<JiraConnectionLogEntry>(NETWORK_STATS_ENTRY_LIMIT);
         }
     }
 }

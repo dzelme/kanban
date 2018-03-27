@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using ESL.CO.React.Models;
 
 namespace ESL.CO.React.DbConnection
@@ -9,6 +10,7 @@ namespace ESL.CO.React.DbConnection
         IEnumerable<StatisticsEntry> GetStatisticsList();
         void RemoveStatisticsEntry(string id);
         StatisticsEntry SaveStatisticsEntry(StatisticsEntry entry);
-        void UpdateStatisticsEntry(string id, StatisticsEntry entry);
+        void UpdateNetworkStats(string id, string url, HttpResponseMessage response);
+        void UpdateStatisticsEntry(StatisticsEntry entry);
     }
 }
