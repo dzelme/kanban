@@ -50,16 +50,15 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
     handleDelete(id: string) {
 
-        fetch('api/admin/presentations/DeletePresentation?ID=' + id, {
+        fetch('api/admin/presentations/' + id, {
+            method:'DELETE',
             headers: {
-                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken')
-            }
+                authorization: 'Bearer ' + sessionStorage.getItem('JwtToken'),
+            },
         })
-            .then(this.handleErrors)
-            .then(response => response.json())
-            .then(data => {
-                open('./admin/presentations', '_self');
-            });
+            .then(this.handleErrors) 
+            open('./admin/presentations', '_self');
+          
     }
 
     public render() {

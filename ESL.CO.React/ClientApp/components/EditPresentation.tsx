@@ -100,14 +100,11 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     handleForm(event) {
         event.preventDefault();
 
-        var username = document.forms['presentation'].elements["username"].value;
-        var password = document.forms['presentation'].elements["password"].value;
-
-        if (username == this.state.credentials.username && password == this.state.credentials.password) {
+        if (this.state.boardPresentation.credentials.username == this.state.credentials.username && this.state.boardPresentation.credentials.password == this.state.credentials.password) {
             this.setState({ loading: false });
         }
         else {
-            this.setState({ boardlist: null, credentials: { username: username, password: password }, loading: true }, this.handleAuth)
+            this.setState({ boardlist: null, loading: true }, this.handleAuth)
         }
     }
 
@@ -145,7 +142,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 id: this.state.boardPresentation.id,
                 title: this.state.boardPresentation.title,
                 owner: this.state.boardPresentation.owner,
-                credentials: this.state.boardPresentation.credentials,
+                credentials: this.state.credentials,
                 boards: {
                     values: val,
                 }
@@ -177,10 +174,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
         }
         else if (name == 'username') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: target.value, password: this.state.boardPresentation.credentials.password }, boards: this.state.boardPresentation.boards } });
+            this.setState({ credentials: { username: event.target.value, password: this.state.credentials.password } });
         }
         else {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: this.state.boardPresentation.title, owner: this.state.boardPresentation.owner, credentials: { username: this.state.boardPresentation.credentials.username, password: target.value }, boards: this.state.boardPresentation.boards } });
+            this.setState({ credentials: { username: this.state.credentials.username, password: event.target.value } });
         }
     }
 
@@ -276,10 +273,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                     Izveidotājs: <input id="owner" name="owner" type="text" disabled value={this.state.boardPresentation.owner} />
                 </div>
                 <div key="username" style={styleForm}>
-                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.boardPresentation.credentials.username} onChange={this.handleChange} />
+                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
                 </div>
                 <div key="password" style={styleForm}>
-                    Parole: <input id="password" required name="password" type="password" value={this.state.boardPresentation.credentials.password} onChange={this.handleChange} />
+                    Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
                 </div>
                 <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br/> autentifikācijas datos</button></div>
             </form>
