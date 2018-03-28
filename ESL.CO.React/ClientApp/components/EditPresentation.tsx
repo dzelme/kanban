@@ -245,8 +245,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                             <th>Nosaukums</th>
                             <th>Tips</th>
                             <th style={styleCheckBoxTitle}>Iekļaut prezentācijā</th>
-                            <th>Attēlošanas laiks</th>
-                            <th>Atjaunošanas laiks</th>
+                            <th>Attēlošanas laiks(ms)</th>
+                            <th>Atjaunošanas laiks(ms)</th>
                         </tr>
                     </thead>
                     <tbody style={styleContent}>
