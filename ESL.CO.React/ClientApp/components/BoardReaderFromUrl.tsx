@@ -7,7 +7,6 @@ import { ApiClient } from './ApiClient';
 interface BoardReaderState {
     boardlist: Value[];
     loading: boolean;
-    credentials: Credentials;
     titleList: string[];
 }
 
@@ -18,25 +17,23 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username: "", password: "" },
             titleList:[]
         };
 
-            this.state = {
-                boardlist: [{
-                    id: this.props.match.params.id,
-                    name: "test",
-                    type: "test",
-                    visibility: true,
-                    timeShown: 10000,
-                    refreshRate: 5000,
-                    timesShown: 0,
-                    lastShown: ""
-                }],
-                loading: false,
-                credentials: this.state.credentials,
-                titleList:[]
-            }
+        this.state = {
+            boardlist: [{
+                id: this.props.match.params.id,
+                name: "test",
+                type: "test",
+                visibility: true,
+                timeShown: 10000,
+                refreshRate: 5000,
+                timesShown: 0,
+                lastShown: ""
+            }],
+            loading: false,
+            titleList:[]
+        }
     }
 
     public render() {
