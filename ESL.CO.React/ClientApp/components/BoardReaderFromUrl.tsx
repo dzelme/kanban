@@ -18,18 +18,10 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
         this.state = {
             boardlist: [],
             loading: true,
-            credentials: { username: "service.kosmoss.tv", password: "ZycsakMylp8od6" },
+            credentials: { username: "", password: "" },
             titleList:[]
         };
 
-        if (this.props.match.params.id == null) {
-            ApiClient.boardList(this.state.credentials)
-                .then(data => {
-                    this.setState({ boardlist: data, loading: false });
-                })
-                .catch(error => console.log(error));
-        }
-        else {
             this.state = {
                 boardlist: [{
                     id: this.props.match.params.id,
@@ -45,13 +37,12 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ id
                 credentials: this.state.credentials,
                 titleList:[]
             }
-        }
     }
 
     public render() {
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} credentials={this.state.credentials} titleList={this.state.titleList} /> : <h1>No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} presID='0' titleList={this.state.titleList} /> : <h1>No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }
