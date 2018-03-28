@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.Models;
 using ESL.CO.React.JiraIntegration;
+using ESL.CO.React.DbConnection;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
@@ -16,11 +17,17 @@ namespace ESL.CO.React.Controllers
     {
         private readonly IJiraClient jiraClient;
         private readonly IAppSettings appSettings;
+        private readonly IDbClient dbClient;
 
-        public PresentationsController(IJiraClient jiraClient, IAppSettings appSettings)
+        public PresentationsController(
+            IJiraClient jiraClient,
+            IAppSettings appSettings,
+            IDbClient dbClient
+            )
         {
             this.jiraClient = jiraClient;
             this.appSettings = appSettings;
+            this.dbClient = dbClient;
         }
 
         [Authorize(Roles = "Admins")]
@@ -31,8 +38,11 @@ namespace ESL.CO.React.Controllers
             //Atbilde 401 Unauthorized, gadījumos ja lietotājs nav autorizēts
             //Atbilde 200 ok un json BoardPresentation(bez credentials sadaļas)
 
-            var presentationList = appSettings.GetPresentationList();
-            return Ok(presentationList.PresentationList);
+            var presentationList = dbClient.GetList<BoardPresentation>();
+            return Ok(presentationList);
+
+            //var presentationList = appSettings.GetPresentationList();
+            //return Ok(presentationList.PresentationList);
         }
 
         [HttpGet("{id}")]
@@ -42,7 +52,8 @@ namespace ESL.CO.React.Controllers
             //Atbilde 404 Not Found, ja prezentācija nav atrasta
             //Atbilde 200 OK un json BoardPresentation(bez credentials sadaļas)
 
-            var boardPresentation = appSettings.GetPresentation(id);
+            var boardPresentation = dbClient.GetOne<BoardPresentation>(id);
+            //var boardPresentation = appSettings.GetPresentation(id);
             if (boardPresentation == null)
             {
                 return BadRequest("Presentation with the specified ID not found!");
@@ -64,11 +75,19 @@ namespace ESL.CO.React.Controllers
 
             if (ModelState.IsValid)
             {
-                appSettings.SavePresentation(boardPresentation);
+                if (string.IsNullOrEmpty(boardPresentation.Id))
+                {
+                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
+                    dbClient.Save(boardPresentation);
+                }
+                else
+                {
+                    dbClient.Update(boardPresentation.Id, boardPresentation);
+                }
+                //appSettings.SavePresentation(boardPresentation);
             }
             else
             {
-                //alert about invalid data
                 return BadRequest("invalid data"); //
             }
 
@@ -80,7 +99,8 @@ namespace ESL.CO.React.Controllers
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {
-            appSettings.DeletePresentation(id);
+            dbClient.Remove<BoardPresentation>(id);
+            //appSettings.DeletePresentation(id);
         }
     }
 }

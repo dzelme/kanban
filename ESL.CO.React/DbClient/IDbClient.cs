@@ -5,6 +5,7 @@ namespace ESL.CO.React.DbConnection
 {
     public interface IDbClient
     {
+        int GeneratePresentationId();
         IEnumerable<T> GetList<T>();
         T GetOne<T>(string id);
         void Remove<T>(string id);

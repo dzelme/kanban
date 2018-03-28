@@ -16,6 +16,7 @@ namespace ESL.CO.React.DbConnection
         private IMongoDatabase db;
         private IMongoCollection<StatisticsEntry> statsCollection;
         private IMongoCollection<BoardPresentation> presCollection;
+        private IMongoCollection<Identity> idCollection;
         private readonly IOptions<DbSettings> dbSettings;
 
         public DbClient(IOptions<DbSettings> dbSettings)
@@ -25,6 +26,7 @@ namespace ESL.CO.React.DbConnection
             db = client.GetDatabase(dbSettings.Value.DatabaseName);
             statsCollection = db.GetCollection<StatisticsEntry>(dbSettings.Value.StatisticsCollectionName);
             presCollection = db.GetCollection<BoardPresentation>(dbSettings.Value.PresentationsCollectionName);
+            idCollection = db.GetCollection<Identity>(dbSettings.Value.IdCollectionName);
             //db.createCollection("collectionName",{capped:true,size:10000,max:5}) //bytes, count
         }
 
@@ -163,6 +165,28 @@ namespace ESL.CO.React.DbConnection
             networkStats.Enqueue(networkStatsEntry);
 
             Update(id, entry);
+        }
+
+        public int GeneratePresentationId()
+        {
+
+            var filter = Builders<Identity>.Filter.Eq("Id", "IncrementId");
+            var identity = idCollection.Find(filter).FirstOrDefault();
+            if (identity == null)
+            {
+                identity = new Identity
+                {
+                    Id = "IncrementId",
+                    SequenceValue = 0
+                };
+                idCollection.InsertOne(identity);
+            }
+
+            var update = Builders<Identity>.Update
+                .Set("SequenceValue", ++identity.SequenceValue);  //
+            idCollection.UpdateOne(filter, update);
+
+            return identity.SequenceValue;
         }
     }
 }
