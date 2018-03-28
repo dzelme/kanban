@@ -61,11 +61,11 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
             </thead>
             <tbody>
                     {statsList.map(entry =>
-                        <tr key={entry.boardId + "row"}>
-                            <td key={entry.boardId + ""}>{entry.boardId}</td>
-                            <td key={entry.boardId + "name"}>{entry.name}</td>
-                            <td key={entry.boardId + "timesShown"}>{entry.timesShown.toString()}</td>
-                            <td key={entry.boardId + "lastShown"}>
+                        <tr key={entry.id + "row"}>
+                            <td key={entry.id + ""}>{entry.id}</td>
+                            <td key={entry.id + "name"}>{entry.name}</td>
+                            <td key={entry.id + "timesShown"}>{entry.timesShown.toString()}</td>
+                            <td key={entry.id + "lastShown"}>
                             {entry.lastShown ?
                                 new Intl.DateTimeFormat('lv-LV', {
                                     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -74,7 +74,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                                 : ""
                             }
                             </td>
-                            <td><Link to={'/admin/jiraconnectionstats/' + entry.boardId} className="btn btn-default">Savienojums</Link></td>
+                            <td><Link to={'/admin/jiraconnectionstats/' + entry.id} className="btn btn-default">Savienojums</Link></td>
                         </tr>
                     )}
                 </tbody>

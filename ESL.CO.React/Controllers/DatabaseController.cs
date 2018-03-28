@@ -26,17 +26,17 @@ namespace ESL.CO.React.Controllers
         public void SaveToStatistics(string id, [FromBody] string name)
         {
             // inefficient, finds entry once here, once in update => make update return bool
-            var entry = dbClient.GetStatisticsEntry(id);
+            var entry = dbClient.GetOne<StatisticsEntry>(id);
             if (entry == null)
             {
                 entry = new StatisticsEntry(id, name);
                 UpdateStatisticsEntry(entry);
-                dbClient.SaveStatisticsEntry(entry);
+                dbClient.Save(entry);
             }
             else
             {
                 UpdateStatisticsEntry(entry);
-                dbClient.UpdateStatisticsEntry(entry);
+                dbClient.Update(id, entry);
             }
 
             return;
@@ -76,7 +76,7 @@ namespace ESL.CO.React.Controllers
         [HttpGet("[action]")]
         public IEnumerable<StatisticsEntry> StatisticsList()
         {
-            var list = dbClient.GetStatisticsList();
+            var list = dbClient.GetList<StatisticsEntry>();
             return list;
         }
 
@@ -89,7 +89,7 @@ namespace ESL.CO.React.Controllers
         [HttpPost("[action]")]
         public Queue<JiraConnectionLogEntry> NetworkStatistics([FromBody] string id)
         {
-            var entry = dbClient.GetStatisticsEntry(id);
+            var entry = dbClient.GetOne<StatisticsEntry>(id);
             return entry.NetworkStats;
         }
     }

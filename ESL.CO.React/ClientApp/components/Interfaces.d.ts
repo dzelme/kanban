@@ -104,7 +104,7 @@ interface JiraConnectionLogEntry {
 }
 
 interface StatisticsEntry {
-    boardId: string;
+    id: string;
     name: string;
     timesShown: number;
     lastShown: string;

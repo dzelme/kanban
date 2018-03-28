@@ -31,7 +31,8 @@ namespace ESL.CO.React
         {
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
-            services.Configure<Paths>(Configuration.GetSection("Paths"));
+            services.Configure<Paths>(Configuration.GetSection("Paths"));  //redundant with db..
+            services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
