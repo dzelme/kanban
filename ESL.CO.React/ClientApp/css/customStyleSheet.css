@@ -29,38 +29,29 @@ h2, h3{
     padding: 3px 8px;
 }
 
-.blocker {
-    background-color:white;
+article {
+    background-color: white;
     border-left: solid;
-    border-width:15px;
+    border-width: 15px;
+}
+
+.blocker { 
     border-color: #da190b;
 }
 
 .critical {
-    background-color: white;
-    border-left: solid;
-    border-width: 15px;
     border-color: #e63600;
 }
 
 .major {
-    background-color: white;
-    border-left: solid;
-    border-width: 15px;
     border-color: #6f1c7d;
 }
 
 .minor {
-    background-color: white;
-    border-left: solid;
-    border-width: 15px;
     border-color: #2e3b84;
 }
 
 .trivial {
-    background-color: white;
-    border-left: solid;
-    border-width: 15px;
     border-color: #495f69;
 }
 

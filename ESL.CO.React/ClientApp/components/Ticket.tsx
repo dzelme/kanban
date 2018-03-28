@@ -28,19 +28,19 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         var PriorityClassName;
 
         if (Priority == 'Blocker') {
-            PriorityClassName = 'box blocker';
+            PriorityClassName = 'blocker';
         }
         else if (Priority == 'Critical') {
-            PriorityClassName = 'box critical';
+            PriorityClassName = 'critical';
         }
         else if (Priority == 'Major') {
-            PriorityClassName = 'box major';
+            PriorityClassName = 'major';
         }
         else if (Priority == 'Minor') {
-            PriorityClassName = 'box minor';
+            PriorityClassName = 'minor';
         }
         else if (Priority == 'Trivial') {
-            PriorityClassName = 'box trivial';
+            PriorityClassName = 'trivial';
         }
 
         return PriorityClassName;

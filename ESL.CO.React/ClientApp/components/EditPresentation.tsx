@@ -33,7 +33,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             boardlist: [],
             credentials: { username: "", password: "" },
             loading: true,
-            authenticated: false
+            authenticated: true
         };
 
         this.handleFetch = this.handleFetch.bind(this);
