@@ -10,18 +10,25 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
 {
+    /// <summary>
+    /// A controller for actions related to application use statistics.
+    /// </summary>
     [Produces("application/json")]
     [Route("api/Database")]
-    public class DatabaseController : Controller
+    public class StatisticsController : Controller
     {
         private readonly IDbClient dbClient;
 
-        public DatabaseController(IDbClient dbClient)
+        public StatisticsController(IDbClient dbClient)
         {
             this.dbClient = dbClient;
         }
 
-
+        /// <summary>
+        /// Saves relevant statistics about board views.
+        /// </summary>
+        /// <param name="id">The id of the board whose statistics will be saved.</param>
+        /// <param name="name">The name of the board whose statistics will be saved.</param>
         [HttpPost("[action]")]
         public void SaveToStatistics(string id, [FromBody] string name)
         {
@@ -40,26 +47,10 @@ namespace ESL.CO.React.Controllers
             }
 
             return;
-
-            //var boardList = new FullBoardList();
-            //boardList = appSettings.GetSavedAppSettings();
-
-            ////updates the board's statistics
-            //foreach (var value in boardList.Values)
-            //{
-            //    if (value.Id == id)
-            //    {
-            //        checked { value.TimesShown++; } //checked...
-            //        value.LastShown = DateTime.Now;
-            //        appSettings.SaveAppSettings(boardList);
-            //        return;
-            //    }
-            //}
-            //return;
         }
 
         /// <summary>
-        /// Helper method that updates a statistics entry's times shown counter and last shown date.
+        /// Updates a statistics entry's "times shown" counter and "last shown" date.
         /// </summary>
         /// <param name="entry">Statistics entry object whose properties will be updated.</param>
         private void UpdateStatisticsEntry(StatisticsEntry entry)
@@ -69,25 +60,25 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Gets the statistics data of all boards that have been viewed atleast once.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of boards and their statistics data.</returns>
         [Authorize(Roles = "Admins")]
         [HttpGet("[action]")]
-        public IEnumerable<StatisticsEntry> StatisticsList()
+        public IEnumerable<StatisticsEntry> GetStatisticsList()
         {
             var list = dbClient.GetList<StatisticsEntry>();
             return list;
         }
 
         /// <summary>
-        /// 
+        /// Gets the entire collection of network statistics entries.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the board whose network statistics will be obtained.</param>
+        /// <returns>A collection of network statistics entries.</returns>
         [Authorize(Roles = "Admins")]
         [HttpPost("[action]")]
-        public Queue<JiraConnectionLogEntry> NetworkStatistics([FromBody] string id)
+        public Queue<JiraConnectionLogEntry> GetNetworkStatisticsList([FromBody] string id)
         {
             var entry = dbClient.GetOne<StatisticsEntry>(id);
             return entry.NetworkStats;

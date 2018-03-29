@@ -78,5 +78,19 @@ namespace ESL.CO.React.Controllers
         {
             return Ok();
         }
+
+
+        [HttpPost("[action]")]
+        public IActionResult CheckCredentials([FromBody] Credentials credentials)
+        {
+            if (ldapClient.CheckCredentials(credentials.Username, credentials.Password, false))
+            {
+                return Ok();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

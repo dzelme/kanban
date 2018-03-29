@@ -39,28 +39,6 @@ namespace ESL.CO.React.Controllers
             this.cache = cache;
             this.boardCreator = boardCreator;
             this.paths = paths;
-
-            //var db = new DbClient();
-            //db.SaveStatisticsEntry(new StatisticsEntry
-            //{
-            //    BoardId = 7357,
-            //    Name = "test",
-            //    TimesShown = 999,
-            //    LastShown = null,
-            //    NetworkStats = new JiraConnectionLogEntry[] {
-            //        new JiraConnectionLogEntry
-            //        {
-            //            Link = "asd.asd",
-            //            ResponseStatus = "200",
-            //            Exception = "no",
-            //            Time = ""
-            //        }
-            //    }
-            //});
-            //var asd = db.GetStatisticsEntry(7357);
-            //var a1 = "asd";
-            //db.RemoveStatisticsEntry(7357);
-            //var a2 = "asd";
         }
 
         /// <summary>
@@ -141,62 +119,6 @@ namespace ESL.CO.React.Controllers
             if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
             else return true;
-        }
-
-        /// <summary>
-        /// Increases the statistics counter each time the board is shown.
-        /// </summary>
-        /// <param name="id">Id of the board whose counter will be increased.</param>
-        [HttpPost("[action]")]
-        public void IncrementTimesShown([FromBody]int id)
-        {
-            var boardList = new FullBoardList();
-            boardList = appSettings.GetSavedAppSettings();
-
-            //updates the board's statistics
-            foreach (var value in boardList.Values)
-            {
-                if (value.Id == id)
-                {
-                    checked { value.TimesShown++; } //checked...
-                    value.LastShown = DateTime.Now;
-                    appSettings.SaveAppSettings(boardList);
-                    return;
-                }
-            }
-            return;
-        }
-
-        /// <summary>
-        /// Reads connection log from the appropriate file into an object.
-        /// </summary>
-        /// <param name="id">Id of the board whose log entries will be retrieved.</param>
-        /// <returns>A list of connection log entries.</returns>
-        [Authorize]
-        [HttpGet("[action]")]
-        public List<JiraConnectionLogEntry> NetworkStatistics(int id)
-        {
-            var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
-            var connectionLog = new List<JiraConnectionLogEntry>();
-            if (System.IO.File.Exists(filePath))
-            {
-                using (StreamReader r = new StreamReader(filePath))
-                {
-                    var logEntry = r.ReadLine();
-                    while (logEntry != null)
-                    {
-                        string[] logEntryField = logEntry.Split('|');
-                        connectionLog.Add(new JiraConnectionLogEntry(
-                            logEntryField[1],
-                            logEntryField[2],
-                            (logEntryField.Length > 3) ? logEntryField[3] : "",
-                            logEntryField[0]
-                        ));
-                        logEntry = r.ReadLine();
-                    }
-                }
-            }
-            return connectionLog;
         }
     }
 }
