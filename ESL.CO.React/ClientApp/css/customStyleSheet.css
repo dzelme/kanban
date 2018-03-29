@@ -68,6 +68,15 @@ h3 {
     margin: 0;
 }
 
+thead {
+    font-size: 20px;
+}
+
+tbody {
+    font-size: 15px;
+}
+
+
 article + article {
     margin-top: 1em;
 }
@@ -107,4 +116,76 @@ input, select, textarea,button {
 
 .LinkText:hover {
     color: wheat;
+}
+
+.BoardNames {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.NamesBar {
+    display: inline-block;
+    border: solid;
+    border-color: white;
+}
+
+.TicketText {
+    color: black;
+}
+
+.Progress {
+    padding: 10px;
+    background: white;
+    color: black;
+}
+
+.ProgressBar {
+    border: solid;
+    border-width:2px;
+    border-color: black;
+    height: 14px;
+}
+
+.ColumnTitle {
+    text-align:center;
+}
+
+.CheckBox {
+    text-align:center;
+}
+
+.FormElement {
+    display: inline-block;
+    font-size: 20px;
+    margin: 10px;
+    margin-bottom: 30px;
+}
+
+.FormButton {
+    display: inline-block;
+    height: 40px;
+}
+
+.LoginInputElement {
+    color: black;
+    width: 150px;
+}
+
+.LoginButton {
+    color: black;
+    width: 150px;
+    margin-top: 20px;
+    height: 30px;
+}
+
+.LoginCenter {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.EditDeletePresButton {
+    width: 30px;
 }

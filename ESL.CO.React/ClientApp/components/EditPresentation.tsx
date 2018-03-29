@@ -1,17 +1,9 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
+import { RouteComponentProps } from 'react-router';
+import { EditPresentationState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
-
-interface EditPresentationState {
-    boardPresentation: BoardPresentation;
-    boardlist: Value[];
-    loading: boolean;
-    credentials: Credentials;
-    authenticated: boolean;
-}
 
 export class EditPresentation extends React.Component<RouteComponentProps<{ id: string }>, EditPresentationState> {
     constructor(props: RouteComponentProps<{ id: string }>) {
@@ -194,19 +186,19 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             <h1>Rediģēt prezentāciju</h1>
 
             <form name="presentation" onSubmit={this.handleForm}>
-                <div key="title" style={styleForm}>
+                <div key="title" className="FormElement">
                     Nosaukums: <input id="title" name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
                 </div>
-                <div key="owner" style={styleForm}>
+                <div key="owner" className="FormElement">
                     Izveidotājs: <input id="owner" name="owner" type="text" disabled value={this.state.boardPresentation.owner} />
                 </div>
-                <div key="username" style={styleForm}>
+                <div key="username" className="FormElement">
                     Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
                 </div>
-                <div key="password" style={styleForm}>
+                <div key="password" className="FormElement">
                     Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
                 </div>
-                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
+                <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>
 
             {error}
@@ -233,23 +225,23 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         return <div>
             <form name='boardlist' onSubmit={handleSubmit}>
                 <table className='table'>
-                    <thead style={styleHeader}>
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nosaukums</th>
                             <th>Tips</th>
-                            <th style={styleCheckBoxTitle}>Iekļaut prezentācijā</th>
+                            <th className="CheckBox">Iekļaut prezentācijā</th>
                             <th>Attēlošanas laiks(ms)</th>
                             <th>Atjaunošanas laiks(ms)</th>
                         </tr>
                     </thead>
-                    <tbody style={styleContent}>
+                    <tbody>
                         {boardList.map(board =>
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
-                                <td key={board.id + "visibility"}><input style={styleCheckBox} name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
                                 <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
                                 <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
@@ -260,31 +252,4 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             </form>
         </div>
     }
-}
-const styleHeader = {
-    fontSize: '20px'
-}
-
-const styleContent = {
-    fontSize: '15px'
-}
-
-const styleForm = {
-    fontSize: '20px',
-    display: 'inline-block',
-    margin: '10px',
-    marginBottom: '30px'
-}
-
-const styleButton = {
-    display: 'inline-block',
-    height: '40px'
-}
-
-const styleCheckBox = {
-    marginLeft: '50%'
-}
-
-const styleCheckBoxTitle = {
-    textAlign: 'center'
 }

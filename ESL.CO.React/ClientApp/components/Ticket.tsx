@@ -1,8 +1,8 @@
 ﻿import * as React from 'react';
+import TicketKey from './TicketKey';
 import TicketSummary from './TicketSummary';
 import TicketProgress from './TicketProgress';
 import TicketInformation from './TicketInformation';
-import TicketKey from './TicketKey';
 import { Issue } from './Interfaces';
 
 

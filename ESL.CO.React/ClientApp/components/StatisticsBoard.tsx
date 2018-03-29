@@ -1,17 +1,12 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
-import { withRouter } from 'react-router';
 import 'isomorphic-fetch';
+import { withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
+import { StatisticsBoardState, JiraConnectionLogEntry } from './Interfaces';
 import { ApiClient } from './ApiClient';
-import { JiraConnectionLogEntry } from './Interfaces';
-
-interface FetchDataExampleState {
-    connectionLog: JiraConnectionLogEntry[];
-    loading: boolean;
-}
 
 //netiek sanemti props (undefined) no routes.tsx
-export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, FetchDataExampleState> {
+export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, StatisticsBoardState> {
     constructor(props: RouteComponentProps<{ id: number }>) {
         super(props);
         this.state = { connectionLog: [], loading: true };
@@ -40,7 +35,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
 
     private static renderStatisticsBoard(connectionLog: JiraConnectionLogEntry[]) {  //
         return <table className='table'>
-            <thead style={styleHeader}>
+            <thead>
                     <tr>
                         <th>Laiks</th>
                         <th>Saite</th>
@@ -48,7 +43,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
                         <th>Izņēmums</th>
                     </tr>
             </thead>
-            <tbody style={styleContent}>
+            <tbody>
                     {connectionLog.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
                             <td key={entry.time + "time"}>{entry.time}</td>
@@ -60,12 +55,4 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
                 </tbody>
             </table>;
     }
-}
-
-const styleHeader = {
-    fontSize: '20px'
-}
-
-const styleContent = {
-    fontSize: '15px'
 }

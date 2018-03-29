@@ -1,18 +1,11 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Value, Board } from './Interfaces';
-import { ApiClient } from './ApiClient';
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
+import { ReaderFromURLState } from './Interfaces';
+import { ApiClient } from './ApiClient';
 
-interface ColumnReaderState {
-    boardlist: Value[];
-    board: Board;
-    boardChanged: boolean;
-    loading: boolean;
-}
-
-export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: number, presentationId: string }>, ColumnReaderState> {
+export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: number, presentationId: string }>, ReaderFromURLState> {
     refreshTimer: number;
 
     constructor(props) {
@@ -44,7 +37,6 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 newBoardList.push(board);
             }
         });
-
 
         this.setState({ boardlist: newBoardList, loading: false }, this.RefreshRate);
     }
@@ -101,7 +93,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             else {
                 return <div>
 
-                    <div>  <BoardName presentationId={this.props.match.params.presentationId} boardId={this.props.match.params.boardId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
+                    <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {this.increment()}

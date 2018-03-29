@@ -1,16 +1,11 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { BoardPresentation } from './Interfaces';
+import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
+import { PresentationListState, BoardPresentation } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-interface PresentationState {
-    presentationList: BoardPresentation[];
-    loading: boolean;
-}
-
-export class PresentationList extends React.Component<RouteComponentProps<{}>, PresentationState> {
+export class PresentationList extends React.Component<RouteComponentProps<{}>, PresentationListState> {
     constructor() {
         super();
 
@@ -50,7 +45,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
             <h1>Prezentāciju saraksts</h1>
             <button onClick={handleNew} className="btn btn-default">Izveidot jaunu</button>
             <table className='table'>
-                <thead style={styleHeader}>
+                <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nosaukums</th>
@@ -59,7 +54,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                         <th colSpan={2}>Darbības</th>
                     </tr>
                 </thead>
-                <tbody style={styleContent}>
+                <tbody>
                     {presentationList.map(presentation =>
                         <tr key={presentation.id + "row"}>
                             <td key={presentation.id + ""}><Link className="LinkText" to={"/p/" + presentation.id}>{presentation.id}</Link></td>
@@ -71,24 +66,12 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                                                   
                                 )}
                             </td>
-                            <td style={styleColumn}><Link to={'/admin/editPresentation/' + presentation.id}><button className="btn btn-default">Rediģēt</button></Link></td>
-                            <td style={styleColumn}><button className="btn btn-default" onClick={() => handleDelete(presentation.id)}>Dzēst</button></td>
+                            <td className="EditDeletePresButton"><Link to={'/admin/editPresentation/' + presentation.id}><button className="btn btn-default">Rediģēt</button></Link></td>
+                            <td className="EditDeletePresButton"><button className="btn btn-default" onClick={() => handleDelete(presentation.id)}>Dzēst</button></td>
                         </tr>
                     )}
                 </tbody>
             </table>
         </div>
     }
-}
-
-const styleHeader = {
-    fontSize: '20px'
-}
-
-const styleContent = {
-    fontSize: '15px'
-}
-
-const styleColumn = {
-    width: '30px'
 }

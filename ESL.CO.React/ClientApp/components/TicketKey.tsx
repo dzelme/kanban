@@ -3,13 +3,8 @@
 export default class TicketKey extends React.Component<{ keyName: string }> {
     public render() {
 
-        return <div style={style}>
+        return <div className="TicketText">
             <h3>{this.props.keyName}</h3>
         </div>
-
     }
 }
-
-const style = {
-    color: 'black'
-};

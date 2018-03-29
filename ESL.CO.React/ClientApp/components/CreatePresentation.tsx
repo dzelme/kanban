@@ -1,19 +1,11 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
-import { Credentials, Value, BoardPresentation } from './Interfaces';
 import jwt_decode from 'jwt-decode';
+import { RouteComponentProps } from 'react-router';
+import { BoardListState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-interface BoardListState {
-    boardPresentation: BoardPresentation;
-    boardList: Value[];
-    loading: boolean;
-
-    authenticated: boolean;
-}
-
-export class BoardList extends React.Component<RouteComponentProps<{}>, BoardListState> {
+export class CreatePresentation extends React.Component<RouteComponentProps<{}>, BoardListState> {
     constructor() {
         super();
 
@@ -160,7 +152,7 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
         let contents = this.state.loading
             ? null
-            : BoardList.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
+            : CreatePresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.authenticated
             ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
@@ -170,16 +162,16 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             <h1>Izveidot prezentāciju</h1>
 
             <form name="presentation" onSubmit={this.handleAuth}>
-                <div key="title" style={styleForm}>
+                <div key="title" className="FormElement">
                     Nosaukums: <input id="title" required name="title" type="text" value={this.state.boardPresentation.title} onChange={this.handleChange} />
                 </div>
-                <div key="username" style={styleForm}>
+                <div key="username" className="FormElement">
                     Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.boardPresentation.credentials.username} onChange={this.handleChange} />
                 </div>
-                <div key="password" style={styleForm}>
+                <div key="password" className="FormElement">
                     Parole: <input id="password" required name="password" type="password" value={this.state.boardPresentation.credentials.password} onChange={this.handleChange} />
                 </div>
-                <div style={styleButton}><button type="submit" className="btn btn-default">Apstiprināt</button></div>
+                <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
             {error}
             {contents}
@@ -191,23 +183,23 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         return <div>
             <form name='boardlist' onSubmit={handleSubmit}>
                 <table className='table'>
-                    <thead style={styleHeader}>
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nosaukums</th>
                             <th>Tips</th>
-                            <th style={styleCheckBoxTitle}>Iekļaut prezentācijā</th>
+                            <th className="CheckBox">Iekļaut prezentācijā</th>
                             <th>Attēlošanas laiks(ms)</th>
                             <th>Atjaunošanas laiks(ms)</th>
                         </tr>
                     </thead>
-                    <tbody style={styleContent}>
+                    <tbody>
                         {boardList.map(board =>
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
-                                <td key={board.id + "visibility"}><input style={styleCheckBox} name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "visibility"} className="CheckBox" ><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
                                 <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
                                 <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
                             </tr>
@@ -218,31 +210,4 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
             </form>
         </div>
     }
-}
-const styleHeader = {
-    fontSize: '20px'
-}
-
-const styleContent = {
-    fontSize: '15px'
-}
-
-const styleForm = {
-    fontSize: '20px',
-    display: 'inline-block',
-    margin: '10px',
-    marginBottom: '30px'
-}
-
-const styleButton = {
-    display: 'inline-block',
-    height: '40px'
-}
-
-const styleCheckBox = {
-    marginLeft:'50%'
-}
-
-const styleCheckBoxTitle = {
-    textAlign: 'center'
 }

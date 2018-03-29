@@ -3,13 +3,8 @@
 export default class TicketStatusName extends React.Component<{ statusName: string }> {
     public render() {
 
-        return <div style={style}>
+        return <div className="TicketText">
             <h4>{this.props.statusName}</h4>
         </div>
-
     }
 }
-
-const style = {
-    color: 'black',
-};

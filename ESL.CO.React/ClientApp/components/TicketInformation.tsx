@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
-import TicketAssignee from './TicketAssignee';
 import TicketStatusName from './TicketStatusName';
+import TicketAssignee from './TicketAssignee';
 import { Issue, Assignee } from './Interfaces';
 
 export default class TicketInformation extends React.Component<{ issue: Issue }> {

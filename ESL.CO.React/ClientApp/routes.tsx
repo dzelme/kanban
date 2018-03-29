@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Redirect } from 'react-router'; 
 import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { BoardList } from './components/BoardList';
+import { CreatePresentation } from './components/CreatePresentation';
 import { BoardReader } from './components/BoardReader';
 import { StatisticsList } from './components/StatisticsList';
 import { StatisticsBoard } from './components/StatisticsBoard';
@@ -18,7 +18,7 @@ export const routes = <Layout>
     <Route path='/logout' component={Logout} />
     <Route exact path='/admin' component={PresentationList} />
     <Route path='/admin/presentations' component={PresentationList} />
-    <Route path='/admin/createPresentation' component={BoardList} />
+    <Route path='/admin/createPresentation' component={CreatePresentation} />
     <Route path='/admin/editPresentation/:id' component={EditPresentation} />
     <Route path='/admin/statistics' component={StatisticsList} />
     <Route path="/admin/jiraconnectionstats/:id" component={StatisticsBoard} />

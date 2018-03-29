@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import Ticket from './Ticket';
 import ColumnTitle from './ColumnTitle';
-import { Issue, BoardColumn } from './Interfaces';
+import { BoardColumn } from './Interfaces';
 
 export default class ColumnFill extends React.Component<{ column: BoardColumn}> {
 

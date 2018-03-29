@@ -2,7 +2,18 @@
 import { Link } from 'react-router-dom';
 import { Value } from './Interfaces';
 
-export default class BoardName extends React.Component<{ presentationId: string, boardId: number, name: string, fromCache: boolean, message: string, boardlist: Value[] }> {
+
+const styleList = {
+    width: ''
+}
+
+const styleActive = {
+    width: '',
+    background: 'grey',
+    color: 'white',
+}
+
+export default class BoardName extends React.Component<{ presentationId: string, name: string, fromCache: boolean, message: string, boardlist: Value[] }> {
 
     public render() {
 
@@ -11,10 +22,10 @@ export default class BoardName extends React.Component<{ presentationId: string,
         styleList.width = size + '%';
         styleActive.width = size + '%';
 
-        return <div>
+        return <div className="BoardNames">
             {
                 this.props.boardlist.map((board, index) =>
-                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index}><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3></Link></div>
+                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index} className="NamesBar"><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3></Link></div>
                     )
             }
             {this.props.fromCache ? <h4>Dati no keša</h4> : ""}<h4>{this.props.message}</h4>
@@ -33,25 +44,4 @@ export default class BoardName extends React.Component<{ presentationId: string,
 
         return style;
     }
-
-}
-
-const styleList = {
-    display: 'inline-block',
-    width: '',
-    border: 'solid',
-    borderColor: 'white',
-    textAlign: 'center',
-    marginBottom:'30px'
-}
-
-const styleActive = {
-    display: 'inline-block',
-    width: '',
-    border: 'solid',
-    borderColor: 'white',
-    textAlign: 'center',
-    background: 'grey',
-    color: 'white',
-    marginBottom: '30px'
 }

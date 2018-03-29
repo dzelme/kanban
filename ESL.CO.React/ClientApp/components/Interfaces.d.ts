@@ -93,3 +93,61 @@ interface JiraConnectionLogEntry {
     responseStatus: string;
     exception: string;
 }
+
+interface BoardReaderState {
+    boardlist: Value[];
+    loading: boolean;
+    titleList: string[];
+}
+
+interface ColumnReaderState {
+    boardlist: Value[];
+    currentIndex: number;
+    boardId: number;
+    board: Board;
+    boardChanged: boolean;
+    loading: boolean;
+}
+
+interface ReaderFromURLState {
+    boardlist: Value[];
+    board: Board;
+    boardChanged: boolean;
+    loading: boolean;
+}
+
+interface EditPresentationState {
+    boardPresentation: BoardPresentation;
+    boardlist: Value[];
+    loading: boolean;
+    credentials: Credentials;
+    authenticated: boolean;
+}
+
+interface BoardListState {
+    boardPresentation: BoardPresentation;
+    boardList: Value[];
+    loading: boolean;
+    authenticated: boolean;
+}
+
+interface AuthenticationState {
+    credentials: Credentials;
+    authenticated: boolean;
+}
+
+interface PresentationListState {
+    presentationList: BoardPresentation[];
+    loading: boolean;
+}
+
+interface StatisticsListState {
+    boardlist: Value[];
+    loading: boolean;
+    credentials: Credentials;
+}
+
+interface StatisticsBoardState {
+    connectionLog: JiraConnectionLogEntry[];
+    loading: boolean;
+}

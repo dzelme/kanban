@@ -1,13 +1,18 @@
 ﻿import * as React from 'react';
 import { Progress } from './Interfaces';
 
+
+const stylePercent = {
+    width: '',
+    height: '10px',
+    background: 'blue'
+}
+
 export default class TicketProgress extends React.Component<{ progress: Progress, created: Date }>{
     public render() {
 
-        
-
-        return <div style={styleSection}>
-            <div style={styleBar}><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
+        return <div className="Progress">
+            <div className="ProgressBar"><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
             <h5>Queue: <strong>{TicketProgress.TimeCalculation(this.props.created)}</strong></h5>
         </div>
     }
@@ -106,23 +111,4 @@ export default class TicketProgress extends React.Component<{ progress: Progress
 
         return queued;
     }
-}
-
-const stylePercent = {
-    width: '',
-    height: '10px',
-    background: 'blue'
-}
-
-const styleBar = {
-    border: 'solid',
-    borderWidth:'2px',
-    borderColor: 'black',
-    height: '14px'
-}
-
-const styleSection = {
-    padding: '10px',
-    background: 'white',
-    color: 'black'
 }

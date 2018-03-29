@@ -4,12 +4,8 @@ export default class TicketAssignee extends React.Component<{ assigneeName: stri
 
     public render() {
 
-        return <div style={style}>
+        return <div className="TicketText">
             <h4>{this.props.assigneeName}</h4>
         </div>
-
     }
 }
-const style = {
-    color: 'black',
-};
