@@ -17,6 +17,7 @@ namespace ESL.CO.React.DbConnection
         private IMongoCollection<StatisticsEntry> statsCollection;
         private IMongoCollection<BoardPresentation> presCollection;
         private IMongoCollection<Identity> idCollection;
+        private IMongoCollection<UserSettings> userSettingsCollection;
         private readonly IOptions<DbSettings> dbSettings;
 
         public DbClient(IOptions<DbSettings> dbSettings)
@@ -27,6 +28,7 @@ namespace ESL.CO.React.DbConnection
             statsCollection = db.GetCollection<StatisticsEntry>(dbSettings.Value.StatisticsCollectionName);
             presCollection = db.GetCollection<BoardPresentation>(dbSettings.Value.PresentationsCollectionName);
             idCollection = db.GetCollection<Identity>(dbSettings.Value.IdCollectionName);
+            userSettingsCollection = db.GetCollection<UserSettings>(dbSettings.Value.UserSettingsCollectionName);
         }
 
         private IMongoCollection<T> ResolveCollection<T>()
@@ -34,6 +36,8 @@ namespace ESL.CO.React.DbConnection
             IMongoCollection<T> collection = null;
             if (typeof(T).Name == "StatisticsEntry") { collection = (IMongoCollection<T>)statsCollection; }
             if (typeof(T).Name == "BoardPresentation") { collection = (IMongoCollection<T>)presCollection; }
+            if (typeof(T).Name == "UserSettings") { collection = (IMongoCollection<T>)userSettingsCollection; }
+
             return collection;
         }
 

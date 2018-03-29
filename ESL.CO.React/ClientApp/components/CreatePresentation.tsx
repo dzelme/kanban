@@ -83,6 +83,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         ApiClient.savePresentation(this.state.boardPresentation)
             .then(() => open('./admin/presentations', '_self'));
+        ApiClient.saveUserSettings(this.state.boardList, this.state.boardPresentation.credentials.username); // saves boardlist with 
+        ApiClient.savePresentation(this.state.boardPresentation);
+        open('./admin/presentations', '_self');
     }
 
     handleChange(event) {

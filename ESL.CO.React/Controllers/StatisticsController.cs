@@ -14,7 +14,7 @@ namespace ESL.CO.React.Controllers
     /// A controller for actions related to application use statistics.
     /// </summary>
     [Produces("application/json")]
-    [Route("api/Database")]
+    [Route("api/[controller]")]
     public class StatisticsController : Controller
     {
         private readonly IDbClient dbClient;

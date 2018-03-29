@@ -19,8 +19,8 @@ namespace ESL.CO.React.Models
         [Range(1000, 100_000)]
         public int TimeShown { get; set; }  // Paneļa attēlošanas laiks sekundēs, pēc kura beigām tiek attēlots nākošais Panelis;
 
-        public int TimesShown { get; set; }  //for statistics, number of times this board shown
-        public DateTime? LastShown { get; set; }  //for statistics
+        //public int TimesShown { get; set; }  //for statistics, number of times this board shown
+        //public DateTime? LastShown { get; set; }  //for statistics
 
         public Value()
         {
@@ -30,8 +30,8 @@ namespace ESL.CO.React.Models
             Visibility = false;
             RefreshRate = 10_000;
             TimeShown = 1000;
-            TimesShown = 0;
-            LastShown = null;
+            //TimesShown = 0;
+            //LastShown = null;
         }
     }
 

@@ -7,8 +7,8 @@ export interface Value {
     visibility: boolean;
     timeShown: number;
     refreshRate: number;
-    timesShown: number;
-    lastShown: string;
+    //timesShown: number;
+    //lastShown: string;
 }
 
 export interface Board {

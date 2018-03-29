@@ -51,7 +51,6 @@ namespace ESL.CO.React
                 });
 
             services.AddSingleton<IJiraClient, JiraClient>();
-            services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();
             services.AddSingleton<ILdapClient, LdapClient>();
             services.AddSingleton<IDbClient, DbClient>();

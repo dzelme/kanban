@@ -13,10 +13,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
         this.state = {
             statsList: [],
             loading: true,
-            credentials: {
-                username: "",
-                password: ""
-            }
         };
     }
 
@@ -26,10 +22,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                 this.setState({
                     statsList: data,
                     loading: false,
-                    credentials: {
-                        username: "",
-                        password: ""
-                    }
                 })
             });
     }
