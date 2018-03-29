@@ -1,18 +1,20 @@
 ﻿import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Value } from './Interfaces';
 
-export default class BoardName extends React.Component<{ name: string, fromCache: boolean, message: string, allNames: string[] }> {
+export default class BoardName extends React.Component<{ presentationId: string, boardId: number, name: string, fromCache: boolean, message: string, boardlist: Value[] }> {
 
     public render() {
 
-        var nameCount = this.props.allNames.length;
+        var nameCount = this.props.boardlist.length;
         var size = 100 / nameCount;
         styleList.width = size + '%';
         styleActive.width = size + '%';
 
         return <div>
             {
-                this.props.allNames.map((name, index) =>
-                    <div style={BoardName.statusColor(this.props.name, name)} key={index}> <h3>{name}</h3></div>
+                this.props.boardlist.map((board, index) =>
+                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index}><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3></Link></div>
                     )
             }
             {this.props.fromCache ? <h4>Dati no keša</h4> : ""}<h4>{this.props.message}</h4>

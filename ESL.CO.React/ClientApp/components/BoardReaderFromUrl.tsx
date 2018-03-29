@@ -10,7 +10,6 @@ interface ColumnReaderState {
     board: Board;
     boardChanged: boolean;
     loading: boolean;
-    titleList: string[];
 }
 
 export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: number, presentationId: string }>, ColumnReaderState> {
@@ -24,8 +23,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
-            loading: true,
-            titleList: []
+            loading: true
         };
 
         ApiClient.getAPresentation(this.props.match.params.presentationId)
@@ -33,16 +31,13 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                        this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeLists);
+                        this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
                     });
             });
     }
 
-    makeLists() {
-        let titlelist = [];
+    makeList() {
         let newBoardList = [];
-
-        titlelist.push(this.state.board.name);
 
         this.state.boardlist.map(board => {
             if (board.id == this.props.match.params.boardId) {
@@ -51,7 +46,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         });
 
 
-        this.setState({ boardlist: newBoardList, titleList: titlelist, loading: false }, this.RefreshRate);
+        this.setState({ boardlist: newBoardList, loading: false }, this.RefreshRate);
     }
 
     boardLoad() {
@@ -106,7 +101,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             else {
                 return <div>
 
-                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} allNames={this.state.titleList} /></div>
+                    <div>  <BoardName presentationId={this.props.match.params.presentationId} boardId={this.props.match.params.boardId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {this.increment()}

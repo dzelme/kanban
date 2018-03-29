@@ -11,7 +11,6 @@ interface ColumnReaderState {
     board: Board;
     boardChanged: boolean;
     loading: boolean;
-    titleList: string[];
 }
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
@@ -30,7 +29,6 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             },
             boardChanged: false,
             loading: true,
-            titleList: this.props.titleList
         };
 
         this.nextSlide = this.nextSlide.bind(this);
@@ -43,14 +41,6 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                           this.setState({ board: dataBoard, loading: false, boardChanged: true }, this.RefreshRate);
                     });
             });     
-    }
-
-    makeTitleList() {
-        let list = [];
-
-        list.push(this.state.board.name);
-        
-        this.setState({ titleList: list, loading: false }, this.RefreshRate);
     }
 
     nextSlide() {
@@ -134,7 +124,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} allNames={this.state.titleList} /></div>
+                    <div>  <BoardName presentationId={this.props.presentationID} boardId={this.state.boardId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }
