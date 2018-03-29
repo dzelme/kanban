@@ -19,17 +19,14 @@ namespace ESL.CO.React.Controllers
     public class PresentationsController : Controller
     {
         private readonly IJiraClient jiraClient;
-        private readonly IAppSettings appSettings;
         private readonly IDbClient dbClient;
 
         public PresentationsController(
             IJiraClient jiraClient,
-            IAppSettings appSettings,
             IDbClient dbClient
             )
         {
             this.jiraClient = jiraClient;
-            this.appSettings = appSettings;
             this.dbClient = dbClient;
         }
 

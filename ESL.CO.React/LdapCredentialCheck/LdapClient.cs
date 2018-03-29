@@ -29,6 +29,7 @@ namespace ESL.CO.React.LdapCredentialCheck
         /// </summary>
         /// <param name="username">Username to be checked.</param>
         /// <param name="password">Password to be checked.</param>
+        /// <param name="adminAccess">Specifies whether administrator access is required.</param>
         /// <returns>True if credentials recognized and false otherwise.</returns>
         public bool CheckCredentials(string username, string password, bool adminAccess = true)
         {
