@@ -26,5 +26,5 @@ export const routes = <Layout>
     <Route exact path='/' component={Login} />
 
     <Route exact path='/p/:id' component={BoardReader} />
-    <Route exact path='/k/:id' component={BoardReaderFromUrl} />
+    <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
 </Layout>;

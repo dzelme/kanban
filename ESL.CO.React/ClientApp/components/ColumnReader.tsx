@@ -16,7 +16,7 @@ interface ColumnReaderState {
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[], presID: string, titleList: string[] }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardlist: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
@@ -35,7 +35,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         this.nextSlide = this.nextSlide.bind(this);
 
-        ApiClient.getAPresentation(this.props.presID)
+        ApiClient.getAPresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
@@ -83,7 +83,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
     boardLoad() {
         clearInterval(this.refreshTimer);
 
-        ApiClient.getAPresentation(this.props.presID)
+        ApiClient.getAPresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)

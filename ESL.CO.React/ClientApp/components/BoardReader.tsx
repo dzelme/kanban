@@ -40,7 +40,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: strin
     public render() {
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} presID={this.props.match.params.id} titleList={this.state.titleList} /> : <h1 >No boards selected</h1>
+            : (this.state.boardlist.length != 0) ? <ColumnReader boardlist={this.state.boardlist} presentationID={this.props.match.params.id} titleList={this.state.titleList} /> : <h1 >No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }
