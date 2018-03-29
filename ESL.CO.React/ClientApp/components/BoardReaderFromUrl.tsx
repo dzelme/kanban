@@ -69,7 +69,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
     //AD: increments timesShown board statistic
     increment() {
-        ApiClient.incrementTimesShown(this.props.match.params.boardId);
+        ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
