@@ -15,7 +15,7 @@ interface ColumnReaderState {
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[], credentials: Credentials }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardlist: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
@@ -28,16 +28,19 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
-            loading: true
+            loading: true,
         };
 
         this.nextSlide = this.nextSlide.bind(this);
 
+        ApiClient.getAPresentation(this.props.presentationID)
+            .then(dataPres => {
 
-        ApiClient.boardData(this.state.boardId, this.props.credentials)
-            .then(data => {
-                this.setState({ board: data, loading: false, boardChanged: true }, this.RefreshRate);
-            });
+                ApiClient.boardData(this.state.boardId, dataPres.credentials)
+                    .then(dataBoard => {
+                          this.setState({ board: dataBoard, loading: false, boardChanged: true }, this.RefreshRate);
+                    });
+            });     
     }
 
     nextSlide() {
@@ -69,18 +72,23 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
     boardLoad() {
         clearInterval(this.refreshTimer);
-        
-        ApiClient.boardData(this.state.boardId, this.props.credentials)
-            .then(data => {
-                if (data.id == this.state.boardId) {
-                    if (this.state.board.id == data.id && data.hasChanged == false) {
-                        this.setState({ board: data, boardChanged: false }, this.RefreshRate);
-                    }
-                    else {
-                        this.setState({ board: data, boardChanged: true }, this.RefreshRate);
-                    }
-                }
+
+        ApiClient.getAPresentation(this.props.presentationID)
+            .then(dataPres => {
+
+                ApiClient.boardData(this.state.boardId, dataPres.credentials)
+                    .then(dataBoard => {
+                        if (dataBoard.id == this.state.boardId) {
+                            if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
+                                this.setState({ board: dataBoard, boardChanged: false }, this.RefreshRate);
+                            }
+                            else {
+                                this.setState({ board: dataBoard, boardChanged: true }, this.RefreshRate);
+                            }
+                        }
+                    });
             });
+        
     }
 
     RefreshRate() {
@@ -116,7 +124,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} /></div>
+                    <div>  <BoardName presentationId={this.props.presentationID} boardId={this.state.boardId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }

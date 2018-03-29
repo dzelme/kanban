@@ -289,7 +289,7 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", "arumka:Dzukste22", 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;

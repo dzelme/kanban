@@ -4,7 +4,6 @@ import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { BoardList } from './components/BoardList';
 import { BoardReader } from './components/BoardReader';
-import { AllBoardReader } from './components/AllBoardReader';
 import { StatisticsList } from './components/StatisticsList';
 import { StatisticsBoard } from './components/StatisticsBoard';
 import { Login } from './components/Login';
@@ -27,5 +26,5 @@ export const routes = <Layout>
     <Route exact path='/' component={Login} />
 
     <Route exact path='/p/:id' component={BoardReader} />
-    <Route exact path='/k/:id' component={BoardReaderFromUrl} />
+    <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
 </Layout>;
