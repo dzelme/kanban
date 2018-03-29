@@ -96,8 +96,8 @@ interface JiraConnectionLogEntry {
 
 interface BoardReaderState {
     boardlist: Value[];
-    loading: boolean;
     titleList: string[];
+    loading: boolean;
 }
 
 interface ColumnReaderState {
@@ -119,16 +119,16 @@ interface ReaderFromURLState {
 interface EditPresentationState {
     boardPresentation: BoardPresentation;
     boardlist: Value[];
-    loading: boolean;
     credentials: Credentials;
     authenticated: boolean;
+    loading: boolean;
 }
 
-interface BoardListState {
+interface CreatePresentationState {
     boardPresentation: BoardPresentation;
-    boardList: Value[];
-    loading: boolean;
+    boardlist: Value[];
     authenticated: boolean;
+    loading: boolean;
 }
 
 interface AuthenticationState {
@@ -143,8 +143,8 @@ interface PresentationListState {
 
 interface StatisticsListState {
     boardlist: Value[];
-    loading: boolean;
     credentials: Credentials;
+    loading: boolean;
 }
 
 interface StatisticsBoardState {

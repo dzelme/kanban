@@ -2,10 +2,10 @@
 import 'isomorphic-fetch';
 import jwt_decode from 'jwt-decode';
 import { RouteComponentProps } from 'react-router';
-import { BoardListState, Value } from './Interfaces';
+import { CreatePresentationState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-export class CreatePresentation extends React.Component<RouteComponentProps<{}>, BoardListState> {
+export class CreatePresentation extends React.Component<RouteComponentProps<{}>, CreatePresentationState> {
     constructor() {
         super();
 
@@ -22,7 +22,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: []
                 }
             },
-            boardList: [],
+            boardlist: [],
             loading: true,
             authenticated: true
         };
@@ -53,7 +53,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     handleFetch() {
         ApiClient.boardList(this.state.boardPresentation.credentials)
             .then(data => {
-                this.setState({ boardList: data, loading: false });
+                this.setState({ boardlist: data, loading: false });
             });
     }
 
@@ -62,7 +62,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         var val = new Array();
 
-        this.state.boardList.map(board => {
+        this.state.boardlist.map(board => {
             if (board.visibility == true) { val.push(board); }
         })
 
@@ -101,44 +101,44 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     }
 
     handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardList;
+        var newBoardlist = this.state.boardlist;
 
-        this.state.boardList.map((board, index) => {
+        this.state.boardlist.map((board, index) => {
             if (board.id.toString() == id) {
                 newBoardlist[index].visibility = !newBoardlist[index].visibility
 
                 this.setState({
-                    boardList: newBoardlist
+                    boardlist: newBoardlist
                 });
             }
         })
     }
 
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardlist = this.state.boardList;
+        var newBoardlist = this.state.boardlist;
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
 
-            this.state.boardList.map((board, index) => {
+            this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].timeShown = value
+                    newBoardlist[index].timeShown = value*1000
 
                     this.setState({
-                        boardList: newBoardlist
+                        boardlist: newBoardlist
                     });
                 }
             })
         }
         else {
-            this.state.boardList.map((board, index) => {
+            this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].refreshRate = value
+                    newBoardlist[index].refreshRate = value*1000
 
                     this.setState({
-                        boardList: newBoardlist
+                        boardlist: newBoardlist
                     });
                 }
             })
@@ -152,7 +152,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         let contents = this.state.loading
             ? null
-            : CreatePresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
+            : CreatePresentation.renderBoardList(this.state.boardlist, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.authenticated
             ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
@@ -189,8 +189,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                             <th>Nosaukums</th>
                             <th>Tips</th>
                             <th className="CheckBox">Iekļaut prezentācijā</th>
-                            <th>Attēlošanas laiks(ms)</th>
-                            <th>Atjaunošanas laiks(ms)</th>
+                            <th>Attēlošanas laiks(s)</th>
+                            <th>Atjaunošanas laiks(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -200,8 +200,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
                                 <td key={board.id + "visibility"} className="CheckBox" ><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={(board.timeShown / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={(board.refreshRate / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
                             </tr>
                         )}
                     </tbody>

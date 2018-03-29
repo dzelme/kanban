@@ -145,7 +145,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].timeShown = value
+                    newBoardlist[index].timeShown = value*1000
 
                     this.setState({
                         boardlist: newBoardlist
@@ -157,7 +157,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             this.state.boardlist.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].refreshRate = value
+                    newBoardlist[index].refreshRate = value*1000
 
                     this.setState({
                         boardlist: newBoardlist
@@ -231,8 +231,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                             <th>Nosaukums</th>
                             <th>Tips</th>
                             <th className="CheckBox">Iekļaut prezentācijā</th>
-                            <th>Attēlošanas laiks(ms)</th>
-                            <th>Atjaunošanas laiks(ms)</th>
+                            <th>Attēlošanas laiks(s)</th>
+                            <th>Atjaunošanas laiks(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -242,8 +242,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
                                 <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={(board.timeShown / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={(board.refreshRate / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>
