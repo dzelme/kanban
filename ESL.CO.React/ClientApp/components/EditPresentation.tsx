@@ -177,8 +177,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
     // used to redirect to login screen, if invalid JWT token
     componentWillMount() {
-        ApiClient.hasValidJwt()
-            .then(response => ApiClient.redirect(response, 401, './login'));
+        ApiClient.hasValidJwt();
     }
 
     public render() {
