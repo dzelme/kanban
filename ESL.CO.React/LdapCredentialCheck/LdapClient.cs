@@ -18,7 +18,7 @@ namespace ESL.CO.React.LdapCredentialCheck
         private const string DisplayNameAttribute = "displayName";  // used in GetUserData
         private const string SAMAccountNameAttribute = "sAMAccountName";  // used in GetUserData
 
-        public LdapClient (IOptions<LdapSettings> ldapSettings, ILogger<LdapClient> logger)
+        public LdapClient(IOptions<LdapSettings> ldapSettings, ILogger<LdapClient> logger)
         {
             this.logger = logger;
             this.ldapSettings = ldapSettings;
@@ -59,7 +59,7 @@ namespace ESL.CO.React.LdapCredentialCheck
                 return ldapUser.IsAdmin;
             }
         }
-        
+
         /// <summary>
         /// Gets LDAP user data.
         /// </summary>
@@ -84,17 +84,24 @@ namespace ESL.CO.React.LdapCredentialCheck
             if (count != 1)
             {
                 logger.LogWarning($"Unexpected response from LDAP server, found {count} users.");
-
                 throw new ApplicationException($"Unexpected response from LDAP server, found {count} users.");
             }
 
             var entry = result.next();
-            return new LdapUser
+
+            var user = new LdapUser
             {
                 DisplayName = entry.getAttribute(DisplayNameAttribute).StringValue,
                 Username = entry.getAttribute(SAMAccountNameAttribute).StringValue,
                 IsAdmin = entry.getAttribute(MemberOfAttribute).StringValueArray.Contains(ldapSettings.Value.AdminCn)
             };
+
+            logger.LogWarning($@"
+Username = {entry.getAttribute(SAMAccountNameAttribute).StringValue},
+Groups = {string.Join(Environment.NewLine, entry.getAttribute(MemberOfAttribute).StringValueArray)}
+");
+
+            return user;
         }
     }
 }
