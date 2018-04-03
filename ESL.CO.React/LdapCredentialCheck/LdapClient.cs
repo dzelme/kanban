@@ -98,6 +98,7 @@ namespace ESL.CO.React.LdapCredentialCheck
 
             logger.LogWarning($@"
 Username = {entry.getAttribute(SAMAccountNameAttribute).StringValue},
+IsAdmin = {user.IsAdmin}
 Groups = {string.Join(Environment.NewLine, entry.getAttribute(MemberOfAttribute).StringValueArray)}
 ");
 
