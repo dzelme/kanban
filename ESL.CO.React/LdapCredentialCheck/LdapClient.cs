@@ -3,6 +3,7 @@ using System.Linq;
 using Novell.Directory.Ldap;
 using ESL.CO.React.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace ESL.CO.React.LdapCredentialCheck
 {
@@ -11,13 +12,15 @@ namespace ESL.CO.React.LdapCredentialCheck
     /// </summary>
     public class LdapClient : ILdapClient
     {
+        private readonly ILogger<LdapClient> logger;
         private readonly IOptions<LdapSettings> ldapSettings;
         private const string MemberOfAttribute = "memberOf";  // used in GetUserData
         private const string DisplayNameAttribute = "displayName";  // used in GetUserData
         private const string SAMAccountNameAttribute = "sAMAccountName";  // used in GetUserData
 
-        public LdapClient (IOptions<LdapSettings> ldapSettings)
+        public LdapClient (IOptions<LdapSettings> ldapSettings, ILogger<LdapClient> logger)
         {
+            this.logger = logger;
             this.ldapSettings = ldapSettings;
         }
 
@@ -42,6 +45,7 @@ namespace ESL.CO.React.LdapCredentialCheck
                 }
                 catch (LdapException e)
                 {
+                    logger.LogWarning("ldap exception on log in", e);
                     if (e.ResultCode == 49)  //LdapException: Invalid Credentials(49) Invalid Credentials
                     {
                         return false;
@@ -77,8 +81,12 @@ namespace ESL.CO.React.LdapCredentialCheck
             // Needed because of LDAP library imperfections (result.count sometimes won't register properly)
             var hasMore = result.hasMore();
             var count = result.Count;
-            if(count != 1)
+            if (count != 1)
+            {
+                logger.LogWarning($"Unexpected response from LDAP server, found {count} users.");
+
                 throw new ApplicationException($"Unexpected response from LDAP server, found {count} users.");
+            }
 
             var entry = result.next();
             return new LdapUser
