@@ -52,32 +52,11 @@ export class ApiClient {
         .then(handleResponse);
     }
 
-    // helper redirects if response has a specified status code
-    // static redirect(response, statusCode, redirectLink) {
-    //     if (response.status == statusCode) {
-    //         open(redirectLink, '_self');
-    //     }
-    //     else if (!response.ok) {
-    //         throw Error(response.statusText);
-    //     }
-    //     return response;
-    // }
-
     // AccountController: Checks the credentials submitted by user.
     static login(credentials: Credentials): Promise<boolean> {
         return ApiClient.post('api/account/login', credentials)
             .then(json => {
                 sessionStorage.setItem(ApiClient.tokenName, json.token);
-
-                // if (response.ok) {
-                //     response.json().then(json => {
-                //         sessionStorage.setItem(ApiClient.tokenName, json.token);
-                //     });
-                //     return true;
-                // }
-                // else {
-                //     return false;
-                // }
                 return true;
             })
             .catch(err => {
@@ -87,7 +66,12 @@ export class ApiClient {
 
     // AccountController: Checks if the current user has a valid JWT token
     static hasValidJwt(redirect = true ): Promise<boolean> {
-        var p = fetch('api/account/hasValidJwt');
+        var p = fetch('api/account/hasValidJwt', {
+            headers: {
+                'Accept': 'application/json',
+                authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
+            }
+        });
         if (redirect) {
             return p.then(handleResponse).then(() => true);
         }
@@ -121,7 +105,7 @@ export class ApiClient {
     }
 
     // PresentationsController
-    static getAPresentation(id: string): Promise<BoardPresentation> {
+    static getAPresentation(id: string): Promise<BoardPresentation> {  //400?
         return ApiClient.get('api/admin/presentations/' + id) as Promise<BoardPresentation>;
     }
 

@@ -13,6 +13,24 @@ import { EditPresentation } from './components/EditPresentation';
 import { NavMenu } from './components/NavMenu';
 import { BoardReaderFromUrl } from './components/BoardReaderFromUrl';
 
+
+//export const routes = <Layout>
+//    <Route exact path='/p/:id' component={BoardReader} />
+//    <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
+
+//    <Route path='/login' component={Login} />
+//    <Route path='/logout' component={Logout} />
+//    <Route path='/admin' component={NavMenu}>
+//        <Route path='/' exact component={PresentationList} />
+//        <Route path='/createPresentation' component={BoardList} />
+//        <Route path='/editPresentation/:id' component={EditPresentation} />
+//        <Route path='/statistics' component={StatisticsList} />
+//        <Route path="/jiraconnectionstats/:id" component={StatisticsBoard} />
+//    </Route>
+//    <Redirect exact path='/' to="/login" />
+//</Layout>
+
+
 export const routes = <Layout>
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
@@ -22,9 +40,30 @@ export const routes = <Layout>
     <Route path='/admin/editPresentation/:id' component={EditPresentation} />
     <Route path='/admin/statistics' component={StatisticsList} />
     <Route path="/admin/jiraconnectionstats/:id" component={StatisticsBoard} />
-    <Route path='/' component={NavMenu} />
     <Route exact path='/' component={Login} />
-
+    <Route path='/' component={NavMenu} />
     <Route exact path='/p/:id' component={BoardReader} />
     <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
 </Layout>;
+
+
+/*
+
+    <Route exact path='/p/:id' component={BoardReader} />
+    <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
+
+    <Route path='/login' component={Login} />
+    <Route path='/logout' component={Logout} />
+    <Route path='/admin' component={AdminComponent}> <--
+        <Route path='/' exact component={PresentationList} />
+        <Route path='/createPresentation' component={BoardList} />
+        <Route path='/editPresentation/:id' component={EditPresentation} />
+        <Route path='/statistics' component={StatisticsList} />
+        <Route path="/jiraconnectionstats/:id" component={StatisticsBoard} />
+    </Route>
+    <Route path='/' component={NavMenu} /> <--?
+    <Redictect exact path='/' to="/login" />
+
+
+
+*/
