@@ -4,8 +4,8 @@ import { Progress } from './Interfaces';
 
 const stylePercent = {
     width: '',
-    height: '10px',
-    background: 'blue'
+    height: '14px',
+    background: 'red'
 }
 
 export default class TicketProgress extends React.Component<{ progress: Progress, created: Date }>{
@@ -13,9 +13,10 @@ export default class TicketProgress extends React.Component<{ progress: Progress
 
         return <div className="Progress">
             <div className="ProgressBar"><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
-            <h5>Queue: <strong>{TicketProgress.TimeCalculation(this.props.created)}</strong></h5>
         </div>
     }
+
+    // <h5>Queue: <strong>{TicketProgress.TimeCalculation(this.props.created)}</strong></h5>
 
     private static ProgressBar(progress: number) {
 
@@ -23,7 +24,7 @@ export default class TicketProgress extends React.Component<{ progress: Progress
 
         return stylePercent;
     }
-
+    /*
     private static TimeCalculation(createdTime: Date) {
 
         var queued;
@@ -110,5 +111,5 @@ export default class TicketProgress extends React.Component<{ progress: Progress
         }
 
         return queued;
-    }
+    }*/
 }

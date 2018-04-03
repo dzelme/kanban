@@ -64,6 +64,7 @@ export interface Assignee {
 export interface Priority {
     name: string;
     id: string;
+    color: string;
 }
 
 export interface Credentials {

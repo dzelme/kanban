@@ -31,8 +31,6 @@ h2, h3{
 
 article {
     background-color: white;
-    border-left: solid;
-    border-width: 15px;
 }
 
 .blocker { 
@@ -87,7 +85,7 @@ article > a > .information {
 
 article > a > .information > div {
     display: inline-block;
-    width:50%;
+    width:33%;
     text-align:center;
 }
 
@@ -134,16 +132,12 @@ input, select, textarea,button {
 }
 
 .Progress {
-    padding: 10px;
-    background: white;
+    background: black;
     color: black;
 }
 
 .ProgressBar {
-    border: solid;
-    border-width:2px;
-    border-color: black;
-    height: 14px;
+    height: 16px;
 }
 
 .ColumnTitle {
