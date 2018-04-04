@@ -15,7 +15,7 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
                 <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
                     <TicketSummary summary={this.props.issue.fields.summary} />
                     <TicketInformation issue={this.props.issue} keyName={this.props.issue.key} />
-                    <TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created}/>
+                    <TicketProgress issue={this.props.issue} />
                 </a>
             </article>
         }

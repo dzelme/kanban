@@ -43,6 +43,9 @@ export interface Fields {
     description: string;
     summary: string;
     created: Date;
+    timeTracking: TimeTracking;
+    resolutionDate: string;
+    dueDate: string;
 }
 
 export interface Progress {
@@ -51,6 +54,11 @@ export interface Progress {
     percent: number;
 }
 
+export interface TimeTracking {
+    originalEstimateSeconds: number;
+    remainingEstimateSeconds: number;
+    timeSpentSeconds: number;
+}
 
 export interface Status {
     name: string;

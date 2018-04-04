@@ -5,7 +5,7 @@
 
 body {
     font: normal 84% "Segoe UI", Arial;
-    background-color: #000;
+    background-color: #333;
     color: #fff;
 }
 
@@ -21,7 +21,7 @@ body {
 }
 
 .column-wrapper {
-    background-color: #222;
+    background-color: #333;
     margin: 0 4%;
 }
 
@@ -33,30 +33,30 @@ article {
     background-color: white;
 }
 
-.blocker { 
-    border-color: #da190b;
+.blocker {
+    background-color: #FFE4D2;
 }
 
 .critical {
-    border-color: #e63600;
+    background-color: #FFF0D9;
 }
 
 .major {
-    border-color: #6f1c7d;
+    background-color: #DDF1FF;
 }
 
 .minor {
-    border-color: #2e3b84;
+    background-color: #DBFFCE;
 }
 
 .trivial {
-    border-color: #495f69;
+    background-color: #D3D3D3;
 }
 
 h2 {
     text-transform: uppercase;
     margin: .5em 0 0 0;
-    border-bottom: 1em solid #000;
+    border-bottom: 1em solid #333;
 }
 
 h3 {
@@ -76,7 +76,7 @@ tbody {
 
 
 article + article {
-    margin-top: 1em;
+    margin-top: 3em;
 }
 
 article > a > .information {
@@ -118,13 +118,11 @@ input, select, textarea,button {
 
 .BoardNames {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .NamesBar {
     display: inline-block;
-    border: solid;
-    border-color: white;
 }
 
 .TicketText {
@@ -132,12 +130,14 @@ input, select, textarea,button {
 }
 
 .Progress {
-    background: black;
+    background: #000;
     color: black;
 }
 
-.ProgressBar {
-    height: 16px;
+.ProgressTime {
+    position: absolute;
+    right: 5px;
+    color: white;
 }
 
 .ColumnTitle {

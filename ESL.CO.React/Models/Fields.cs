@@ -21,6 +21,9 @@ namespace ESL.CO.React.Models
         public Progress Progress { get; set; }
         public Assignee Assignee { get; set; }
         public string Description { get; set; }
+        public string ResolutionDate { get; set; }
+        public string DueDate { get; set; }
+        public TimeTracking TimeTracking { get; set; } 
 
         public Fields()
         {
@@ -31,6 +34,9 @@ namespace ESL.CO.React.Models
             Summary = string.Empty;
             Progress = new Progress();
             Created = new DateTime();
+            TimeTracking = new TimeTracking();
+            ResolutionDate = string.Empty;
+            DueDate = string.Empty;
         }
 
         #region Equality
