@@ -153,12 +153,6 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
         }
     }
 
-
-    // used to redirect to login screen, if invalid JWT token
-    componentWillMount() {
-        ApiClient.hasValidJwt();
-    }
-
     public render() {
         if (sessionStorage.getItem('JwtToken') === null) {
             return null;

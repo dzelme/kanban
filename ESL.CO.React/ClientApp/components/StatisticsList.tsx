@@ -26,8 +26,6 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
     }
 
     componentWillMount() {
-        ApiClient.hasValidJwt();
-
         ApiClient.boardList(this.state.credentials)
             .then(data => {
                 this.setState({
