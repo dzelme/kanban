@@ -42,7 +42,7 @@ export class ApiClient {
     }
 
     // helper delete method
-    static delete(link): Promise<any> {
+    static delete(link) {
         return fetch(link, {
             method: 'DELETE',
             headers: {
