@@ -12,12 +12,12 @@ namespace ESL.CO.React.JiraIntegration
     /// </summary>
     public class AppSettings
     {
-        private readonly IOptions<Paths> paths;
+        //private readonly IOptions<UserSettings> userSettings;
 
-        public AppSettings(IOptions<Paths> paths)
-        {
-            this.paths = paths;
-        }
+        //public AppSettings(IOptions<UserSettings> userSettings)
+        //{
+        //    this.userSettings = userSettings;
+        //}
 
         /// <summary>
         /// Reads application settings from a JSON file to an object.
@@ -68,11 +68,17 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="saved">An object containing the stored list of all available Kanban boards and their settings.</param>
         /// <param name="current">An object containing the newly obtained list of all currently available Kanban boards with default settings.</param>
         /// <returns>An object containing a list of all currently available Kanban boards and their settings.</returns>
-        public static FullBoardList MergeSettings(FullBoardList saved, FullBoardList current)
+        public static FullBoardList MergeSettings(FullBoardList saved, FullBoardList current, IOptions<UserSettings> userSettings)
         {
             if (saved == null)
             {
                 if (current == null) { return null; }
+
+                foreach (Value currentBoard in current.Values)
+                {
+                    currentBoard.RefreshRate = userSettings.Value.RefreshRateMin;
+                    currentBoard.TimeShown = userSettings.Value.TimeShownMin;
+                }
                 return current;
             }
             if (current == null) { return saved; }
@@ -85,11 +91,9 @@ namespace ESL.CO.React.JiraIntegration
                     {
                         currentBoard.Name = savedBoard.Name;
                         currentBoard.Type = savedBoard.Type;
-                        currentBoard.RefreshRate = Math.Max(savedBoard.RefreshRate, 1000);  //should be same as range minimum in class BoardList
-                        currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, 5000);  //should be same as range minimum in class BoardList
+                        currentBoard.RefreshRate = Math.Max(savedBoard.RefreshRate, userSettings.Value.RefreshRateMin);
+                        currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, userSettings.Value.TimeShownMin);
                         currentBoard.Visibility = savedBoard.Visibility;
-                        //currentBoard.TimesShown = savedBoard.TimesShown;
-                        //currentBoard.LastShown = savedBoard.LastShown;
                     }
                 }
             }

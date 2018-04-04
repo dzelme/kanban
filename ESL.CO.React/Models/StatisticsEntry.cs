@@ -10,10 +10,6 @@ namespace ESL.CO.React.Models
 {
     public class StatisticsEntry
     {
-        //FIX: same const located in 2 places - DbClient and here
-        //private const int NETWORK_STATS_ENTRY_LIMIT = 3;
-        //private readonly IOptions<DbSettings> dbSettings;
-
         [BsonId]
         public string Id { get; set; }
         [BsonElement("Name")]

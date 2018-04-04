@@ -21,7 +21,7 @@ namespace ESL.CO.React.Controllers
         }
 
         [HttpPost("[action]")] //, ValidateAntiForgeryToken]
-        public void SaveUserSettings(string id, [FromBody] Value[] input)  //change name
+        public IActionResult SaveUserSettings(string id, [FromBody] Value[] input)
         {
             if (ModelState.IsValid)
             {
@@ -30,14 +30,14 @@ namespace ESL.CO.React.Controllers
                     Values = input.ToList()
                 };
 
-                // optional: when creating a new presentation no need to remember previously selected boards
-                // is useful to remember "time shown" and "refresh rate" values
+                // optional: when creating a new presentation no need to remember previously selected boards,
+                // it is useful to remember "time shown" and "refresh rate" values
                 foreach (Value value in boardList.Values)
                 {
                     value.Visibility = false;
                 }
 
-                dbClient.Update(id, new UserSettings
+                dbClient.Update(id, new UserSettingsDbEntry
                 {
                     Id = id,
                     BoardSettingsList = boardList
@@ -45,10 +45,11 @@ namespace ESL.CO.React.Controllers
             }
             else
             {
+                return BadRequest(ModelState);
                 //alert about invalid data
             }
 
-            return;
+            return Ok();
         }
     }
 }

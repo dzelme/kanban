@@ -21,27 +21,24 @@ namespace ESL.CO.React.Controllers
     public class SampleDataController : Controller
     {
         private readonly IJiraClient jiraClient;
-        //private readonly IAppSettings appSettings;  //delete when done with db
         private readonly IMemoryCache cache;
         private readonly IBoardCreator boardCreator;
         private readonly IDbClient dbClient;
-        private readonly IOptions<Paths> paths;
+        private readonly IOptions<UserSettings> userSettings;
 
         public SampleDataController(
             IMemoryCache cache, 
             IJiraClient jiraClient, 
-            //IAppSettings appSettings,  //delete when done with db
             IBoardCreator boardCreator,
             IDbClient dbClient,
-            IOptions<Paths> paths
+            IOptions<UserSettings> userSettings
             )
         {
             this.jiraClient = jiraClient;
-            //this.appSettings = appSettings;  //delete when done with db
             this.cache = cache;
             this.boardCreator = boardCreator;
             this.dbClient = dbClient;
-            this.paths = paths;
+            this.userSettings = userSettings;
         }
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
             if (boardList == null)
             {
-                return dbClient.GetOne<UserSettings>(credentials.Username)?.BoardSettingsList?.Values;
+                return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
             }  //
 
             FullBoardList fullBoardList = new FullBoardList();
@@ -69,8 +66,8 @@ namespace ESL.CO.React.Controllers
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
                 if (boardList == null)
                 {
-                    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettings>(credentials.Username)?.BoardSettingsList, fullBoardList);
-                    dbClient.Update(credentials.Username, new UserSettings
+                    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+                    dbClient.Update(credentials.Username, new UserSettingsDbEntry
                     {
                         Id = credentials.Username,
                         BoardSettingsList = fullBoardList
@@ -80,40 +77,13 @@ namespace ESL.CO.React.Controllers
                 fullBoardList.Values.AddRange(boardList.Values);
             }
 
-            fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettings>(credentials.Username)?.BoardSettingsList, fullBoardList);
-            dbClient.Update(credentials.Username, new UserSettings
+            fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+            dbClient.Update(credentials.Username, new UserSettingsDbEntry
             {
                 Id = credentials.Username,
                 BoardSettingsList = fullBoardList
             });
             return fullBoardList.Values;
-
-            //var credentialsString = credentials.Username + ":" + credentials.Password;
-
-            //var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
-            //if (boardList == null)
-            //{
-            //    return appSettings.GetSavedAppSettings()?.Values;
-            //}  //
-
-            //FullBoardList fullBoardList = new FullBoardList();
-            //fullBoardList.Values.AddRange(boardList.Values);
-            //while (!boardList.IsLast)
-            //{
-            //    boardList.StartAt += boardList.MaxResults;
-            //    boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
-            //    if (boardList == null)
-            //    {
-            //        fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
-            //        appSettings.SaveAppSettings(fullBoardList);
-            //        return fullBoardList.Values;
-            //    }
-            //    fullBoardList.Values.AddRange(boardList.Values);
-            //}
-
-            //fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
-            //appSettings.SaveAppSettings(fullBoardList);
-            //return fullBoardList.Values;
         }
 
         /// <summary>

@@ -7,13 +7,9 @@ namespace ESL.CO.React.Models
 {
     public class UserSettings
     {
-        public string Id { get; set; }  // username
-        public FullBoardList BoardSettingsList { get; set; }
-
-        public UserSettings()
-        {
-            Id = "";
-            BoardSettingsList = new FullBoardList();
-        }
+        public int RefreshRateMax { get; set; } 
+        public int RefreshRateMin { get; set; }
+        public int TimeShownMax { get; set; }
+        public int TimeShownMin { get; set; }
     }
 }
