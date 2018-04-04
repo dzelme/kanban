@@ -42,14 +42,13 @@ export class ApiClient {
     }
 
     // helper delete method
-    static delete(link) {
+    static delete(link): Promise<any> {
         return fetch(link, {
             method: 'DELETE',
             headers: {
                 authorization: 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName)
             }
         })
-        .then(handleResponse);
     }
 
     // AccountController: Checks the credentials submitted by user.
@@ -116,7 +115,7 @@ export class ApiClient {
 
     // PresentationsController
     static deletePresentation(id: string) {
-        ApiClient.delete('api/admin/presentations/' + id)
+        return ApiClient.delete('api/admin/presentations/' + id);
     }
 
     // VersionController

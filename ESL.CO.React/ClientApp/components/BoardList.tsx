@@ -89,8 +89,8 @@ export class BoardList extends React.Component<RouteComponentProps<{}>, BoardLis
 
     postPresentation() {
 
-        ApiClient.savePresentation(this.state.boardPresentation);
-        open('./admin/presentations', '_self');
+        ApiClient.savePresentation(this.state.boardPresentation)
+            .then(() => open('./admin/presentations', '_self'));
     }
 
     handleChange(event) {

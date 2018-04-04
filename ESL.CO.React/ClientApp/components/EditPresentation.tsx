@@ -111,8 +111,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     postPresentation() {
-        ApiClient.savePresentation(this.state.boardPresentation);
-        open('./admin/presentations', '_self');
+        ApiClient.savePresentation(this.state.boardPresentation)
+            .then(() => open('./admin/presentations', '_self'));
     }
 
     handleChange(event) {
