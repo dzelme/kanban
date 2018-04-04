@@ -20,7 +20,7 @@ export default class TicketProgress extends React.Component<{ issue: Issue }>{
     public render() {
 
         return <div className="Progress">
-            <div className="ProgressBar" style={TicketProgress.Overdue(this.props.issue.fields.dueDate, this.props.issue.fields.resolutionDate)}>
+            <div className="ProgressBar" style={TicketProgress.Overdue(this.props.issue.fields.dueDate, this.props.issue.fields.resolutionDate, this.props.issue.fields.progress.percent)}>
                 <div style={TicketProgress.ProgressBar(this.props.issue.fields.progress.percent, this.props.issue.fields.priority.name)}></div>
                 <strong><p className="ProgressTime">{TicketProgress.RemainingTimeCalculation(this.props.issue.fields.timeTracking.remainingEstimateSeconds)}</p></strong>
             </div>
@@ -50,7 +50,7 @@ export default class TicketProgress extends React.Component<{ issue: Issue }>{
         return stylePercent;
     }
 
-    private static Overdue(dueDate: string, resolutionDate: string) {
+    private static Overdue(dueDate: string, resolutionDate: string, progress: number) {
 
         if (dueDate != null && resolutionDate != null) {
             styleProgressBar.background = "#000"
@@ -66,7 +66,12 @@ export default class TicketProgress extends React.Component<{ issue: Issue }>{
             var differenceMS = todayString - dueDateString;
 
             if (differenceMS >= 0) {
-                styleProgressBar.background = "#FF0000"
+                if (progress != 0) {
+                    styleProgressBar.background = 'linear-gradient(to right,' + stylePercent.background + ', #FF0000)';
+                }
+                else {
+                    styleProgressBar.background = "#FF0000"
+                }
             }
             else {
                 styleProgressBar.background = "#000"
