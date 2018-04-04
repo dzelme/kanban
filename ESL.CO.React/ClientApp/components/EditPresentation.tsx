@@ -44,8 +44,26 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             });
     }
 
+    handleForm(event) {
+        event.preventDefault();
+
+        this.handleAuth();
+    }
+
+    handleAuth() {
+        ApiClient.checkCredentials(this.state.credentials)
+            .then(response => {
+                if (response.status == 200) {
+                    this.setState({ authenticated: true }, this.handleFetch);
+                }
+                else {
+                    this.setState({ authenticated: false, loading: true });
+                }
+            });
+    }
+
     handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
+        ApiClient.boardList(this.state.credentials)
             .then(data => {
                 this.setState({ boardPresentation: this.state.boardPresentation, boardList: data }, this.handleVisibility);
             });
@@ -54,29 +72,6 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     handleVisibility() {
         var newList = EditPresentation.checkVisibility(this.state.boardList, this.state.boardPresentation.boards.values);
         this.setState({ boardList: newList, loading: false });
-    }
-
-    handleForm(event) {
-        event.preventDefault();
-
-        if (this.state.boardPresentation.credentials.username == this.state.credentials.username && this.state.boardPresentation.credentials.password == this.state.credentials.password) {
-            this.setState({ loading: false });
-        }
-        else {
-            this.setState({ boardList: null, loading: true }, this.handleAuth)
-        }
-    }
-
-    handleAuth() {
-        ApiClient.login(this.state.credentials)
-            .then(response => {
-                if (response) {
-                    this.setState({ authenticated: true }, this.handleFetch);
-                }
-                else {
-                    this.setState({ authenticated: false });
-                }
-            });
     }
 
     handleSubmit(event) {
@@ -103,9 +98,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     postPresentation() {
-        ApiClient.saveUserSettings(this.state.boardList, this.state.boardPresentation.credentials.username); // saves boardlist with 
-        ApiClient.savePresentation(this.state.boardPresentation);
-        open('./admin/presentations', '_self');
+        ApiClient.saveUserSettings(this.state.boardList, this.state.boardPresentation.credentials.username);
         ApiClient.savePresentation(this.state.boardPresentation)
             .then(() => open('./admin/presentations', '_self'));
     }
