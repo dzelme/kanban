@@ -22,9 +22,8 @@ export const routes = <Layout>
     <Route path='/admin/editPresentation/:id' component={EditPresentation} />
     <Route path='/admin/statistics' component={StatisticsList} />
     <Route path="/admin/jiraconnectionstats/:id" component={StatisticsBoard} />
-    <Route path='/' component={NavMenu} />
     <Route exact path='/' component={Login} />
-
+    <Route path='/' component={NavMenu} />
     <Route exact path='/p/:id' component={BoardReader} />
     <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
 </Layout>;

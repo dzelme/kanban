@@ -14,9 +14,7 @@ namespace ESL.CO.React.Models
 
         public JiraConnectionLogEntry(string link = "", string responseStatus = "", string exception ="", string time = "")
         {
-            //required because javascript date.parse only understands months first (mm.dd.yyyy) format;
-
-            string pattern = "MM.dd.yyyy HH:mm:ss";
+            string pattern = "dd.MM.yyyy HH:mm:ss";
 
             Time = (time == "") ? DateTime.Now.ToString(pattern) : DateTime.Parse(time).ToString(pattern);
             Link = link;

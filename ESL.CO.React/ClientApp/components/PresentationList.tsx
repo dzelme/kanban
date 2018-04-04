@@ -32,7 +32,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
     handleDelete(id: string) {
         ApiClient.deletePresentation(id)
-        open('./admin/presentations', '_self');         
+            .then(() => open('./admin/presentations', '_self'));
     }
 
     public render() {

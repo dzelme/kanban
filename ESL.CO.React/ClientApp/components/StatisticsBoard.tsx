@@ -51,15 +51,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
             <tbody style={styleContent}>
                     {connectionLog.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
-                            <td key={entry.time + "time"}>
-                            {entry.time ?
-                                new Intl.DateTimeFormat('lv-LV', {
-                                    day: '2-digit', month: '2-digit', year: 'numeric',
-                                    hour: 'numeric', minute: 'numeric', second: 'numeric'
-                                }).format(new Date(Date.parse(entry.time)))
-                                : ""
-                            }
-                            </td>
+                            <td key={entry.time + "time"}>{entry.time}</td>
                             <td key={entry.time + "link"}>{entry.link}</td>
                             <td key={entry.time + "responseStatus"}>{entry.responseStatus}</td>
                             <td key={entry.time + "exception"}>{entry.exception}</td>

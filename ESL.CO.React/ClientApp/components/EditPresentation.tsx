@@ -111,8 +111,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     postPresentation() {
-        ApiClient.savePresentation(this.state.boardPresentation);
-        open('./admin/presentations', '_self');
+        ApiClient.savePresentation(this.state.boardPresentation)
+            .then(() => open('./admin/presentations', '_self'));
     }
 
     handleChange(event) {
@@ -173,12 +173,6 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 }
             })
         }
-    }
-
-    // used to redirect to login screen, if invalid JWT token
-    componentWillMount() {
-        ApiClient.hasValidJwt()
-            .then(response => ApiClient.redirect(response, 401, './login'));
     }
 
     public render() {
