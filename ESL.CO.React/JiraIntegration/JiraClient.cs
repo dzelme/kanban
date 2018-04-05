@@ -72,9 +72,8 @@ namespace ESL.CO.React.JiraIntegration
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
-
+            
             var response = await client.SendAsync(request);
-
             if (response.IsSuccessStatusCode)
             {
                 var serializer = new JsonSerializer();
@@ -95,7 +94,6 @@ namespace ESL.CO.React.JiraIntegration
             return default(T);  //null
             //throw new InvalidOperationException();
         }
-
 
         /// <summary>
         /// Adds an entry to the appropriate connection log file.
