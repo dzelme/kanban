@@ -84,7 +84,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     RefreshRate() {
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
-            this.state.boardList[this.state.currentIndex].refreshRate
+            this.state.boardList[this.state.currentIndex].refreshRate*1000
         );
     }
 
