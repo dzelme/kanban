@@ -58,7 +58,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
     slideShow() {
         this.increment();  //AD: increments timesShown board statistic
-        setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown);
+        setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown*1000);
     }
 
     boardLoad() {
