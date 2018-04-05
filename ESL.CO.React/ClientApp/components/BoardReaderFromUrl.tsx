@@ -28,7 +28,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                         ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
                             .then(dataColor => {
-                                this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true, colorList: dataColor }, this.makeList);
+                                this.setState({ boardList: dataPres.boards.values, board: dataBoard, boardChanged: true, colorList: dataColor }, this.makeList);
                             });
 
                     });
