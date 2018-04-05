@@ -1,12 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Credentials } from './Interfaces';
+import { AuthenticationState } from './Interfaces';
 import { ApiClient } from './ApiClient';
-
-interface AuthenticationState {
-    credentials: Credentials;
-    authenticated: boolean;
-}
 
 export class Login extends React.Component<RouteComponentProps<{}>, AuthenticationState> {
 
@@ -55,48 +50,28 @@ export class Login extends React.Component<RouteComponentProps<{}>, Authenticati
             : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
 
         return <div>
-                <form onSubmit={this.handleSubmit}>
-                        <div style={styleCenter}>
+            <form onSubmit={this.handleSubmit}>
+                <div className="LoginCenter">
                             <h1>Autentifikācija</h1>
                         </div>
 
-                        <div style={styleCenter}>
+                <div className="LoginCenter">
                     <h3>Lietotājvārds</h3>
-                    <input style={LoginInputStyle} name='username' type="text" required value={this.state.credentials.username} onChange={this.handleChange} />
+                    <input className="LoginInputElement" name='username' type="text" required value={this.state.credentials.username} onChange={this.handleChange} />
                         </div>
 
-                        <div style={styleCenter}>
+                <div className="LoginCenter">
                     <h3>Parole</h3>
-                    <input style={LoginInputStyle} name='password' type="password" required value={this.state.credentials.password} onChange={this.handleChange} />
+                    <input className="LoginInputElement" name='password' type="password" required value={this.state.credentials.password} onChange={this.handleChange} />
                         </div>
 
-                        <div style={styleCenter}>
-                            <button style={buttonStyle} type="submit"><strong>Apstiprināt</strong></button>
+                <div className="LoginCenter">
+                            <button className="LoginButton" type="submit"><strong>Apstiprināt</strong></button>
                         </div>
                 </form>
 
-        <div style={styleCenter}>{error}</div>
+            <div className="LoginCenter">{error}</div>
 
         </div>
     }
-}
-
-const buttonStyle = {
-    color: 'black',
-    width: '150px',
-    marginTop: '20px',
-    height:'30px'
-}
-
-const LoginInputStyle = {
-    color: 'black',
-    width:'150px'
-}
-
-const styleCenter = {
-    height: '100 %',
-    width: '100 %',
-    display: 'flex',
-    justifyContent: 'center' as 'center',
-    alignItems: 'center' as 'center'
 }

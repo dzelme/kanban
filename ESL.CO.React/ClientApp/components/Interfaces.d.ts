@@ -43,6 +43,9 @@ export interface Fields {
     description: string;
     summary: string;
     created: Date;
+    timeTracking: TimeTracking;
+    resolutionDate: string;
+    dueDate: string;
 }
 
 export interface Progress {
@@ -51,6 +54,11 @@ export interface Progress {
     percent: number;
 }
 
+export interface TimeTracking {
+    originalEstimateSeconds: number;
+    remainingEstimateSeconds: number;
+    timeSpentSeconds: number;
+}
 
 export interface Status {
     name: string;
@@ -64,6 +72,7 @@ export interface Assignee {
 export interface Priority {
     name: string;
     id: string;
+    color: string;
 }
 
 export interface Credentials {
@@ -92,4 +101,62 @@ interface JiraConnectionLogEntry {
     link: string;
     responseStatus: string;
     exception: string;
+}
+
+interface BoardReaderState {
+    boardlist: Value[];
+    titleList: string[];
+    loading: boolean;
+}
+
+interface ColumnReaderState {
+    boardlist: Value[];
+    currentIndex: number;
+    boardId: number;
+    board: Board;
+    boardChanged: boolean;
+    loading: boolean;
+}
+
+interface ReaderFromURLState {
+    boardlist: Value[];
+    board: Board;
+    boardChanged: boolean;
+    loading: boolean;
+}
+
+interface EditPresentationState {
+    boardPresentation: BoardPresentation;
+    boardlist: Value[];
+    credentials: Credentials;
+    authenticated: boolean;
+    loading: boolean;
+}
+
+interface CreatePresentationState {
+    boardPresentation: BoardPresentation;
+    boardlist: Value[];
+    authenticated: boolean;
+    loading: boolean;
+}
+
+interface AuthenticationState {
+    credentials: Credentials;
+    authenticated: boolean;
+}
+
+interface PresentationListState {
+    presentationList: BoardPresentation[];
+    loading: boolean;
+}
+
+interface StatisticsListState {
+    boardlist: Value[];
+    credentials: Credentials;
+    loading: boolean;
+}
+
+interface StatisticsBoardState {
+    connectionLog: JiraConnectionLogEntry[];
+    loading: boolean;
 }

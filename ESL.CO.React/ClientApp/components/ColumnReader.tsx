@@ -1,17 +1,8 @@
 ﻿import * as React from 'react';
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
-import { Value, Board, Credentials } from './Interfaces';
+import { ColumnReaderState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
-
-interface ColumnReaderState {
-    boardlist: Value[];
-    currentIndex: number;
-    boardId: number;
-    board: Board;
-    boardChanged: boolean;
-    loading: boolean;
-}
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
@@ -87,8 +78,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
                             }
                         }
                     });
-            });
-        
+            });      
     }
 
     RefreshRate() {
@@ -124,7 +114,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName presentationId={this.props.presentationID} boardId={this.state.boardId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
+                    <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }

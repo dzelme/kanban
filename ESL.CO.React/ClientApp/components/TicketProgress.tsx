@@ -1,128 +1,130 @@
 ﻿import * as React from 'react';
-import { Progress } from './Interfaces';
+import { Issue } from './Interfaces';
 
-export default class TicketProgress extends React.Component<{ progress: Progress, created: Date }>{
+
+const stylePercent = {
+    position: 'absolute' as 'absolute',
+    height: '16px',
+    width: '',
+    background: ''
+}
+
+const styleProgressBar = {
+    position: 'relative' as 'relative',
+    height: '16px',
+    background: '#000'
+}
+
+
+export default class TicketProgress extends React.Component<{ issue: Issue }>{
     public render() {
 
-        
-
-        return <div style={styleSection}>
-            <div style={styleBar}><div style={TicketProgress.ProgressBar(this.props.progress.percent)}></div></div>
-            <h5>Queue: <strong>{TicketProgress.TimeCalculation(this.props.created)}</strong></h5>
+        return <div className="Progress">
+            <div className="ProgressBar" style={TicketProgress.Overdue(this.props.issue.fields.dueDate, this.props.issue.fields.resolutionDate, this.props.issue.fields.progress.percent)}>
+                <div style={TicketProgress.ProgressBar(this.props.issue.fields.progress.percent, this.props.issue.fields.priority.name)}></div>
+                <strong><p className="ProgressTime">{TicketProgress.RemainingTimeCalculation(this.props.issue.fields.timeTracking.remainingEstimateSeconds)}</p></strong>
+            </div>
         </div>
     }
 
-    private static ProgressBar(progress: number) {
+    private static ProgressBar(progress: number, priority: string) {
 
         stylePercent.width = progress + '%';
+
+        if( priority == 'Blocker') {
+            stylePercent.background = '#CC0000';
+        }
+        else if (priority == 'Critical') {
+            stylePercent.background = '#FF9900';
+        }
+        else if (priority == 'Major') {
+            stylePercent.background = '#0099FF';
+        }
+        else if (priority == 'Minor') {
+            stylePercent.background = '#00CC00';
+        }
+        else if (priority == 'Trivial') {
+            stylePercent.background = '#808080';
+        }
 
         return stylePercent;
     }
 
-    private static TimeCalculation(createdTime: Date) {
+    private static Overdue(dueDate: string, resolutionDate: string, progress: number) {
 
-        var queued;
+        if (dueDate != null && resolutionDate != null) {
+            styleProgressBar.background = "#000"
 
-        var today = new Date();
-
-        var todayString = Date.parse(today.toString());
-        var createdString = Date.parse(createdTime.toString());
-
-        var differenceMS = todayString - createdString;
-
-        var differenceYears = Math.floor((differenceMS) / (1000 * 60 * 60 * 24 * 365));
-        var differenceDays = Math.floor((differenceMS) / (1000 * 60 * 60 * 24));
-        var differenceHours = Math.floor((differenceMS) / (1000 * 60 * 60));
-        var differenceMinutes = Math.floor((differenceMS) / (1000 * 60));
-
-        var years = differenceYears; 
-        var yearDays = differenceDays - (years * 365);
-
-        var days = differenceDays;
-        var dayHours = differenceHours - (days * 24);
-        var dayMinutes = differenceMinutes - ((days * 24 * 60) + (dayHours * 60));
-
-        if (years > 0) {
-
-            if (years % 10 == 1 && years % 100 != 11)
-            {
-                if (yearDays % 10 == 1 && yearDays % 100 != 11) {
-                    queued = years + ' gads ' + yearDays + ' diena';
-                }
-                else
-                {
-                    queued = years + ' gads ' + yearDays + ' dienas';
-                }
-            }
-            else
-            {
-                if (yearDays % 10 == 1 && yearDays % 100 != 11) {
-                    queued = years + ' gadi ' + yearDays + ' diena';
-                }
-                else {
-                    queued = years + ' gadi ' + yearDays + ' dienas';
-                }
-            }
         }
-        else
-        {
-            if (days % 10 == 1 && days % 100 != 11) {
-                if (dayHours % 10 == 1 && dayHours % 100 != 11) {
-                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
-                        queued = days + ' diena ' + dayHours + ' stunda ' + dayMinutes + ' minūte';
-                    }
-                    else {
-                        queued = days + ' diena ' + dayHours + ' stunda ' + dayMinutes + ' minūtes';
-                    }
+        else if (dueDate != null && resolutionDate == null) {
+ 
+            var today = new Date();
+
+            var todayString = Date.parse(today.toString());
+            var dueDateString = Date.parse(dueDate);
+
+            var differenceMS = todayString - dueDateString;
+
+            if (differenceMS >= 0) {
+                if (progress != 0) {
+                    styleProgressBar.background = 'linear-gradient(to right,' + stylePercent.background + ', #FF0000)';
                 }
                 else {
-                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
-                        queued = days + ' diena ' + dayHours + ' stundas ' + dayMinutes + ' minūte';
-                    }
-                    else {
-                        queued = days + ' diena ' + dayHours + ' stundas ' + dayMinutes + ' minūtes';
-                    }
+                    styleProgressBar.background = "#FF0000"
                 }
             }
             else {
-                if (dayHours % 10 == 1 && dayHours % 100 != 11) {
-                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
-                        queued = days + ' dienas ' + dayHours + ' stunda ' + dayMinutes + ' minūte';
-                    }
-                    else {
-                        queued = days + ' dienas ' + dayHours + ' stunda ' + dayMinutes + ' minūtes';
-                    }
-                }
-                else {
-                    if (dayMinutes % 10 == 1 && dayMinutes % 100 != 11) {
-                        queued = days + ' dienas ' + dayHours + ' stundas ' + dayMinutes + ' minūte';
-                    }
-                    else {
-                        queued = days + ' dienas ' + dayHours + ' stundas ' + dayMinutes + ' minūtes';
-                    }
-                }
+                styleProgressBar.background = "#000"
             }
         }
+        else {
+            styleProgressBar.background = "#000"
+        }
 
-        return queued;
+        return styleProgressBar;
     }
-}
 
-const stylePercent = {
-    width: '',
-    height: '10px',
-    background: 'blue'
-}
+    private static RemainingTimeCalculation(timeSeconds: number) {
+        const minute = 60;
+        const hour = 3600;
+        const day = 86400;
+        var time = timeSeconds;
+        var timeDays = 0;
+        var timeHours = 0;
+        var timeMinutes = 0;
 
-const styleBar = {
-    border: 'solid',
-    borderWidth:'2px',
-    borderColor: 'black',
-    height: '14px'
-}
+        if (time >= day) {
+            timeDays = Math.floor(time / day);
+            time -= day * timeDays
+        }
 
-const styleSection = {
-    padding: '10px',
-    background: 'white',
-    color: 'black'
+        if (time >= hour) {
+            timeHours = Math.floor(time / hour);
+            time -= hour * timeHours
+        }
+
+        if (time >= minute) {
+            timeMinutes = Math.floor(time / minute);
+            time -= minute * timeMinutes
+        }
+
+        if (timeSeconds == 0) {
+            return null;
+        }
+        else if (timeDays > 0) {
+            if (timeHours > 0) {
+                return timeDays + "d " + timeHours + "h";
+            }
+            return timeDays + "d";
+        }
+        else if (timeHours > 0) {
+            if (timeMinutes > 0) {
+                return timeHours + "h " + timeMinutes + "m";
+            }
+            return timeHours + "h"
+        }
+        else {
+            return timeMinutes + "m";
+        }
+    }
 }

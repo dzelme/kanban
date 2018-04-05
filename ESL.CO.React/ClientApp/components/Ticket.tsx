@@ -2,7 +2,6 @@
 import TicketSummary from './TicketSummary';
 import TicketProgress from './TicketProgress';
 import TicketInformation from './TicketInformation';
-import TicketKey from './TicketKey';
 import { Issue } from './Interfaces';
 
 
@@ -14,10 +13,9 @@ export default class Ticket extends React.Component<{ issue: Issue }> {
         else {
             return <article className={Ticket.PriorityCheck(this.props.issue)}>
                 <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
-                    <TicketKey keyName={this.props.issue.key} />
                     <TicketSummary summary={this.props.issue.fields.summary} />
-                    <TicketProgress progress={this.props.issue.fields.progress} created={this.props.issue.fields.created}/>
-                    <TicketInformation issue={this.props.issue} />
+                    <TicketInformation issue={this.props.issue} keyName={this.props.issue.key} />
+                    <TicketProgress issue={this.props.issue} />
                 </a>
             </article>
         }

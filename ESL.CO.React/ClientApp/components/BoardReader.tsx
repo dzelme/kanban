@@ -1,16 +1,9 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { Value, Credentials, BoardPresentation } from './Interfaces';
+import { BoardReaderState } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-interface BoardReaderState {
-    boardlist: Value[];
-    loading: boolean;
-    titleList: string[];
-}
-
-//Get all boards in list
 export class BoardReader extends React.Component<RouteComponentProps<{ id: string }>, BoardReaderState> {
 
     constructor(props: RouteComponentProps<{ id: string }>) {

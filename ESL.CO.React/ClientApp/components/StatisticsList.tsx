@@ -1,15 +1,10 @@
 ﻿import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
 import 'isomorphic-fetch';
+import { RouteComponentProps} from 'react-router';
 import { Link } from 'react-router-dom';
-import { Credentials, Value } from './Interfaces';
+import { StatisticsListState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-interface StatisticsListState {
-    boardlist: Value[];
-    loading: boolean;
-    credentials: Credentials;
-}
 
 export class StatisticsList extends React.Component<RouteComponentProps<{}>, StatisticsListState> {
     constructor() {
@@ -55,7 +50,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
 
     private static renderStatisticsList(boardlist: Value[]) {  //
         return <table className='table'>
-            <thead style={styleHeader}>
+            <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nosaukums</th>
@@ -64,7 +59,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                         <th>Savienojums</th>
                     </tr>
             </thead>
-            <tbody style={styleContent}>
+            <tbody>
                     {boardlist.map(board =>
                         <tr key={board.id + "row"}>
                             <td key={board.id + ""}>{board.id}</td>
@@ -85,12 +80,4 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                 </tbody>
             </table>;
     }
-}
-
-const styleHeader = {
-    fontSize: '20px'
-}
-
-const styleContent = {
-    fontSize: '15px'
 }

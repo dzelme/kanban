@@ -1,9 +1,10 @@
 ﻿import * as React from 'react';
-import ColumnTitle from './ColumnTitle';
 import ColumnFill from './ColumnFill';
-import Ticket from './Ticket';
 import { Board } from './Interfaces';
 
+const styleColumns = {
+    width: ''
+}
 
 export default class BoardTable extends React.Component<{ board: Board }> {
 
@@ -13,9 +14,16 @@ export default class BoardTable extends React.Component<{ board: Board }> {
 
         return <div>{
             this.props.board.columns.map((column, index) =>
-                <section className='column' key={index}><ColumnFill column={column} /></section>
+                <section style={BoardTable.columnSize(this.props.board.columns.length)} key={index}><ColumnFill column={column} /></section>
             )
 
         }</div>
+    }
+
+    private static columnSize(columnCount: number) {
+
+        styleColumns.width = (100 / columnCount) + '%'
+
+        return styleColumns;
     }
 }
