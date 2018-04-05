@@ -94,24 +94,18 @@ export default class TicketProgress extends React.Component<{ issue: Issue }>{
         var timeMinutes = 0;
 
         if (time >= day) {
-            while (time >= day) {
-                time -= day;
-                timeDays++;
-            }
+            timeDays = Math.floor(time / day);
+            time -= day * timeDays
         }
 
         if (time >= hour) {
-            while (time >= hour) {
-                time -= hour;
-                timeHours++;
-            }
+            timeHours = Math.floor(time / hour);
+            time -= hour * timeHours
         }
 
         if (time >= minute) {
-            while (time >= minute) {
-                time -= minute;
-                timeMinutes++;
-            }
+            timeMinutes = Math.floor(time / minute);
+            time -= minute * timeMinutes
         }
 
         if (timeSeconds == 0) {
