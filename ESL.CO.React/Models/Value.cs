@@ -19,7 +19,7 @@ namespace ESL.CO.React.Models
         [Range(1, 100, ErrorMessage = "Value for {0} must be between {1} and {2}.")]  // range values should equal the ones in UserSettings in appsettings.json
         public int TimeShown { get; set; }  // Paneļa attēlošanas laiks sekundēs, pēc kura beigām tiek attēlots nākošais Panelis;
 
-        public Value(IOptions<UserSettings> userSettings)
+        public Value()
         {
             Id = 0;
             Name = "";

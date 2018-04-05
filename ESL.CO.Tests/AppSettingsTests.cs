@@ -17,11 +17,11 @@ namespace ESL.CO.Tests
         private FullBoardList listCurrent;
         private IOptions<Paths> paths;
 
-        public AppSettingsTests()
-        {
-            paths = Options.Create(new Paths());
-            controller = new AppSettings(paths);
-        }
+        //public AppSettingsTests()
+        //{
+        //    paths = Options.Create(new Paths());
+        //    controller = new AppSettings(paths);
+        //}
 
         ///<Summary>
         ///Testi MergeSettings, ja mainīs klasi uz ne-statisku

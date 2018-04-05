@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-using System.IO;
+using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-
-using ESL.CO.React.DbConnection;
 
 namespace ESL.CO.React.Controllers
 {
