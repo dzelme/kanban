@@ -62,7 +62,9 @@ article > a > .information {
 article > a > .information > div {
     display: inline-block;
     width:33%;
+    word-wrap:break-word;
     text-align:center;
+
 }
 
 a:link {
@@ -99,6 +101,7 @@ input, select, textarea,button {
 
 .NamesBar {
     display: inline-block;
+    word-wrap: break-word;
 }
 
 .TicketText {
