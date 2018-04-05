@@ -9,4 +9,5 @@ namespace ESL.CO.React.JiraIntegration
         void SaveToConnectionLog_AsTextFile(string url, HttpResponseMessage response, int id);
         void TruncateLogFile(string filePath);
     }
+
 }

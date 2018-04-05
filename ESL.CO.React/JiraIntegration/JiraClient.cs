@@ -37,7 +37,7 @@ namespace ESL.CO.React.JiraIntegration
             /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
         public async Task<T> GetBoardDataAsync<T>(string url, string credentials, int id)
         {
-            var baseUri = new Uri("https://jira.returnonintelligence.com/rest/agile/1.0/");
+            var baseUri = new Uri("https://jira.returnonintelligence.com/rest/");
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
             

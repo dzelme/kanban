@@ -29,30 +29,6 @@ h2, h3{
     padding: 3px 8px;
 }
 
-article {
-    background-color: white;
-}
-
-.blocker {
-    background-color: #FFE4D2;
-}
-
-.critical {
-    background-color: #FFF0D9;
-}
-
-.major {
-    background-color: #DDF1FF;
-}
-
-.minor {
-    background-color: #DBFFCE;
-}
-
-.trivial {
-    background-color: #D3D3D3;
-}
-
 h2 {
     text-transform: uppercase;
     margin: .5em 0 0 0;
@@ -86,7 +62,9 @@ article > a > .information {
 article > a > .information > div {
     display: inline-block;
     width:33%;
+    word-wrap:break-word;
     text-align:center;
+
 }
 
 a:link {
@@ -123,6 +101,7 @@ input, select, textarea,button {
 
 .NamesBar {
     display: inline-block;
+    word-wrap: break-word;
 }
 
 .TicketText {

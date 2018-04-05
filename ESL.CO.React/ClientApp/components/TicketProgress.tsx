@@ -16,36 +16,21 @@ const styleProgressBar = {
 }
 
 
-export default class TicketProgress extends React.Component<{ issue: Issue }>{
+export default class TicketProgress extends React.Component<{ issue: Issue, color: string }>{
     public render() {
 
         return <div className="Progress">
             <div className="ProgressBar" style={TicketProgress.Overdue(this.props.issue.fields.dueDate, this.props.issue.fields.resolutionDate, this.props.issue.fields.progress.percent)}>
-                <div style={TicketProgress.ProgressBar(this.props.issue.fields.progress.percent, this.props.issue.fields.priority.name)}></div>
+                <div style={TicketProgress.ProgressBar(this.props.issue.fields.progress.percent, this.props.color)}></div>
                 <strong><p className="ProgressTime">{TicketProgress.RemainingTimeCalculation(this.props.issue.fields.timeTracking.remainingEstimateSeconds)}</p></strong>
             </div>
         </div>
     }
 
-    private static ProgressBar(progress: number, priority: string) {
+    private static ProgressBar(progress: number, color: string) {
 
         stylePercent.width = progress + '%';
-
-        if( priority == 'Blocker') {
-            stylePercent.background = '#CC0000';
-        }
-        else if (priority == 'Critical') {
-            stylePercent.background = '#FF9900';
-        }
-        else if (priority == 'Major') {
-            stylePercent.background = '#0099FF';
-        }
-        else if (priority == 'Minor') {
-            stylePercent.background = '#00CC00';
-        }
-        else if (priority == 'Trivial') {
-            stylePercent.background = '#808080';
-        }
+        stylePercent.background = color;
 
         return stylePercent;
     }

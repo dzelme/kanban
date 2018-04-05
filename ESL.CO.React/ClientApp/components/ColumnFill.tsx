@@ -1,9 +1,9 @@
 ﻿import * as React from 'react';
 import Ticket from './Ticket';
 import ColumnTitle from './ColumnTitle';
-import { BoardColumn } from './Interfaces';
+import { BoardColumn, CardColor } from './Interfaces';
 
-export default class ColumnFill extends React.Component<{ column: BoardColumn}> {
+export default class ColumnFill extends React.Component<{ column: BoardColumn, colorList: CardColor[] }> {
 
     public render() {
 
@@ -12,7 +12,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn}> 
 
             {
                 this.props.column.issues.map((issue, index) =>
-                    <Ticket issue={issue} key={index} />
+                    <Ticket issue={issue} key={index} colorList={this.props.colorList}/>
                     )
             }
         </div>

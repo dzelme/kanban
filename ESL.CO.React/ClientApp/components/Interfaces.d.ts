@@ -80,6 +80,16 @@ export interface Credentials {
     password: string;
 }
 
+export interface ColorList {
+    cardColors: CardColor[];
+}
+
+export interface CardColor {
+    color: string;
+    displayValue: string;
+    value: string;
+}
+
 export interface FullPresentationList {
     presentationList: BoardPresentation[];
 }
@@ -123,6 +133,7 @@ interface ColumnReaderState {
     boardId: number;
     board: Board;
     boardChanged: boolean;
+    colorList: CardColor[];
     loading: boolean;
 }
 
@@ -130,6 +141,7 @@ interface ReaderFromURLState {
     boardList: Value[];
     board: Board;
     boardChanged: boolean;
+    colorList: CardColor[];
     loading: boolean;
 }
 
