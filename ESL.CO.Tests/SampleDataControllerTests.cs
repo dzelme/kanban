@@ -72,7 +72,7 @@ namespace ESL.CO.Tests
         public void BoardList_Should_Retrieve_Values_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", credentialsString, 0)).Returns(Task.FromResult<BoardList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString, 0)).Returns(Task.FromResult<BoardList>(null));
 
             // Act
             var actual = controller.BoardList(credentials).Result;
@@ -94,7 +94,7 @@ namespace ESL.CO.Tests
                 }
             };
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("board/", credentialsString, 0)).Returns(Task.FromResult(boardList));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString, 0)).Returns(Task.FromResult(boardList));
 
             // Act
             var actual = controller.BoardList(credentials).Result;
@@ -134,8 +134,8 @@ namespace ESL.CO.Tests
             {
                 switch (a)
                 {
-                    case "board/": return Task.FromResult(firstPage);
-                    case "board?startAt=2": return Task.FromResult(secondPage);
+                    case "agile/1.0/board/": return Task.FromResult(firstPage);
+                    case "agile/1.0/board?startAt=2": return Task.FromResult(secondPage);
                     default: return Task.FromResult<BoardList>(null);
                 }
             });
@@ -170,8 +170,8 @@ namespace ESL.CO.Tests
             {
                 switch (a)
                 {
-                    case "board/": return Task.FromResult(firstPage);
-                    case "board?startAt=2": return Task.FromResult<BoardList>(null);
+                    case "agile/1.0/board/": return Task.FromResult(firstPage);
+                    case "agile/1.0/board?startAt=2": return Task.FromResult<BoardList>(null);
                     default: return Task.FromResult<BoardList>(null);
                 }
             });

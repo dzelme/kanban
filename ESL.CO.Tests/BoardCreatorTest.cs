@@ -237,7 +237,7 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74 )).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74 )).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s=>s.TryGetValue(74, out board)).Returns(true);
@@ -254,7 +254,7 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Create_New_Board_Because_Jira_Not_Aviable_And_Cache_Empty()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
@@ -271,8 +271,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
@@ -289,8 +289,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
@@ -308,8 +308,8 @@ namespace ESL.CO.Tests
         {
             // Arrange
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("board/74/issue", credentials, 74)).Returns(Task.FromResult(issueOnlyPage));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult(issueOnlyPage));
 
             // Act
             var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
@@ -330,14 +330,14 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
 
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(issuePageOne);
-                    case "board/74/issue?startAt=2": return Task.FromResult(issuePageTwo);
+                    case "agile/1.0/board/74/issue": return Task.FromResult(issuePageOne);
+                    case "agile/1.0/board/74/issue?startAt=2": return Task.FromResult(issuePageTwo);
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
@@ -361,14 +361,14 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
 
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(issuePageOne);
-                    case "board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
+                    case "agile/1.0/board/74/issue": return Task.FromResult(issuePageOne);
+                    case "agile/1.0/board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
@@ -390,14 +390,14 @@ namespace ESL.CO.Tests
         {
             // Arrange
            
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
 
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
-                    case "board/74/issue": return Task.FromResult(issuePageOne);
-                    case "board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
+                    case "agile/1.0/board/74/issue": return Task.FromResult(issuePageOne);
+                    case "agile/1.0/board/74/issue?startAt=2": return Task.FromResult<IssueList>(null);
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
