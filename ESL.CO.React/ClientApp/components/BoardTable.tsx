@@ -1,12 +1,12 @@
 ﻿import * as React from 'react';
 import ColumnFill from './ColumnFill';
-import { Board } from './Interfaces';
+import { Board, CardColor } from './Interfaces';
 
 const styleColumns = {
     width: ''
 }
 
-export default class BoardTable extends React.Component<{ board: Board }> {
+export default class BoardTable extends React.Component<{ board: Board, colorList: CardColor[] }> {
 
     public render() {
 
@@ -14,7 +14,7 @@ export default class BoardTable extends React.Component<{ board: Board }> {
 
         return <div>{
             this.props.board.columns.map((column, index) =>
-                <section style={BoardTable.columnSize(this.props.board.columns.length)} key={index}><ColumnFill column={column} /></section>
+                <section style={BoardTable.columnSize(this.props.board.columns.length)} key={index}><ColumnFill column={column} colorList={this.props.colorList} /></section>
             )
 
         }</div>

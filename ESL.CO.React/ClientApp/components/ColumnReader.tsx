@@ -19,6 +19,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
+            colorList: [],
             loading: true,
         };
 
@@ -29,7 +30,12 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                          this.setState({ board: dataBoard, loading: false, boardChanged: true }, this.RefreshRate);
+
+                        ApiClient.colorList(this.state.boardId, dataPres.credentials)
+                            .then(dataColor => {
+                                this.setState({ board: dataBoard, loading: false, boardChanged: true, colorList: dataColor }, this.RefreshRate);
+                            });
+
                     });
             });     
     }
@@ -69,14 +75,18 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                        if (dataBoard.id == this.state.boardId) {
-                            if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                                this.setState({ board: dataBoard, boardChanged: false }, this.RefreshRate);
-                            }
-                            else {
-                                this.setState({ board: dataBoard, boardChanged: true }, this.RefreshRate);
-                            }
-                        }
+
+                        ApiClient.colorList(this.state.boardId, dataPres.credentials)
+                            .then(dataColor => {                         
+                                if (dataBoard.id == this.state.boardId) {
+                                    if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false && dataColor == this.state.colorList) {
+                                        this.setState({ boardChanged: false }, this.RefreshRate);
+                                    }
+                                    else {
+                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true }, this.RefreshRate);
+                                    }
+                                }
+                            });
                     });
             });      
     }
@@ -115,7 +125,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                 return <div>
 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
-                    <div id='board'><BoardTable board={this.state.board} /></div>
+                    <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
                     { (this.state.boardList.length <= 1) ? this.increment() : this.slideShow() }
 

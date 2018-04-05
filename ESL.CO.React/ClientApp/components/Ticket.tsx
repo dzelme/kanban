@@ -2,45 +2,86 @@
 import TicketSummary from './TicketSummary';
 import TicketProgress from './TicketProgress';
 import TicketInformation from './TicketInformation';
-import { Issue } from './Interfaces';
+import { Issue, CardColor } from './Interfaces';
 
+const styleTicket = {
+    background:''
+}
 
-export default class Ticket extends React.Component<{ issue: Issue }> {
+const styleProgress = {
+    background: ''
+}
+
+export default class Ticket extends React.Component<{ issue: Issue, colorList: CardColor[] }> {
     public render() {
         if (this.props.issue.key == '') {
             return null;
         }
         else {
-            return <article className={Ticket.PriorityCheck(this.props.issue)}>
+            return <article style={Ticket.PriorityCheck(this.props.issue, this.props.colorList)}>
                 <a href={"https://jira.returnonintelligence.com/browse/" + this.props.issue.key} target="_blank">
                     <TicketSummary summary={this.props.issue.fields.summary} />
                     <TicketInformation issue={this.props.issue} keyName={this.props.issue.key} />
-                    <TicketProgress issue={this.props.issue} />
+                    <TicketProgress issue={this.props.issue} color={styleProgress.background} />
                 </a>
             </article>
         }
     }
 
-    private static PriorityCheck(issue: Issue) {
+    private static PriorityCheck(issue: Issue, colorList: CardColor[]) {
         var Priority = issue.fields.priority.name;
-        var PriorityClassName;
 
         if (Priority == 'Blocker') {
-            PriorityClassName = 'blocker';
+            if (colorList.length > 0) {
+                styleTicket.background = colorList[0].color;
+                styleProgress.background = colorList[0].color;
+            }
+            else {
+                styleTicket.background = '#FFE4D2';
+                styleProgress.background = '#CC0000';
+            }
         }
         else if (Priority == 'Critical') {
-            PriorityClassName = 'critical';
+            if (colorList.length > 0) {
+                styleTicket.background = colorList[1].color;
+                styleProgress.background = colorList[1].color;
+            }
+            else {
+                styleTicket.background = '#FFF0D9';
+                styleProgress.background = '#FF9900';
+            }
         }
         else if (Priority == 'Major') {
-            PriorityClassName = 'major';
+            if (colorList.length > 0) {
+                styleTicket.background =  colorList[2].color;
+                styleProgress.background = colorList[2].color;
+            }
+            else {
+                styleTicket.background = '#DDF1FF';
+                styleProgress.background = '#0099FF';
+            }
         }
         else if (Priority == 'Minor') {
-            PriorityClassName = 'minor';
+            if (colorList.length > 0) {
+                styleTicket.background = colorList[3].color;
+                styleProgress.background = colorList[3].color;
+            }
+            else {
+                styleTicket.background = '#DBFFCE';
+                styleProgress.background = '#00CC00';
+            }
         }
         else if (Priority == 'Trivial') {
-            PriorityClassName = 'trivial';
+            if (colorList.length > 0) {
+                styleTicket.background = colorList[4].color;
+                styleProgress.background = colorList[4].color;
+            }
+            else {
+                styleTicket.background = '#D3D3D3';
+                styleProgress.background = '#808080';
+            }
         }
 
-        return PriorityClassName;
+        return styleTicket;
     }
 }
