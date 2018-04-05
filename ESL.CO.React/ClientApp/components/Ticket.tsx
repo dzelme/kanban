@@ -33,7 +33,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
 
         if (Priority == 'Blocker') {
             if (colorList.length > 0) {
-                styleTicket.background = colorList[0].color;
+                styleTicket.background = Ticket.ChangeColor(colorList[0].color);
                 styleProgress.background = colorList[0].color;
             }
             else {
@@ -43,7 +43,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         }
         else if (Priority == 'Critical') {
             if (colorList.length > 0) {
-                styleTicket.background = colorList[1].color;
+                styleTicket.background = Ticket.ChangeColor(colorList[1].color);
                 styleProgress.background = colorList[1].color;
             }
             else {
@@ -53,7 +53,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         }
         else if (Priority == 'Major') {
             if (colorList.length > 0) {
-                styleTicket.background =  colorList[2].color;
+                styleTicket.background = Ticket.ChangeColor(colorList[2].color);
                 styleProgress.background = colorList[2].color;
             }
             else {
@@ -63,7 +63,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         }
         else if (Priority == 'Minor') {
             if (colorList.length > 0) {
-                styleTicket.background = colorList[3].color;
+                styleTicket.background = Ticket.ChangeColor(colorList[3].color);
                 styleProgress.background = colorList[3].color;
             }
             else {
@@ -73,7 +73,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         }
         else if (Priority == 'Trivial') {
             if (colorList.length > 0) {
-                styleTicket.background = colorList[4].color;
+                styleTicket.background = Ticket.ChangeColor(colorList[4].color);
                 styleProgress.background = colorList[4].color;
             }
             else {
@@ -83,5 +83,38 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         }
 
         return styleTicket;
+    }
+
+    private static ChangeColor(color: string) {
+
+        var colorHex = color.slice(1);
+
+        var numberHex = parseInt(colorHex, 16);
+
+        var r = (numberHex >> 16) + 50;
+        if (r > 255) {
+            r = 255;
+        }
+        else if (r < 50) {
+            r = 50;
+        }
+
+        var g = (numberHex & 0x0000FF) + 50;
+        if (g > 255) {
+            g = 255;
+        }
+        else if (g < 50) {
+            g = 50;
+        }
+
+        var b = ((numberHex >> 8) & 0x00FF) + 50;
+        if (b > 255) {
+            b = 255;
+        }
+        else if (b < 50) {
+            b = 50;
+        }
+
+        return "#" + (g | (b << 8) | (r << 16)).toString(16);
     }
 }
