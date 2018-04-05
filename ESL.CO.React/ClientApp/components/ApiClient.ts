@@ -59,7 +59,8 @@ export class ApiClient {
 
     // AccountController: Checks the credentials submitted by user.
     static login(credentials: Credentials): Promise<boolean> {
-        return ApiClient.post('api/account/login', credentials)
+        return ApiClient.unhandledPost('api/account/login', credentials)
+            .then(response => response.json())
             .then(json => {
                 sessionStorage.setItem(ApiClient.tokenName, json.token);
                 return true;
