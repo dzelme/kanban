@@ -58,7 +58,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                         ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
                             .then(dataColor => {
-                                if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false && dataColor == this.state.colorList) {
+                                if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
                                     this.setState({ boardChanged: false }, this.RefreshRate);
                                 }
                                 else {
