@@ -6,7 +6,7 @@ import { StatisticsBoardState, JiraConnectionLogEntry } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 //netiek sanemti props (undefined) no routes.tsx
-export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: string }>, FetchDataExampleState> {
+export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: string }>, StatisticsBoardState> {
     constructor(props: RouteComponentProps<{ id: string }>) {
         super(props);
         this.state = { connectionLog: [], loading: true };

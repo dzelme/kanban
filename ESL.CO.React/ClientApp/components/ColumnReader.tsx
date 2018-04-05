@@ -6,15 +6,15 @@ import { ApiClient } from './ApiClient';
 
 // test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
 // error because generated file hass all boards with visibility false
-export default class ColumnReader extends React.Component<{ boardlist: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardList: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     
     constructor(props) {
         super(props);
         this.state = {
-            boardlist: this.props.boardlist,
+            boardList: this.props.boardList,
             currentIndex: 0,
-            boardId: this.props.boardlist[0].id,
+            boardId: this.props.boardList[0].id,
             board: {
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
@@ -38,7 +38,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         var index;
 
-        if (this.state.currentIndex == (this.state.boardlist.length - 1)) {
+        if (this.state.currentIndex == (this.state.boardList.length - 1)) {
             index = 0;
         }
         else {
@@ -48,7 +48,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
         const newState = {
             currentIndex: index,
-            boardId: this.state.boardlist[index].id,
+            boardId: this.state.boardList[index].id,
             boardChanged: false
         }
 
@@ -58,7 +58,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
 
     slideShow() {
         this.increment();  //AD: increments timesShown board statistic
-        setTimeout(this.nextSlide, this.state.boardlist[this.state.currentIndex].timeShown);
+        setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown);
     }
 
     boardLoad() {
@@ -84,7 +84,7 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
     RefreshRate() {
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
-            this.state.boardlist[this.state.currentIndex].refreshRate
+            this.state.boardList[this.state.currentIndex].refreshRate
         );
     }
 
@@ -114,10 +114,10 @@ export default class ColumnReader extends React.Component<{ boardlist: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
+                    <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
-                    { (this.state.boardlist.length <= 1) ? this.increment() : this.slideShow() }
+                    { (this.state.boardList.length <= 1) ? this.increment() : this.slideShow() }
 
                 </div>;
             }

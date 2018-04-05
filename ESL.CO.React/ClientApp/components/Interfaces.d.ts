@@ -112,13 +112,13 @@ interface StatisticsEntry {
 }
 
 interface BoardReaderState {
-    boardlist: Value[];
+    boardList: Value[];
     titleList: string[];
     loading: boolean;
 }
 
 interface ColumnReaderState {
-    boardlist: Value[];
+    boardList: Value[];
     currentIndex: number;
     boardId: number;
     board: Board;
@@ -127,7 +127,7 @@ interface ColumnReaderState {
 }
 
 interface ReaderFromURLState {
-    boardlist: Value[];
+    boardList: Value[];
     board: Board;
     boardChanged: boolean;
     loading: boolean;
@@ -135,7 +135,7 @@ interface ReaderFromURLState {
 
 interface EditPresentationState {
     boardPresentation: BoardPresentation;
-    boardlist: Value[];
+    boardList: Value[];
     credentials: Credentials;
     authenticated: boolean;
     loading: boolean;
@@ -143,7 +143,7 @@ interface EditPresentationState {
 
 interface CreatePresentationState {
     boardPresentation: BoardPresentation;
-    boardlist: Value[];
+    boardList: Value[];
     authenticated: boolean;
     loading: boolean;
 }
@@ -159,8 +159,7 @@ interface PresentationListState {
 }
 
 interface StatisticsListState {
-    boardlist: Value[];
-    credentials: Credentials;
+    statsList: StatisticsEntry[];
     loading: boolean;
 }
 

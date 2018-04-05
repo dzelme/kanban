@@ -11,7 +11,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     constructor(props) {
         super(props);
         this.state = {
-            boardlist:[],
+            boardList:[],
             board: {
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
@@ -24,7 +24,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                        this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
+                        this.setState({ boardList: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
                     });
             });
     }
@@ -32,13 +32,13 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     makeList() {
         let newBoardList = [];
 
-        this.state.boardlist.map(board => {
+        this.state.boardList.map(board => {
             if (board.id == this.props.match.params.boardId) {
                 newBoardList.push(board);
             }
         });
 
-        this.setState({ boardlist: newBoardList, loading: false }, this.RefreshRate);
+        this.setState({ boardList: newBoardList, loading: false }, this.RefreshRate);
     }
 
     boardLoad() {
@@ -63,7 +63,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     RefreshRate() {
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
-            this.state.boardlist[0].refreshRate
+            this.state.boardList[0].refreshRate
         );
     }
 
@@ -93,7 +93,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             else {
                 return <div>
 
-                    <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
+                    <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {this.increment()}
