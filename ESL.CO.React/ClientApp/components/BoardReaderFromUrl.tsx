@@ -72,7 +72,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     RefreshRate() {
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
-            this.state.boardList[0].refreshRate
+            this.state.boardList[0].refreshRate*1000
         );
     }
 

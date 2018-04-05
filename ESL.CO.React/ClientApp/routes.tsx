@@ -17,11 +17,11 @@ export const routes = <Layout>
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
     <Route exact path='/admin' component={PresentationList} />
-    <Route path='/admin/presentations' component={PresentationList} />
-    <Route path='/admin/createPresentation' component={CreatePresentation} />
-    <Route path='/admin/editPresentation/:id' component={EditPresentation} />
-    <Route path='/admin/statistics' component={StatisticsList} />
-    <Route path="/admin/jiraconnectionstats/:id" component={StatisticsBoard} />
+    <Route exact path='/admin/presentations' component={PresentationList} />
+    <Route path='/admin/presentations/create' component={CreatePresentation} />
+    <Route path='/admin/presentations/edit/:id' component={EditPresentation} />
+    <Route exact path='/admin/statistics' component={StatisticsList} />
+    <Route path="/admin/statistics/:id" component={StatisticsBoard} />
     <Route exact path='/' component={Login} />
     <Route path='/' component={NavMenu} />
     <Route exact path='/p/:id' component={BoardReader} />

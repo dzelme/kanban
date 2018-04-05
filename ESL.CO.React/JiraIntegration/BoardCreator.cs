@@ -18,6 +18,27 @@ namespace ESL.CO.React.JiraIntegration
         }
 
         /// <summary>
+        /// Helper function for retrieving a board from cache.
+        /// </summary>
+        /// <param name="id">Id of the board to be retrieved.</param>
+        /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
+        /// <returns>
+        /// The requested board from cache or a newly made empty board with the requested id.
+        /// </returns>
+        private Board TryGetBoardFromCache(int id, IMemoryCache cache)
+        {
+            if (!cache.TryGetValue(id, out Board cachedBoard))
+            {
+                return new Board(id);
+            }
+            else
+            {
+                cachedBoard.FromCache = true;
+                return cachedBoard;
+            }
+        }
+
+        /// <summary>
         /// Creates and fills a board object with appropriate information.
         /// </summary>
         /// <param name="id">Id of the board whose object will be made.</param>
@@ -30,15 +51,7 @@ namespace ESL.CO.React.JiraIntegration
             var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + id.ToString() + "/configuration", credentials, id);
             if (boardConfig == null)  //
             {
-                if (!cache.TryGetValue(id, out Board cachedBoard))
-                {
-                    return new Board(id);
-                }
-                else
-                {
-                    cachedBoard.FromCache = true;
-                    return cachedBoard;
-                }
+                return TryGetBoardFromCache(id, cache);
             }
 
             board.Name = boardConfig.Name;
@@ -47,15 +60,7 @@ namespace ESL.CO.React.JiraIntegration
             IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id.ToString() + "/issue", credentials, id);
             if (issueList == null)  //
             {
-                if (!cache.TryGetValue(id, out Board cachedBoard))
-                {
-                    return new Board(id);
-                }
-                else
-                {
-                    cachedBoard.FromCache = true;
-                    return cachedBoard;
-                }
+                return TryGetBoardFromCache(id, cache);
             }
 
             li.AllIssues.AddRange(issueList.Issues);
@@ -65,15 +70,7 @@ namespace ESL.CO.React.JiraIntegration
                 issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id.ToString() + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, id);
                 if (issueList == null)  //
                 {
-                    if (!cache.TryGetValue(id, out Board cachedBoard))
-                    {
-                        return new Board(id);
-                    }
-                    else
-                    {
-                        cachedBoard.FromCache = true;
-                        return cachedBoard;
-                    }
+                    return TryGetBoardFromCache(id, cache);
                 }
                 li.AllIssues.AddRange(issueList.Issues);
             }

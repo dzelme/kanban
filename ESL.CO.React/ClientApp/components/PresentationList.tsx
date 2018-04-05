@@ -22,7 +22,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
 
     handleNew()
     {
-        open('./admin/createPresentation','_self');
+        open('./admin/presentations/create','_self');
     }
 
     handleDelete(id: string) {
@@ -66,7 +66,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                                                   
                                 )}
                             </td>
-                            <td className="EditDeletePresButton"><Link to={'/admin/editPresentation/' + presentation.id}><button className="btn btn-default">Rediģēt</button></Link></td>
+                            <td className="EditDeletePresButton"><Link to={'/admin/presentations/edit/' + presentation.id}><button className="btn btn-default">Rediģēt</button></Link></td>
                             <td className="EditDeletePresButton"><button className="btn btn-default" onClick={() => handleDelete(presentation.id)}>Dzēst</button></td>
                         </tr>
                     )}
