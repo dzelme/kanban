@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import 'isomorphic-fetch';
-import { Credentials, Board, Value, JiraConnectionLogEntry, BoardPresentation } from './Interfaces';
+import { Credentials, Board, Value, StatisticsEntry, JiraConnectionLogEntry, BoardPresentation } from './Interfaces';
 
 function handleResponse(response: Response): Promise<any> {
     if (response.ok) return response.json();
@@ -19,6 +19,12 @@ export class ApiClient {
 
     // helper post method
     static post(link, data): Promise<any> {
+        return ApiClient.unhandledPost(link, data)
+            .then(handleResponse);
+    }
+
+    // helper post method
+    static unhandledPost(link, data): Promise<any> {
         return fetch(link, {
             method: 'POST',
             headers: {
@@ -27,7 +33,7 @@ export class ApiClient {
                 'authorization': 'Bearer ' + sessionStorage.getItem(ApiClient.tokenName),
             },
             body: JSON.stringify(data)
-        }).then(handleResponse);
+        })
     }
 
     // helper get method
@@ -53,7 +59,8 @@ export class ApiClient {
 
     // AccountController: Checks the credentials submitted by user.
     static login(credentials: Credentials): Promise<boolean> {
-        return ApiClient.post('api/account/login', credentials)
+        return ApiClient.unhandledPost('api/account/login', credentials)
+            .then(response => response.json())
             .then(json => {
                 sessionStorage.setItem(ApiClient.tokenName, json.token);
                 return true;
@@ -61,6 +68,11 @@ export class ApiClient {
             .catch(err => {
                 return false;
             });
+    }
+
+    // AccountController
+    static checkCredentials(credentials: Credentials): Promise<Response> {
+        return ApiClient.unhandledPost('api/account/CheckCredentials', credentials)
     }
 
     // AccountController: Checks if the current user has a valid JWT token
@@ -88,16 +100,6 @@ export class ApiClient {
         return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials) as Promise<Board>;
     }
 
-    // SampleDataController: Increases the statistics counter each time the board is shown.
-    static incrementTimesShown(id: number) {
-        return ApiClient.post('api/SampleData/IncrementTimesShown', id)
-    }
-
-    // SampleDataController: Reads connection log from the appropriate file into an object.
-    static networkStatistics(id: number): Promise<JiraConnectionLogEntry[]> {
-        return ApiClient.get('api/SampleData/NetworkStatistics?id=' + id.toString()) as Promise<JiraConnectionLogEntry[]>;
-    }
-
     // PresentationsController
     static getPresentations(): Promise<BoardPresentation[]> {
         return ApiClient.get('api/admin/presentations') as Promise<BoardPresentation[]>;
@@ -121,5 +123,25 @@ export class ApiClient {
     // VersionController
     static getVersion(): Promise<string> {
         return ApiClient.get('api/version') as Promise<string>;
+    }
+
+    // StatisticsController
+    static statisticsList(): Promise<StatisticsEntry[]> {
+        return ApiClient.get('api/Statistics/GetStatisticsList')
+    }
+
+    // StatisticsController
+    static networkStatistics(id: string): Promise<JiraConnectionLogEntry[]> {
+        return ApiClient.post('api/Statistics/GetNetworkStatisticsList', id)
+    }
+
+    // StatisticsController
+    static saveToStatistics(id: string, name: string) {
+        return ApiClient.post('api/Statistics/SaveToStatistics?id=' + id, name)
+    }
+
+    // SettingsController
+    static saveUserSettings(boardList: Value[], id: string) {
+        return ApiClient.post('api/Settings/SaveUserSettings?id=' + id, boardList)
     }
 }

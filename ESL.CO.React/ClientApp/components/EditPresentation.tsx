@@ -22,7 +22,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                     values: []
                 }
             },
-            boardlist: [],
+            boardList: [],
             credentials: { username: "", password: "" },
             loading: true,
             authenticated: true
@@ -44,39 +44,34 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             });
     }
 
+    handleForm(event) {
+        event.preventDefault();
+
+        this.handleAuth();
+    }
+
+    handleAuth() {
+        ApiClient.checkCredentials(this.state.credentials)
+            .then(response => {
+                if (response.status == 200) {
+                    this.setState({ authenticated: true }, this.handleFetch);
+                }
+                else {
+                    this.setState({ authenticated: false, loading: true });
+                }
+            });
+    }
+
     handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
+        ApiClient.boardList(this.state.credentials)
             .then(data => {
-                this.setState({ boardPresentation: this.state.boardPresentation, boardlist: data }, this.handleVisibility);
+                this.setState({ boardPresentation: this.state.boardPresentation, boardList: data }, this.handleVisibility);
             });
     }
 
     handleVisibility() {
-        var newList = EditPresentation.checkVisibility(this.state.boardlist, this.state.boardPresentation.boards.values);
-        this.setState({ boardlist: newList, loading: false });
-    }
-
-    handleForm(event) {
-        event.preventDefault();
-
-        if (this.state.boardPresentation.credentials.username == this.state.credentials.username && this.state.boardPresentation.credentials.password == this.state.credentials.password) {
-            this.setState({ loading: false });
-        }
-        else {
-            this.setState({ boardlist: null, loading: true }, this.handleAuth)
-        }
-    }
-
-    handleAuth() {
-        ApiClient.login(this.state.credentials)
-            .then(response => {
-                if (response) {
-                    this.setState({ authenticated: true }, this.handleFetch);
-                }
-                else {
-                    this.setState({ authenticated: false });
-                }
-            });
+        var newList = EditPresentation.checkVisibility(this.state.boardList, this.state.boardPresentation.boards.values);
+        this.setState({ boardList: newList, loading: false });
     }
 
     handleSubmit(event) {
@@ -84,7 +79,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
         var val = new Array();
 
-        this.state.boardlist.map(board => {
+        this.state.boardList.map(board => {
             if (board.visibility == true) { val.push(board); }
         })
 
@@ -103,6 +98,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     postPresentation() {
+        ApiClient.saveUserSettings(this.state.boardList, this.state.boardPresentation.credentials.username);
         ApiClient.savePresentation(this.state.boardPresentation)
             .then(() => open('./admin/presentations', '_self'));
     }
@@ -123,44 +119,44 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardlist;
+        var newBoardlist = this.state.boardList;
 
-        this.state.boardlist.map((board, index) => {
+        this.state.boardList.map((board, index) => {
             if (board.id.toString() == id) {
                 newBoardlist[index].visibility = !newBoardlist[index].visibility
 
                 this.setState({
-                    boardlist: newBoardlist
+                    boardList: newBoardlist
                 });
             }
         })
     }
 
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardlist = this.state.boardlist;
+        var newBoardList = this.state.boardList;
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
 
-            this.state.boardlist.map((board, index) => {
+            this.state.boardList.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].timeShown = value*1000
+                    newBoardList[index].timeShown = value
 
                     this.setState({
-                        boardlist: newBoardlist
+                        boardList: newBoardList
                     });
                 }
             })
         }
         else {
-            this.state.boardlist.map((board, index) => {
+            this.state.boardList.map((board, index) => {
 
                 if (board.id.toString() == id) {
-                    newBoardlist[index].refreshRate = value*1000
+                    newBoardList[index].refreshRate = value
 
                     this.setState({
-                        boardlist: newBoardlist
+                        boardList: newBoardList
                     });
                 }
             })
@@ -174,7 +170,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
         let contents = this.state.loading
             ? null
-            : EditPresentation.renderBoardList(this.state.boardlist, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
+            : EditPresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
         let error = this.state.authenticated
             ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
@@ -242,8 +238,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "type"}>{board.type}</td>
                                 <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={(board.timeShown / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={(board.refreshRate / 1000).toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>

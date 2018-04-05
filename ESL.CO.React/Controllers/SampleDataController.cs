@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
-using System.IO;
+using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-
 
 namespace ESL.CO.React.Controllers
 {
@@ -20,24 +19,24 @@ namespace ESL.CO.React.Controllers
     public class SampleDataController : Controller
     {
         private readonly IJiraClient jiraClient;
-        private readonly IAppSettings appSettings;
         private readonly IMemoryCache cache;
         private readonly IBoardCreator boardCreator;
-        private readonly IOptions<Paths> paths;
+        private readonly IDbClient dbClient;
+        private readonly IOptions<UserSettings> userSettings;
 
         public SampleDataController(
             IMemoryCache cache, 
             IJiraClient jiraClient, 
-            IAppSettings appSettings, 
-            IBoardCreator boardCreator, 
-            IOptions<Paths> paths
+            IBoardCreator boardCreator,
+            IDbClient dbClient,
+            IOptions<UserSettings> userSettings
             )
         {
             this.jiraClient = jiraClient;
-            this.appSettings = appSettings;
             this.cache = cache;
             this.boardCreator = boardCreator;
-            this.paths = paths;
+            this.dbClient = dbClient;
+            this.userSettings = userSettings;
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace ESL.CO.React.Controllers
             var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
             if (boardList == null)
             {
-                return appSettings.GetSavedAppSettings()?.Values;
+                return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
             }  //
 
             FullBoardList fullBoardList = new FullBoardList();
@@ -65,15 +64,23 @@ namespace ESL.CO.React.Controllers
                 boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
                 if (boardList == null)
                 {
-                    fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
-                    appSettings.SaveAppSettings(fullBoardList);
+                    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+                    dbClient.Update(credentials.Username, new UserSettingsDbEntry
+                    {
+                        Id = credentials.Username,
+                        BoardSettingsList = fullBoardList
+                    });
                     return fullBoardList.Values;
                 }
                 fullBoardList.Values.AddRange(boardList.Values);
             }
 
-            fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
-            appSettings.SaveAppSettings(fullBoardList);
+            fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+            dbClient.Update(credentials.Username, new UserSettingsDbEntry
+            {
+                Id = credentials.Username,
+                BoardSettingsList = fullBoardList
+            });
             return fullBoardList.Values;
         }
 
@@ -118,62 +125,6 @@ namespace ESL.CO.React.Controllers
             if (!cache.TryGetValue(board.Id, out Board cachedBoard)) { return true; }
             if (board.Equals(cachedBoard)) { return false; }
             else return true;
-        }
-
-        /// <summary>
-        /// Increases the statistics counter each time the board is shown.
-        /// </summary>
-        /// <param name="id">Id of the board whose counter will be increased.</param>
-        [HttpPost("[action]")]
-        public void IncrementTimesShown([FromBody]int id)
-        {
-            var boardList = new FullBoardList();
-            boardList = appSettings.GetSavedAppSettings();
-
-            //updates the board's statistics
-            foreach (var value in boardList.Values)
-            {
-                if (value.Id == id)
-                {
-                    checked { value.TimesShown++; } //checked...
-                    value.LastShown = DateTime.Now;
-                    appSettings.SaveAppSettings(boardList);
-                    return;
-                }
-            }
-            return;
-        }
-
-        /// <summary>
-        /// Reads connection log from the appropriate file into an object.
-        /// </summary>
-        /// <param name="id">Id of the board whose log entries will be retrieved.</param>
-        /// <returns>A list of connection log entries.</returns>
-        [Authorize]
-        [HttpGet("[action]")]
-        public List<JiraConnectionLogEntry> NetworkStatistics(int id)
-        {
-            var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
-            var connectionLog = new List<JiraConnectionLogEntry>();
-            if (System.IO.File.Exists(filePath))
-            {
-                using (StreamReader r = new StreamReader(filePath))
-                {
-                    var logEntry = r.ReadLine();
-                    while (logEntry != null)
-                    {
-                        string[] logEntryField = logEntry.Split('|');
-                        connectionLog.Add(new JiraConnectionLogEntry(
-                            logEntryField[1],
-                            logEntryField[2],
-                            (logEntryField.Length > 3) ? logEntryField[3] : "",
-                            logEntryField[0]
-                        ));
-                        logEntry = r.ReadLine();
-                    }
-                }
-            }
-            return connectionLog;
         }
     }
 }

@@ -29,8 +29,9 @@ namespace ESL.CO.React.LdapCredentialCheck
         /// </summary>
         /// <param name="username">Username to be checked.</param>
         /// <param name="password">Password to be checked.</param>
+        /// <param name="adminAccess">Specifies whether administrator access is required.</param>
         /// <returns>True if credentials recognized and false otherwise.</returns>
-        public bool CheckCredentials(string username, string password)
+        public bool CheckCredentials(string username, string password, bool adminAccess = true)
         {
             // Creating an LdapConnection instance 
             using (var ldapConnection = new LdapConnection() { })
@@ -53,10 +54,10 @@ namespace ESL.CO.React.LdapCredentialCheck
                     throw;
                 }
 
-                // Returns true only if the user belongs to the group specified in appsettings.json as AdminCn in LdapSettings section
-
                 var ldapUser = GetUserData(username, password, ldapConnection);
-                return ldapUser.IsAdmin;
+
+                if (adminAccess) { return ldapUser.IsAdmin; }  // Returns true only if the user belongs to the group specified in appsettings.json as AdminCn in LdapSettings section
+                else { return true; }
             }
         }
 

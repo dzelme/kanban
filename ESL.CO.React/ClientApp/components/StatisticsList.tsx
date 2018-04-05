@@ -2,7 +2,7 @@
 import 'isomorphic-fetch';
 import { RouteComponentProps} from 'react-router';
 import { Link } from 'react-router-dom';
-import { StatisticsListState, Value } from './Interfaces';
+import { StatisticsListState, Credentials, StatisticsEntry } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 
@@ -11,25 +11,17 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
         super();
         
         this.state = {
-            boardlist: [],
+            statsList: [],
             loading: true,
-            credentials: {
-                username: "",
-                password: ""
-            }
         };
     }
 
     componentWillMount() {
-        ApiClient.boardList(this.state.credentials)
+        ApiClient.statisticsList()
             .then(data => {
                 this.setState({
-                    boardlist: data,
+                    statsList: data,
                     loading: false,
-                    credentials: {
-                        username: "",
-                        password: ""
-                    }
                 })
             });
     }
@@ -40,7 +32,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
         }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : StatisticsList.renderStatisticsList(this.state.boardlist);
+            : StatisticsList.renderStatisticsList(this.state.statsList);
 
         return <div className='top-padding'>
             <h1>Statistika</h1>
@@ -48,7 +40,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
         </div>;
     }
 
-    private static renderStatisticsList(boardlist: Value[]) {  //
+    private static renderStatisticsList(statsList: StatisticsEntry[]) {  //
         return <table className='table'>
             <thead>
                     <tr>
@@ -60,21 +52,21 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                     </tr>
             </thead>
             <tbody>
-                    {boardlist.map(board =>
-                        <tr key={board.id + "row"}>
-                            <td key={board.id + ""}>{board.id}</td>
-                            <td key={board.id + "name"}>{board.name}</td>
-                            <td key={board.id + "timesShown"}>{board.timesShown.toString()}</td>
-                            <td key={board.id + "lastShown"}>
-                            {board.lastShown ?
+                    {statsList.map(entry =>
+                        <tr key={entry.id + "row"}>
+                            <td key={entry.id + ""}>{entry.id}</td>
+                            <td key={entry.id + "name"}>{entry.name}</td>
+                            <td key={entry.id + "timesShown"}>{entry.timesShown.toString()}</td>
+                            <td key={entry.id + "lastShown"}>
+                            {entry.lastShown ?
                                 new Intl.DateTimeFormat('lv-LV', {
                                     day: '2-digit', month: '2-digit', year: 'numeric',
                                     hour: 'numeric', minute: 'numeric', second: 'numeric'
-                                }).format(new Date(Date.parse(board.lastShown)))
+                                }).format(new Date(Date.parse(entry.lastShown)))
                                 : ""
                             }
                             </td>
-                            <td><Link to={'/admin/jiraconnectionstats/' + board.id}><button className="btn btn-default">Savienojums</button></Link></td>
+                            <td><Link to={'/admin/jiraconnectionstats/' + entry.id} className="btn btn-default">Savienojums</Link></td>
                         </tr>
                     )}
                 </tbody>

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.LdapCredentialCheck;
+using ESL.CO.React.DbConnection;
 using ESL.CO.React.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +31,9 @@ namespace ESL.CO.React
         {
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
-            services.Configure<Paths>(Configuration.GetSection("Paths"));
+            services.Configure<Paths>(Configuration.GetSection("Paths"));  //redundant with db..
+            services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
+            services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -49,9 +52,9 @@ namespace ESL.CO.React
                 });
 
             services.AddSingleton<IJiraClient, JiraClient>();
-            services.AddSingleton<IAppSettings, AppSettings>();
             services.AddSingleton<IBoardCreator, BoardCreator>();
             services.AddSingleton<ILdapClient, LdapClient>();
+            services.AddSingleton<IDbClient, DbClient>();
             services.AddMemoryCache();
             services.AddMvc();
         }

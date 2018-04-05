@@ -6,8 +6,8 @@ import { StatisticsBoardState, JiraConnectionLogEntry } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 //netiek sanemti props (undefined) no routes.tsx
-export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: number }>, StatisticsBoardState> {
-    constructor(props: RouteComponentProps<{ id: number }>) {
+export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: string }>, StatisticsBoardState> {
+    constructor(props: RouteComponentProps<{ id: string }>) {
         super(props);
         this.state = { connectionLog: [], loading: true };
     }
@@ -34,6 +34,8 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: n
     }
 
     private static renderStatisticsBoard(connectionLog: JiraConnectionLogEntry[]) {  //
+
+
         return <table className='table'>
             <thead>
                     <tr>

@@ -2,53 +2,60 @@
 using System.Threading.Tasks;
 using ESL.CO.React.Controllers;
 using ESL.CO.React.Models;
-using Microsoft.Extensions.Caching.Memory;
-using Moq;
 using ESL.CO.React.JiraIntegration;
+using ESL.CO.React.DbConnection;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using Moq;
 
 namespace ESL.CO.Tests
 {
     public class SampleDataControllerTests
     {
         private Mock<IMemoryCache> memoryCache;
-        private Mock<IAppSettings> appSettings;
         private Mock<IJiraClient> jiraClient;
         private Mock<IBoardCreator> boardCreator;
-        private FullBoardList cachedSettings;
+        private Mock<IDbClient> dbClient;
+        private IOptions<UserSettings> userSettings;
         private Board cachedBoard;
         private Board testBoard1;
         private Board testBoard2;
         private SampleDataController controller;
-        private IOptions<Paths> paths;
         private Credentials credentials;
         private string credentialsString;
+        private UserSettingsDbEntry userSettingsDbEntry;
 
         public SampleDataControllerTests()
         {
-            memoryCache = new Mock<IMemoryCache>();
-            appSettings = new Mock<IAppSettings>();
             jiraClient = new Mock<IJiraClient>();
+            memoryCache = new Mock<IMemoryCache>();
             boardCreator = new Mock<IBoardCreator>();
+            dbClient = new Mock<IDbClient>();
             credentials = new Credentials { Username = "", Password = "" };
             credentialsString = credentials.Username + ":" + credentials.Password;
 
-            paths = Options.Create(new Paths
+            userSettings = Options.Create(new UserSettings
             {
-                LogDirectoryPath = ".\\data\\logs\\",
-                PresentationDirectoryPath = ".\\data\\presentations\\"
+                RefreshRateMax = 100,
+                RefreshRateMin = 1,
+                TimeShownMax = 100,
+                TimeShownMin = 1
             });
 
-            cachedSettings = new FullBoardList
+            userSettingsDbEntry = new UserSettingsDbEntry
             {
-                Values = new List<Value>()
+                Id = "66",
+                BoardSettingsList = new FullBoardList
                 {
-                    new Value { Id = 74 },
-                    new Value { Id = 75 },
-                    new Value { Id = 76 },
-                    new Value { Id = 77 },
+                    Values = new List<Value>()
+                    {
+                        new Value { Id = 74 },
+                        new Value { Id = 75 },
+                        new Value { Id = 76 },
+                        new Value { Id = 77 },
+                    }
                 }
             };
 
@@ -57,8 +64,8 @@ namespace ESL.CO.Tests
             testBoard1 = new Board(74);
             testBoard2 = new Board(80);
 
-            appSettings.Setup(a => a.GetSavedAppSettings()).Returns(cachedSettings);
-            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, appSettings.Object, boardCreator.Object, paths);
+            dbClient.Setup(a => a.GetOne<UserSettingsDbEntry>(credentials.Username)).Returns(userSettingsDbEntry);
+            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, boardCreator.Object, dbClient.Object, userSettings);
         }
 
         [Fact]
@@ -71,7 +78,7 @@ namespace ESL.CO.Tests
             var actual = controller.BoardList(credentials).Result;
 
             // Assert
-            Assert.Equal(cachedSettings.Values, actual);
+            Assert.Equal(userSettingsDbEntry.BoardSettingsList.Values, actual);
         }
 
         [Fact]
@@ -174,7 +181,7 @@ namespace ESL.CO.Tests
 
             // Assert
             Assert.Equal(2, actual.Count());
-            Assert.NotEqual(cachedSettings.Values.Count(), actual.Count());
+            Assert.NotEqual(userSettingsDbEntry.BoardSettingsList.Values.Count(), actual.Count());
             Assert.Contains(actual, x => x.Id == 74);
             Assert.Contains(actual, x => x.Id == 75);
             Assert.DoesNotContain(actual, x => x.Id == 76);
