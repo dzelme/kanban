@@ -51,7 +51,7 @@ namespace ESL.CO.React.Controllers
         {
             var credentialsString = credentials.Username + ":" + credentials.Password;
 
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
+            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString);
             if (boardList == null)
             {
                 return appSettings.GetSavedAppSettings()?.Values;
@@ -62,7 +62,7 @@ namespace ESL.CO.React.Controllers
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
-                boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
+                boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board?startAt=" + boardList.StartAt.ToString(), credentialsString);
                 if (boardList == null)
                 {
                     fullBoardList = AppSettings.MergeSettings(appSettings.GetSavedAppSettings(), fullBoardList);
@@ -83,7 +83,7 @@ namespace ESL.CO.React.Controllers
             var credentialsString = credentials.Username + ":" + credentials.Password;
 
             var colorList = new ColorList();
-            colorList = await jiraClient.GetColorDataAsync<ColorList>(id + "/strategy/priority", credentialsString, id);
+            colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/"  +id + "/strategy/priority", credentialsString, id);
 
             if (colorList == null)
             {
