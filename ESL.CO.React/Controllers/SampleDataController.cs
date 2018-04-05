@@ -90,7 +90,7 @@ namespace ESL.CO.React.Controllers
             var credentialsString = credentials.Username + ":" + credentials.Password;
 
             var colorList = new ColorList();
-            colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/"  +id + "/strategy/priority", credentialsString, id);
+            colorList = await jiraClient.GetBoardDataAsync<ColorList> ("greenhopper/1.0/cardcolors/" + id + "/strategy/priority", credentialsString, id);
 
             if (colorList == null)
             {
