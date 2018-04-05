@@ -16,6 +16,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
+            colorList:[],
             loading: true
         };
 
@@ -24,7 +25,12 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                        this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
+
+                        ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
+                            .then(dataColor => {
+                                this.setState({ boardlist: dataPres.boards.values, board: dataBoard, boardChanged: true, colorList: dataColor }, this.makeList);
+                            });
+
                     });
             });
     }
@@ -50,12 +56,15 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
 
-                        if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                            this.setState({ board: dataBoard, boardChanged: false }, this.RefreshRate);
-                        }
-                        else {
-                            this.setState({ board: dataBoard, boardChanged: true }, this.RefreshRate);
-                        }                       
+                        ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
+                            .then(dataColor => {
+                                if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false && dataColor == this.state.colorList) {
+                                    this.setState({ boardChanged: false }, this.RefreshRate);
+                                }
+                                else {
+                                    this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true }, this.RefreshRate);
+                                }                             
+                            });                                           
                     });
             });
     }
@@ -94,7 +103,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 return <div>
 
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardlist} /></div>
-                    <div id='board'><BoardTable board={this.state.board} /></div>
+                    <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
                     {this.increment()}
 

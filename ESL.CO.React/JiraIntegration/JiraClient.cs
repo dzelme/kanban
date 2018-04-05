@@ -60,6 +60,37 @@ namespace ESL.CO.React.JiraIntegration
             //throw new InvalidOperationException();
         }
 
+        public async Task<T> GetColorDataAsync<T>(string url, string credentials, int id)
+        {
+            var baseUri = new Uri("https://jira.returnonintelligence.com/rest/greenhopper/1.0/cardcolors/");
+
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
+
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var serializer = new JsonSerializer();
+                using (var stream = await response.Content.ReadAsStreamAsync())
+                using (var reader = new StreamReader(stream))
+                using (var jsonReader = new JsonTextReader(reader))
+                {
+                    SaveToConnectionLog_AsTextFile(url, response, id);
+                    return serializer.Deserialize<T>(jsonReader);
+                }
+            }
+            else
+            {
+                //HttpError error = response.Content.ReadAsStringAsync().Result;
+            }
+
+            SaveToConnectionLog_AsTextFile(url, response, id);
+            return default(T);  //null
+            //throw new InvalidOperationException();
+        }
+
+
         /// <summary>
         /// Adds an entry to the appropriate connection log file.
         /// </summary>

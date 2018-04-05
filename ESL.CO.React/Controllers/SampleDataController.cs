@@ -77,6 +77,22 @@ namespace ESL.CO.React.Controllers
             return fullBoardList.Values;
         }
 
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<CardColor>> ColorList(int id, [FromBody] Credentials credentials)
+        {
+            var credentialsString = credentials.Username + ":" + credentials.Password;
+
+            var colorList = new ColorList();
+            colorList = await jiraClient.GetColorDataAsync<ColorList>(id + "/strategy/priority", credentialsString, id);
+
+            if (colorList == null)
+            {
+                return null;
+            }
+
+            return colorList.CardColors;
+        }
+
         /// <summary>
         /// Gets board data, checks if the data has changed (compared to cached version), saves to cache if it has.
         /// </summary>
