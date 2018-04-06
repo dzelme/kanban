@@ -63,8 +63,22 @@ article > a > .information > div {
     display: inline-block;
     width:33%;
     word-wrap:break-word;
-    text-align:center;
 
+
+}
+
+.information_key {
+    text-align: left;
+    padding-left: 2px;
+}
+
+.information_status {
+    text-align: center;
+}
+
+.information_assignee {
+    text-align: right;
+    padding-right: 2px;
 }
 
 a:link {
@@ -106,6 +120,8 @@ input, select, textarea,button {
 
 .TicketText {
     color: black;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .Progress {

@@ -4,7 +4,7 @@ export default class TicketStatusName extends React.Component<{ statusName: stri
     public render() {
 
         return <div className="TicketText">
-            <h4>{this.props.statusName}</h4>
+            <h5>{this.props.statusName}</h5>
         </div>
     }
 }

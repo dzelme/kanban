@@ -4,7 +4,7 @@ export default class TicketKey extends React.Component<{ keyName: string }> {
     public render() {
 
         return <div className="TicketText">
-            <h4>{this.props.keyName}</h4>
+            <h5>{this.props.keyName}</h5>
         </div>
     }
 }

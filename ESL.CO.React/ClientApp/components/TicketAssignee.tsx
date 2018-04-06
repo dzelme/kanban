@@ -5,7 +5,7 @@ export default class TicketAssignee extends React.Component<{ assigneeName: stri
     public render() {
 
         return <div className="TicketText">
-            <h4>{this.props.assigneeName}</h4>
+            <h5>{this.props.assigneeName}</h5>
         </div>
     }
 }

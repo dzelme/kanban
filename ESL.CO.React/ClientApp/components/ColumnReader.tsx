@@ -77,20 +77,23 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
 
-                        ApiClient.colorList(this.state.boardId, dataPres.credentials)
-                            .then(dataColor => {                         
-                                if (dataBoard.id == this.state.boardId) {
-                                    if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                                        this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
+                        if (dataBoard.id == this.state.boardId) {
+                            ApiClient.colorList(this.state.boardId, dataPres.credentials)
+                                .then(dataColor => {
+
+                                    if (dataBoard.id == this.state.boardId) {
+                                        if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
+                                            this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
+                                        }
+                                        else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
+                                            this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: true }, this.RefreshRate);
+                                        }
+                                        else {
+                                            this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: false }, this.RefreshRate);
+                                        }
                                     }
-                                    else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
-                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: true }, this.RefreshRate);
-                                    }
-                                    else {
-                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: false }, this.RefreshRate);
-                                    }
-                                }
-                            });
+                                });
+                        }
                     });
             });      
     }

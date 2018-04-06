@@ -10,9 +10,9 @@ export default class TicketInformation extends React.Component<{ issue: Issue, k
         let currentIssue = this.props.issue;
 
         return <div className='information'>
-            <div><TicketKey keyName={this.props.issue.key} /></div>
-            <div><TicketStatusName statusName={currentIssue.fields.status.name} /></div>
-            <div><TicketAssignee assigneeName={TicketInformation.AssigneeCheck(currentIssue.fields.assignee)} /></div>
+            <div className='information_key'><TicketKey keyName={this.props.issue.key} /></div>
+            <div className='information_status'><TicketStatusName statusName={currentIssue.fields.status.name} /></div>
+            <div className='information_assignee'><TicketAssignee assigneeName={TicketInformation.AssigneeCheck(currentIssue.fields.assignee)} /></div>
         </div>
 
     }
