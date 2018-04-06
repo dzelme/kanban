@@ -66,20 +66,10 @@ namespace ESL.CO.React.DbConnection
                 });
             }
 
-
             if (entryDbModel.Id == null)
                 return presCollection.InsertOneAsync(entryDbModel);
             return presCollection.ReplaceOneAsync(i => i.Id == entryDbModel.Id, entryDbModel, new UpdateOptions { IsUpsert = true });
         }
-
-        //public async Task<IEnumerable<T>> GetListAsync<T>()
-        //{
-        //    var collection = ResolveCollection<T>();
-        //    return await collection.Find(new BsonDocument()).ToListAsync();
-        //}
-
-        //public async Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync()
-        //{
 
         public async Task<List<BoardPresentationDbModel>> GetPresentationsListAsync()
         {
@@ -121,27 +111,6 @@ namespace ESL.CO.React.DbConnection
             }
 
             return statisticsList;
-
-            //var ass = BsonSerializer.Deserialize<Statistics>(results[0]);
-
-            //foreach (var obj in results)
-            //{
-            //    //Console.WriteLine(obj.ToString());
-            //    var r = BsonSerializer.Deserialize<Statistics>(obj);
-            //    li.Add(r);
-            //}
-
-            //var agg = statsCollection
-            //    .Aggregate()
-            //    .Group(
-            //        a => a.BoardId,
-            //        b => new
-            //        {
-            //            Result = b.Select(
-            //                a => a.Time
-            //                ).Last()
-            //        }
-            //    ).ToList();
         }
 
         public async Task<List<JiraConnectionLogEntry>> GetStatisticsConnectionsListAsync(string id)
@@ -152,11 +121,6 @@ namespace ESL.CO.React.DbConnection
                     { "Type", "p" },
                     { "BoardId", id }
                 })
-                //.Group(new BsonDocument {
-                //    { "_id", "$BoardId" },
-                //    { "TimesShown", new BsonDocument("$sum", 1)},
-                //    { "LastShown", new BsonDocument("$last", "$Time")}
-                //})
                 .Sort(new BsonDocument { { "Time", -1 } })
                 .Limit(100);
             var results = await aggregate.ToListAsync();
@@ -196,48 +160,10 @@ namespace ESL.CO.React.DbConnection
             collection.DeleteOne(filter);
         }
 
-        public void UpdateNetworkStats(string id, string url, HttpResponseMessage response)
-        {
-            var entry = GetOne<StatisticsEntry>(id);
-            if (entry == null) { return; }  // starts to save network stats only after the board has been shown once
-
-            var networkStats = entry.NetworkStats;
-            var networkStatsEntry = new JiraConnectionLogEntry(url, response.StatusCode.ToString());
-
-            while (networkStats.Count() >= dbSettings.Value.NetworkStatisticsEntryCapacity)
-            {
-                networkStats.Dequeue();
-            }
-            networkStats.Enqueue(networkStatsEntry);
-
-            //SaveAsync(entry);
-        }
-
-
-
         public int GeneratePresentationId()
         {
             var id = (int)presCollection.Count(new BsonDocument());
             return ++id;
-            
-            
-            //var filter = Builders<Identity>.Filter.Eq("Id", "IncrementId");
-            //var identity = idCollection.Find(filter).FirstOrDefault();
-            //if (identity == null)
-            //{
-            //    identity = new Identity
-            //    {
-            //        Id = "IncrementId",
-            //        SequenceValue = 0
-            //    };
-            //    idCollection.InsertOne(identity);
-            //}
-
-            //var update = Builders<Identity>.Update
-            //    .Set("SequenceValue", ++identity.SequenceValue);  //
-            //idCollection.UpdateOne(filter, update);
-
-            //return identity.SequenceValue;
         }
     }
 }

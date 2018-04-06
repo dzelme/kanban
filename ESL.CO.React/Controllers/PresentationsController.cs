@@ -31,6 +31,41 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
+        /// Helper function to get board names from Jira.
+        /// </summary>
+        /// <param name="boardPresentationDbModel">??????????????????</param>
+        /// <returns>?????????????</returns>
+        private async Task<BoardPresentation> AddNameToPresentationBoards(BoardPresentationDbModel boardPresentationDbModel)
+        {
+            var boardPresentation = new BoardPresentation
+            {
+                Id = boardPresentationDbModel.Id,
+                Title = boardPresentationDbModel.Title,
+                Owner = boardPresentationDbModel.Owner,
+                Credentials = boardPresentationDbModel.Credentials,
+                Boards = new FullBoardList
+                {
+                    Values = new List<Value>()
+                }
+            };
+
+            foreach (var boardDbModel in boardPresentationDbModel.Boards)
+            {
+                var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
+                boardPresentation.Boards.Values.Add(new Value
+                {
+                    Id = boardDbModel.Id,
+                    Name = (await jiraClient.GetBoardDataAsync<BoardName>("board/" + boardDbModel.Id, credentialsString)).Name,
+                    Visibility = boardDbModel.Visibility,
+                    TimeShown = boardDbModel.TimeShown,
+                    RefreshRate = boardDbModel.RefreshRate
+                });
+            }
+
+            return boardPresentation;
+        }
+
+        /// <summary>
         /// Gets a list of all saved presentations.
         /// </summary>
         /// <returns>
@@ -41,50 +76,15 @@ namespace ESL.CO.React.Controllers
         public async Task<IActionResult> GetPresentations()
         {
             var boardPresentationDbModelList = await dbClient.GetPresentationsListAsync();
-
             var boardPresentationList = new List<BoardPresentation>();
 
             foreach (var boardPresentationDbModel in boardPresentationDbModelList)
             {
-                var boardPresentation = new BoardPresentation
-                {
-                    Id = boardPresentationDbModel.Id,
-                    Title = boardPresentationDbModel.Title,
-                    Owner = boardPresentationDbModel.Owner,
-                    Credentials = boardPresentationDbModel.Credentials,
-                    Boards = new FullBoardList()
-                };
-
-                foreach (var boardDbModel in boardPresentationDbModel.Boards)
-                {
-                    var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
-                    boardPresentation.Boards.Values.Add(new Value
-                    {
-                        Id = boardDbModel.Id,
-                        Name = (await jiraClient.GetBoardDataAsync<BoardName>("board/" + boardDbModel.Id, credentialsString)).Name,
-                        Visibility = boardDbModel.Visibility,
-                        RefreshRate = boardDbModel.RefreshRate,
-                        TimeShown = boardDbModel.TimeShown
-                    });
-                }
-
+                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
                 boardPresentationList.Add(boardPresentation);
             }
 
-                    //foreach (var boardPresentationDbModel in boardPresentationDbModelList)
-                    //{
-                    //    var boardList = await jiraClient.GetFullBoardList(boardPresentationDbModel.Credentials);
-                    //    foreach (var boardDbModel in boardPresentationDbModel.Boards)
-                    //    {
-                    //        foreach (var )
-                    //    }
-                    //}
-
-
            return Ok(boardPresentationList);
-
-            //var presentationList = dbClient.GetList<BoardPresentation>();
-            //return Ok(presentationList);
         }
 
         /// <summary>
@@ -105,39 +105,7 @@ namespace ESL.CO.React.Controllers
             }
             else
             {
-                // get name from jira
-                // alternatively: GET /rest/agile/1.0/board/{boardId} 
-                var boardPresentation = new BoardPresentation
-                {
-                    Id = boardPresentationDbModel.Id,
-                    Title = boardPresentationDbModel.Title,
-                    Owner = boardPresentationDbModel.Owner,
-                    Credentials = boardPresentationDbModel.Credentials,
-                    Boards = new FullBoardList
-                    {
-                        Values = new List<Value>()
-                    }
-                };
-                var boardList = await jiraClient.GetFullBoardList(boardPresentationDbModel.Credentials);
-
-                foreach (var boardDbModel in boardPresentationDbModel.Boards)
-                {
-                    foreach (var value in boardList)
-                    {
-                        if (boardDbModel.Id == value.Id)
-                        {
-                            boardPresentation.Boards.Values.Add(new Value
-                            {
-                                Id = boardDbModel.Id,
-                                Name = value.Name,
-                                Visibility = boardDbModel.Visibility,
-                                TimeShown = boardDbModel.TimeShown,
-                                RefreshRate = boardDbModel.RefreshRate
-                            });
-                        }
-                    }
-                }
-
+                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
                 return Ok(boardPresentation);
             }
         }

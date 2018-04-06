@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
 
@@ -15,6 +14,5 @@ namespace ESL.CO.React.DbConnection
         void Remove<T>(string id);
         Task SavePresentationsAsync(BoardPresentation entry);
         Task SaveStatisticsAsync(Statistics entry);
-        void UpdateNetworkStats(string id, string url, HttpResponseMessage response);
     }
 }

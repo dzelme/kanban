@@ -102,9 +102,6 @@ namespace ESL.CO.React.Controllers
         {
             var connectionStatsList = await dbClient.GetStatisticsConnectionsListAsync(id);
             return connectionStatsList;
-
-            //var entry = dbClient.GetOne<StatisticsEntry>(id);
-            //return entry.NetworkStats;
         }
     }
 }

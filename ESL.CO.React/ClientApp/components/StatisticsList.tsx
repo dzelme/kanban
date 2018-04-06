@@ -57,10 +57,7 @@ export class StatisticsList extends React.Component<RouteComponentProps<{}>, Sta
                             <td key={entry.boardId + ""}>{entry.boardId}</td>
                             <td key={entry.boardId + "name"}>{entry.boardId}</td>
                             <td key={entry.boardId + "timesShown"}>{entry.timesShown.toString()}</td>
-                            <td key={entry.boardId + "lastShown"}>
-                            {entry.lastShown
-                            }
-                            </td>
+                            <td key={entry.boardId + "lastShown"}>{entry.lastShown}</td>
                             <td><Link to={'/admin/statistics/' + entry.boardId} className="btn btn-default">Savienojums</Link></td>
                         </tr>
                     )}
