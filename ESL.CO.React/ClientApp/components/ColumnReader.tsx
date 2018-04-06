@@ -79,7 +79,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                         ApiClient.colorList(this.state.boardId, dataPres.credentials)
                             .then(dataColor => {                         
                                 if (dataBoard.id == this.state.boardId) {
-                                    if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false && dataColor == this.state.colorList) {
+                                    if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
                                         this.setState({ boardChanged: false }, this.RefreshRate);
                                     }
                                     else {
@@ -94,7 +94,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     RefreshRate() {
         this.refreshTimer = setInterval(
             () => this.boardLoad(),
-            this.state.boardList[this.state.currentIndex].refreshRate*1000
+            this.state.boardList[this.state.currentIndex].refreshRate * 1000
         );
     }
 
