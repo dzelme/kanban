@@ -97,7 +97,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         else {
 
             if (this.state.board.columns.length == 0) {
-                return <h1>Error loading!</h1>
+                return <h1>Error loading!(Check CAPTCHA)</h1>
             }
             else {
                 return <div>
