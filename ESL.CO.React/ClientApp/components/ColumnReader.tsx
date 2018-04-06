@@ -20,7 +20,8 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             },
             boardChanged: false,
             colorList: [],
-            loading: true,
+            sameBoard: false,
+            loading: true
         };
 
         this.nextSlide = this.nextSlide.bind(this);
@@ -33,7 +34,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                         ApiClient.colorList(this.state.boardId, dataPres.credentials)
                             .then(dataColor => {
-                                this.setState({ board: dataBoard, loading: false, boardChanged: true, colorList: dataColor }, this.RefreshRate);
+                                this.setState({ board: dataBoard, loading: false, boardChanged: true, colorList: dataColor, sameBoard: false }, this.RefreshRate);
                             });
 
                     });
@@ -80,10 +81,13 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                             .then(dataColor => {                         
                                 if (dataBoard.id == this.state.boardId) {
                                     if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                                        this.setState({ boardChanged: false }, this.RefreshRate);
+                                        this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
+                                    }
+                                    else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
+                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: true }, this.RefreshRate);
                                     }
                                     else {
-                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true }, this.RefreshRate);
+                                        this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: false }, this.RefreshRate);
                                     }
                                 }
                             });
@@ -119,7 +123,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         else {
 
             if (this.state.board.columns.length == 0) {
-                return <h1>Error loading!</h1>
+                return <h1>Error loading!(Check CAPTCHA)</h1>
             }
             else {
                 return <div>
@@ -127,9 +131,11 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    { (this.state.boardList.length <= 1) ? this.increment() : this.slideShow() }
+                    {(this.state.boardList.length == 1) ? this.increment() : (this.state.sameBoard == false) ? this.slideShow() : this.increment()} 
+                        
 
                 </div>;
+                
             }
         }
     }

@@ -134,6 +134,7 @@ interface ColumnReaderState {
     board: Board;
     boardChanged: boolean;
     colorList: CardColor[];
+    sameBoard: boolean;
     loading: boolean;
 }
 
