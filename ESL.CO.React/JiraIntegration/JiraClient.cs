@@ -35,7 +35,7 @@ namespace ESL.CO.React.JiraIntegration
             /// <param name="url">Part of URL required to make different Jira REST API requests.</param>
             /// <param name="id">Board id required for creating board specific connection logs.</param>
             /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, int id)
+        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, string id = "")
         {
             var baseUri = new Uri("https://jira.returnonintelligence.com/rest/");
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
@@ -49,8 +49,12 @@ namespace ESL.CO.React.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    dbClient.UpdateNetworkStats(id.ToString(), url, response);
-
+                    if (id != "")
+                    {
+                        dbClient.SaveStatisticsAsync(
+                            new Statistics(id, url, response.StatusCode.ToString(), response.ReasonPhrase));
+                    }
+                    //dbClient.UpdateNetworkStats(id.ToString(), url, response);
                     //SaveToConnectionLog_AsTextFile(url, response, id);
                     return serializer.Deserialize<T>(jsonReader);
                 }
@@ -60,60 +64,55 @@ namespace ESL.CO.React.JiraIntegration
                 //HttpError error = response.Content.ReadAsStringAsync().Result;
             }
 
-            dbClient.UpdateNetworkStats(id.ToString(), url, response);
+            if (id != "")
+            {
+                dbClient.SaveStatisticsAsync(
+                    new Statistics(id, url, response.StatusCode.ToString(), response.ReasonPhrase));
+            }
+            //dbClient.UpdateNetworkStats(id.ToString(), url, response);
             //SaveToConnectionLog_AsTextFile(url, response, id);
             return default(T);  //null
             //throw new InvalidOperationException();
         }
 
-        /// <summary>
-        /// Adds an entry to the appropriate connection log file.
-        /// </summary>
-        /// <param name="url">Jira REST API request URL to be logged.</param>
-        /// <param name="response">Request's HTTP response message.</param>
-        /// <param name="id">Board id used for saving to the appropriate log file.</param>
-        public void SaveToConnectionLog_AsTextFile(string url, HttpResponseMessage response, int id)
+        public async Task<IEnumerable<Value>> GetFullBoardList(Credentials credentials)
         {
-            Directory.CreateDirectory(paths.Value.LogDirectoryPath);
-            var filePath = Path.Combine(paths.Value.LogDirectoryPath, id.ToString() + "_jiraConnectionLog.txt");
-            using (StreamWriter file = File.AppendText(filePath))
-            {
-                file.WriteLine(DateTime.Now + "|" + url + "|" + response.StatusCode.ToString());
-            }
-            TruncateLogFile(filePath);
-        }
+            var credentialsString = credentials.Username + ":" + credentials.Password;
 
-        /// <summary>
-        /// Truncates the appropriate connection log file.
-        /// </summary>
-        /// <param name="filePath">Path on the the server to the appropriate log file to be truncated.</param>
-        public void TruncateLogFile(string filePath)
-        {
-            int maxLogLines = 100;  // should be outside...
-            var queue = new Queue<string>(maxLogLines);
-            
-            using (StreamReader r = new StreamReader(filePath))
-            {
-                while(!r.EndOfStream)
-                {
-                    string line = r.ReadLine();
-                    if (queue.Count() >= maxLogLines) queue.Dequeue();
-                    queue.Enqueue(line);
-                } 
-            }
+            var boardList = await GetBoardDataAsync<BoardList>("board/", credentialsString);
+            //if (boardList == null)
+            //{
+            //    return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
+            //}  //
 
-            if (queue.Count() >= maxLogLines)
+            FullBoardList fullBoardList = new FullBoardList();
+            fullBoardList.Values.AddRange(boardList.Values);
+            while (!boardList.IsLast)
             {
-                using (StreamWriter file = new StreamWriter(filePath, false))
-                {
-                    for (int i = 0; i < maxLogLines; i++)
-                    {
-                        file.WriteLine(queue.Dequeue().ToString());
-                    }
-                }
+                boardList.StartAt += boardList.MaxResults;
+                boardList = await GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
+                //if (boardList == null)
+                //{
+                //    // settings not stored anymore..
+                //    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+                //    return fullBoardList.Values;
+                //    //dbClient.Update(credentials.Username, new UserSettingsDbEntry
+                //    //{
+                //    //    Id = credentials.Username,
+                //    //    BoardSettingsList = fullBoardList
+                //    //});
+                //    //return fullBoardList.Values;
+                //}
+                fullBoardList.Values.AddRange(boardList.Values);
             }
 
-            return;
+            //fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+            //dbClient.Update(credentials.Username, new UserSettingsDbEntry
+            //{
+            //    Id = credentials.Username,
+            //    BoardSettingsList = fullBoardList
+            //});
+            return fullBoardList.Values;
         }
     }
 }

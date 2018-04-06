@@ -24,7 +24,7 @@ namespace ESL.CO.React.Controllers
         public PresentationsController(
             IJiraClient jiraClient,
             IDbClient dbClient
-            )
+        )
         {
             this.jiraClient = jiraClient;
             this.dbClient = dbClient;
@@ -38,10 +38,53 @@ namespace ESL.CO.React.Controllers
         /// </returns>
         [Authorize(Roles = "Admins")]
         [HttpGet]
-        public IActionResult GetPresentations()
+        public async Task<IActionResult> GetPresentations()
         {
-            var presentationList = dbClient.GetList<BoardPresentation>();
-            return Ok(presentationList);
+            var boardPresentationDbModelList = await dbClient.GetPresentationsListAsync();
+
+            var boardPresentationList = new List<BoardPresentation>();
+
+            foreach (var boardPresentationDbModel in boardPresentationDbModelList)
+            {
+                var boardPresentation = new BoardPresentation
+                {
+                    Id = boardPresentationDbModel.Id,
+                    Title = boardPresentationDbModel.Title,
+                    Owner = boardPresentationDbModel.Owner,
+                    Credentials = boardPresentationDbModel.Credentials,
+                    Boards = new FullBoardList()
+                };
+
+                foreach (var boardDbModel in boardPresentationDbModel.Boards)
+                {
+                    var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
+                    boardPresentation.Boards.Values.Add(new Value
+                    {
+                        Id = boardDbModel.Id,
+                        Name = (await jiraClient.GetBoardDataAsync<BoardName>("board/" + boardDbModel.Id, credentialsString)).Name,
+                        Visibility = boardDbModel.Visibility,
+                        RefreshRate = boardDbModel.RefreshRate,
+                        TimeShown = boardDbModel.TimeShown
+                    });
+                }
+
+                boardPresentationList.Add(boardPresentation);
+            }
+
+                    //foreach (var boardPresentationDbModel in boardPresentationDbModelList)
+                    //{
+                    //    var boardList = await jiraClient.GetFullBoardList(boardPresentationDbModel.Credentials);
+                    //    foreach (var boardDbModel in boardPresentationDbModel.Boards)
+                    //    {
+                    //        foreach (var )
+                    //    }
+                    //}
+
+
+           return Ok(boardPresentationList);
+
+            //var presentationList = dbClient.GetList<BoardPresentation>();
+            //return Ok(presentationList);
         }
 
         /// <summary>
@@ -53,15 +96,48 @@ namespace ESL.CO.React.Controllers
         /// a response with status code 200 together with an object containing all data about the presentation.
         /// </returns>
         [HttpGet("{id}")]
-        public IActionResult GetAPresentation(string id)
+        public async Task<IActionResult> GetAPresentation(string id)
         {
-            var boardPresentation = dbClient.GetOne<BoardPresentation>(id);
-            if (boardPresentation == null)
+            var boardPresentationDbModel = dbClient.GetOne<BoardPresentationDbModel>(id);
+            if (boardPresentationDbModel == null)
             {
                 return BadRequest("Presentation with the specified ID not found!");
             }
             else
             {
+                // get name from jira
+                // alternatively: GET /rest/agile/1.0/board/{boardId} 
+                var boardPresentation = new BoardPresentation
+                {
+                    Id = boardPresentationDbModel.Id,
+                    Title = boardPresentationDbModel.Title,
+                    Owner = boardPresentationDbModel.Owner,
+                    Credentials = boardPresentationDbModel.Credentials,
+                    Boards = new FullBoardList
+                    {
+                        Values = new List<Value>()
+                    }
+                };
+                var boardList = await jiraClient.GetFullBoardList(boardPresentationDbModel.Credentials);
+
+                foreach (var boardDbModel in boardPresentationDbModel.Boards)
+                {
+                    foreach (var value in boardList)
+                    {
+                        if (boardDbModel.Id == value.Id)
+                        {
+                            boardPresentation.Boards.Values.Add(new Value
+                            {
+                                Id = boardDbModel.Id,
+                                Name = value.Name,
+                                Visibility = boardDbModel.Visibility,
+                                TimeShown = boardDbModel.TimeShown,
+                                RefreshRate = boardDbModel.RefreshRate
+                            });
+                        }
+                    }
+                }
+
                 return Ok(boardPresentation);
             }
         }
@@ -82,13 +158,17 @@ namespace ESL.CO.React.Controllers
             {
                 if (string.IsNullOrEmpty(boardPresentation.Id))
                 {
-                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
-                    dbClient.Save(boardPresentation);
+                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();  //
+                    //dbClient.SavePresentationsAsync(boardPresentation); //
+                    
+                    //boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
+                    //dbClient.Save(boardPresentation);
                 }
                 else
                 {
-                    dbClient.Update(boardPresentation.Id, boardPresentation);
+                    //dbClient.Update(boardPresentation.Id, boardPresentation);
                 }
+                dbClient.SavePresentationsAsync(boardPresentation); //
             }
             else
             {
@@ -107,7 +187,7 @@ namespace ESL.CO.React.Controllers
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {
-            dbClient.Remove<BoardPresentation>(id);
+            dbClient.Remove<BoardPresentationDbModel>(id);
         }
     }
 }

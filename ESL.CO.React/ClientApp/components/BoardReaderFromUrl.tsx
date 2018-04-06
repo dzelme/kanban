@@ -5,7 +5,7 @@ import BoardTable from './BoardTable';
 import { ReaderFromURLState } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: number, presentationId: string }>, ReaderFromURLState> {
+export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: string, presentationId: string }>, ReaderFromURLState> {
     refreshTimer: number;
 
     constructor(props) {
@@ -13,7 +13,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         this.state = {
             boardList:[],
             board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
             colorList:[],

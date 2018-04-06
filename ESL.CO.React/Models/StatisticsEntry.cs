@@ -10,25 +10,19 @@ namespace ESL.CO.React.Models
 {
     public class StatisticsEntry
     {
-        [BsonId]
+        [BsonId, BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
-        [BsonElement("Name")]
         public string Name { get; set; }
-        [BsonElement("TimesShown")]
         public int TimesShown { get; set; }
-        [BsonElement("LastShown")]
         public DateTime? LastShown { get; set; }
-        [BsonElement("NetworkStats")]
-        public Queue<JiraConnectionLogEntry> NetworkStats { get; set; }
+        public Queue<JiraConnectionLogEntry> NetworkStats { get; set; } = new Queue<JiraConnectionLogEntry>();
 
-        public StatisticsEntry(string id = "0", string name = "")  //IOptions<DbSettings> dbSettings, 
+        public StatisticsEntry() { }
+
+        public StatisticsEntry(string id, string name)
         {
-            //this.dbSettings = dbSettings;
             Id = id;
             Name = name;
-            TimesShown = 0;
-            LastShown = null;
-            NetworkStats = new Queue<JiraConnectionLogEntry>();  // (dbSettings.Value.NetworkStatisticsEntryCapacity);
         }
     }
 }

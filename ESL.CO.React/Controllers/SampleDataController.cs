@@ -48,40 +48,43 @@ namespace ESL.CO.React.Controllers
         [HttpPost("[action]")]
         public async Task<IEnumerable<Value>> BoardList([FromBody] Credentials credentials)
         {
-            var credentialsString = credentials.Username + ":" + credentials.Password;
+            return await jiraClient.GetFullBoardList(credentials);
+            //var credentialsString = credentials.Username + ":" + credentials.Password;
 
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString);
-            if (boardList == null)
-            {
-                return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
-            }  //
+            //var boardList = await jiraClient.GetBoardDataAsync<BoardList>("board/", credentialsString);
+            ////if (boardList == null)
+            ////{
+            ////    return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
+            ////}  //
 
-            FullBoardList fullBoardList = new FullBoardList();
-            fullBoardList.Values.AddRange(boardList.Values);
-            while (!boardList.IsLast)
-            {
-                boardList.StartAt += boardList.MaxResults;
-                boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board?startAt=" + boardList.StartAt.ToString(), credentialsString);
-                if (boardList == null)
-                {
-                    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
-                    dbClient.Update(credentials.Username, new UserSettingsDbEntry
-                    {
-                        Id = credentials.Username,
-                        BoardSettingsList = fullBoardList
-                    });
-                    return fullBoardList.Values;
-                }
-                fullBoardList.Values.AddRange(boardList.Values);
-            }
+            //FullBoardList fullBoardList = new FullBoardList();
+            //fullBoardList.Values.AddRange(boardList.Values);
+            //while (!boardList.IsLast)
+            //{
+            //    boardList.StartAt += boardList.MaxResults;
+            //    boardList = await jiraClient.GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentialsString);
+            //    //if (boardList == null)
+            //    //{
+            //    //    // settings not stored anymore..
+            //    //    fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+            //    //    return fullBoardList.Values;
+            //    //    //dbClient.Update(credentials.Username, new UserSettingsDbEntry
+            //    //    //{
+            //    //    //    Id = credentials.Username,
+            //    //    //    BoardSettingsList = fullBoardList
+            //    //    //});
+            //    //    //return fullBoardList.Values;
+            //    //}
+            //    fullBoardList.Values.AddRange(boardList.Values);
+            //}
 
-            fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
-            dbClient.Update(credentials.Username, new UserSettingsDbEntry
-            {
-                Id = credentials.Username,
-                BoardSettingsList = fullBoardList
-            });
-            return fullBoardList.Values;
+            ////fullBoardList = AppSettings.MergeSettings(dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList, fullBoardList, userSettings);
+            ////dbClient.Update(credentials.Username, new UserSettingsDbEntry
+            ////{
+            ////    Id = credentials.Username,
+            ////    BoardSettingsList = fullBoardList
+            ////});
+            //return fullBoardList.Values;
         }
 
         [HttpPost("[action]")]
@@ -107,7 +110,7 @@ namespace ESL.CO.React.Controllers
         /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>Board information.</returns>
         [HttpPost("[action]")]
-        public async Task<Board> BoardData(int id, [FromBody] Credentials credentials)
+        public async Task<Board> BoardData(string id, [FromBody] Credentials credentials)
         {
             var credentialsString = credentials.Username + ":" + credentials.Password;
             var b = boardCreator.CreateBoardModel(id, credentialsString, cache);

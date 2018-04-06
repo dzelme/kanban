@@ -16,7 +16,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             currentIndex: 0,
             boardId: this.props.boardList[0].id,
             board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
             colorList: [],

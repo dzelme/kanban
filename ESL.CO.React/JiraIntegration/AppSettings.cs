@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using System.IO;
 using ESL.CO.React.Models;
+using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ESL.CO.React.JiraIntegration
 {
@@ -40,7 +42,7 @@ namespace ESL.CO.React.JiraIntegration
                     if (savedBoard.Id == currentBoard.Id)
                     {
                         currentBoard.Name = savedBoard.Name;
-                        currentBoard.Type = savedBoard.Type;
+                        //currentBoard.Type = savedBoard.Type;
                         currentBoard.RefreshRate = Math.Max(savedBoard.RefreshRate, userSettings.Value.RefreshRateMin);
                         currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, userSettings.Value.TimeShownMin);
                         currentBoard.Visibility = savedBoard.Visibility;

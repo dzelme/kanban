@@ -37,11 +37,11 @@ namespace ESL.CO.React.Controllers
                     value.Visibility = false;
                 }
 
-                dbClient.Update(id, new UserSettingsDbEntry
-                {
-                    Id = id,
-                    BoardSettingsList = boardList
-                });
+                //dbClient.Update(id, new UserSettingsDbEntry
+                //{
+                //    Id = id,
+                //    BoardSettingsList = boardList
+                //});
             }
             else
             {

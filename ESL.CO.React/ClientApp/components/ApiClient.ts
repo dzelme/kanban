@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import 'isomorphic-fetch';
-import { Credentials, Board, Value, StatisticsEntry, JiraConnectionLogEntry, BoardPresentation, CardColor } from './Interfaces';
+import { Credentials, Board, Value, StatisticsModel, JiraConnectionLogEntry, BoardPresentation } from './Interfaces';
 
 function handleResponse(response: Response): Promise<any> {
     if (response.ok) return response.json();
@@ -101,7 +101,7 @@ export class ApiClient {
     }
 
     // SampleDataController: Gets board data
-    static boardData(id: number, credentials: Credentials): Promise<Board> {
+    static boardData(id: string, credentials: Credentials): Promise<Board> {
         return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials) as Promise<Board>;
     }
 
@@ -131,7 +131,7 @@ export class ApiClient {
     }
 
     // StatisticsController
-    static statisticsList(): Promise<StatisticsEntry[]> {
+    static statisticsList(): Promise<StatisticsModel[]> {  //
         return ApiClient.get('api/Statistics/GetStatisticsList')
     }
 
@@ -142,7 +142,7 @@ export class ApiClient {
 
     // StatisticsController
     static saveToStatistics(id: string, name: string) {
-        return ApiClient.unhandledPost('api/Statistics/SaveToStatistics?id=' + id, name)
+        return ApiClient.unhandledPost('api/Statistics/SaveToStatistics?id=' + id, name)  //unhandled?
     }
 
     // SettingsController

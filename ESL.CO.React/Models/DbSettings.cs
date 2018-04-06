@@ -11,8 +11,6 @@ namespace ESL.CO.React.Models
         public string DatabaseName { get; set; }
         public string StatisticsCollectionName { get; set; }
         public string PresentationsCollectionName { get; set; }
-        public string IdCollectionName { get; set; }
-        public string UserSettingsCollectionName { get; set; }
         public int NetworkStatisticsEntryCapacity { get; set; }
     }
 }

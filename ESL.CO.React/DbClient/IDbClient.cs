@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
+using ESL.CO.React.Models;
 
 namespace ESL.CO.React.DbConnection
 {
     public interface IDbClient
     {
         int GeneratePresentationId();
-        IEnumerable<T> GetList<T>();
         T GetOne<T>(string id);
+        Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
+        Task<List<JiraConnectionLogEntry>> GetStatisticsConnectionsListAsync(string id);
+        Task<List<StatisticsModel>> GetStatisticsListAsync();
         void Remove<T>(string id);
-        T Save<T>(T entry);
-        void Update<T>(string id, T entry);
+        Task SavePresentationsAsync(BoardPresentation entry);
+        Task SaveStatisticsAsync(Statistics entry);
         void UpdateNetworkStats(string id, string url, HttpResponseMessage response);
     }
 }

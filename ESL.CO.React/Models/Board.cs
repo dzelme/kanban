@@ -7,7 +7,7 @@ namespace ESL.CO.React.Models
 {
     public class Board
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get;set; }
         public bool FromCache { get; set; }  //
         public string Message { get; set; }  //
@@ -15,7 +15,7 @@ namespace ESL.CO.React.Models
         public List<BoardColumn> Columns { get; set; }
         public List<BoardRow> Rows { get; set; }  //
 
-        public Board(int id = 0, bool fromCache = false, string message = "")
+        public Board(string id = "0", bool fromCache = false, string message = "")
         {
             Id = id;
             Name = string.Empty;

@@ -7,10 +7,10 @@ using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.Models
 {
-    public class Value  //extends BoardProperties.cs
+    public class BoardDbModel  //extends BoardProperties.cs
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        //public string Name { get; set; }
         //public string Type { get; set; }
 
         public bool Visibility { get; set; }  // vai attēlot attiecīgo Paneli slaidrādē;
@@ -19,10 +19,10 @@ namespace ESL.CO.React.Models
         [Range(1, 100, ErrorMessage = "Value for {0} must be between {1} and {2}.")]  // range values should equal the ones in UserSettings in appsettings.json
         public int TimeShown { get; set; }  // Paneļa attēlošanas laiks sekundēs, pēc kura beigām tiek attēlots nākošais Panelis;
 
-        public Value()
+        public BoardDbModel()
         {
             Id = "0";
-            Name = "";
+            //Name = "";
             //Type = "";
             Visibility = false;
         }
