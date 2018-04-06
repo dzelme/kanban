@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import 'isomorphic-fetch';
-import { Credentials, Board, Value, StatisticsModel, JiraConnectionLogEntry, BoardPresentation } from './Interfaces';
+import { Credentials, Board, Value, StatisticsModel, JiraConnectionLogEntry, BoardPresentation, CardColor } from './Interfaces';
 
 function handleResponse(response: Response): Promise<any> {
     if (response.ok) return response.json();
@@ -96,7 +96,7 @@ export class ApiClient {
     }
 
     // SampleDataController: Gets color list
-    static colorList(id: number, credentials: Credentials): Promise<CardColor[]> {
+    static colorList(id: string, credentials: Credentials): Promise<CardColor[]> {
         return ApiClient.post('api/SampleData/ColorList?id=' + id.toString(), credentials) as Promise<CardColor[]>;
     }
 

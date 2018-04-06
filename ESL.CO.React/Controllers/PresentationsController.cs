@@ -55,7 +55,7 @@ namespace ESL.CO.React.Controllers
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
-                    Name = (await jiraClient.GetBoardDataAsync<BoardName>("board/" + boardDbModel.Id, credentialsString)).Name,
+                    Name = (await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString)).Name,
                     Visibility = boardDbModel.Visibility,
                     TimeShown = boardDbModel.TimeShown,
                     RefreshRate = boardDbModel.RefreshRate

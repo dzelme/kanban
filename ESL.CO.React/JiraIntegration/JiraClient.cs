@@ -79,13 +79,16 @@ namespace ESL.CO.React.JiraIntegration
         {
             var credentialsString = credentials.Username + ":" + credentials.Password;
 
-            var boardList = await GetBoardDataAsync<BoardList>("board/", credentialsString);
+            var boardList = await GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString);
             //if (boardList == null)
             //{
             //    return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
             //}  //
 
-            FullBoardList fullBoardList = new FullBoardList();
+            FullBoardList fullBoardList = new FullBoardList
+            {
+                Values = new List<Value>()
+            };
             fullBoardList.Values.AddRange(boardList.Values);
             while (!boardList.IsLast)
             {

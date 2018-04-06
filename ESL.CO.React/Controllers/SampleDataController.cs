@@ -88,7 +88,7 @@ namespace ESL.CO.React.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IEnumerable<CardColor>> ColorList(int id, [FromBody] Credentials credentials)
+        public async Task<IEnumerable<CardColor>> ColorList(string id, [FromBody] Credentials credentials)
         {
             var credentialsString = credentials.Username + ":" + credentials.Password;
 
