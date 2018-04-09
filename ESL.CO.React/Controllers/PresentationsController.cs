@@ -53,7 +53,7 @@ namespace ESL.CO.React.Controllers
         /// a response with status code 200 together with an object containing all data about the presentation.
         /// </returns>
         [HttpGet("{id}")]
-        public IActionResult GetAPresentation(string id)
+        public IActionResult GetPresentation(string id)
         {
             var boardPresentation = dbClient.GetOne<BoardPresentation>(id);
             if (boardPresentation == null)
