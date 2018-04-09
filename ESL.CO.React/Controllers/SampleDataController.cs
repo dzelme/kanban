@@ -54,7 +54,7 @@ namespace ESL.CO.React.Controllers
             if (boardList == null)
             {
                 return dbClient.GetOne<UserSettingsDbEntry>(credentials.Username)?.BoardSettingsList?.Values;
-            }  //
+            }  
 
             FullBoardList fullBoardList = new FullBoardList();
             fullBoardList.Values.AddRange(boardList.Values);
@@ -82,22 +82,6 @@ namespace ESL.CO.React.Controllers
                 BoardSettingsList = fullBoardList
             });
             return fullBoardList.Values;
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IEnumerable<CardColor>> ColorList(int id, [FromBody] Credentials credentials)
-        {
-            var credentialsString = credentials.Username + ":" + credentials.Password;
-
-            var colorList = new ColorList();
-            colorList = await jiraClient.GetBoardDataAsync<ColorList> ("greenhopper/1.0/cardcolors/" + id + "/strategy/priority", credentialsString, id);
-
-            if (colorList == null)
-            {
-                return null;
-            }
-
-            return colorList.CardColors;
         }
 
         /// <summary>

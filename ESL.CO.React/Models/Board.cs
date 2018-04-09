@@ -9,11 +9,12 @@ namespace ESL.CO.React.Models
     {
         public int Id { get; set; }
         public string Name { get;set; }
-        public bool FromCache { get; set; }  //
-        public string Message { get; set; }  //
+        public bool FromCache { get; set; } 
+        public string Message { get; set; } 
         public bool HasChanged { get; set; }
         public List<BoardColumn> Columns { get; set; }
-        public List<BoardRow> Rows { get; set; }  //
+        public List<BoardRow> Rows { get; set; } 
+        public List<CardColor> CardColors { get; set; }
 
         public Board(int id = 0, bool fromCache = false, string message = "")
         {
@@ -24,6 +25,7 @@ namespace ESL.CO.React.Models
             HasChanged = false;
             Columns = new List<BoardColumn>();
             Rows = new List<BoardRow>();
+            CardColors = new List<CardColor>();
         }
 
         #region Equality

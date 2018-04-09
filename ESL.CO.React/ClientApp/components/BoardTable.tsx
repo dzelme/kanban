@@ -6,7 +6,7 @@ const styleColumns = {
     width: ''
 }
 
-export default class BoardTable extends React.Component<{ board: Board, colorList: CardColor[] }> {
+export default class BoardTable extends React.Component<{ board: Board }> {
 
     public render() {
 
@@ -14,7 +14,7 @@ export default class BoardTable extends React.Component<{ board: Board, colorLis
 
         return <div>{
             this.props.board.columns.map((column, index) =>
-                <section style={BoardTable.columnSize(this.props.board.columns.length)} key={index}><ColumnFill column={column} colorList={this.props.colorList} /></section>
+                <section style={BoardTable.columnSize(this.props.board.columns.length)} key={index}><ColumnFill column={column} colorList={this.props.board.cardColors} /></section>
             )
 
         }</div>
