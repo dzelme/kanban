@@ -142,7 +142,7 @@ export class ApiClient {
 
     // StatisticsController
     static saveToStatistics(id: string, name: string) {
-        return ApiClient.post('api/Statistics/SaveToStatistics?id=' + id, name)
+        return ApiClient.unhandledPost('api/Statistics/SaveToStatistics?id=' + id, name)
     }
 
     // SettingsController

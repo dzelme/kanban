@@ -4,7 +4,8 @@
 }
 
 body {
-    font: normal 84% "Segoe UI", Arial;
+    font-size: 1em;
+    font-family: "Segoe UI", Arial;
     background-color: #333;
     color: #fff;
 }
@@ -36,23 +37,28 @@ h2 {
 }
 
 h3 {
+    font-size:1.75em;
     font-weight: normal;
     padding-top: .45em;
     padding-bottom: .45em;
     margin: 0;
 }
 
+h4 {
+    font-size: 1.5em;
+}
+
 thead {
-    font-size: 20px;
+    font-size: 2em;
 }
 
 tbody {
-    font-size: 15px;
+    font-size: 1em;
 }
 
 
 article + article {
-    margin-top: 3em;
+    margin-top: 1.5em;
 }
 
 article > a > .information {
@@ -63,8 +69,22 @@ article > a > .information > div {
     display: inline-block;
     width:33%;
     word-wrap:break-word;
-    text-align:center;
 
+
+}
+
+.information_key {
+    text-align: left;
+    padding-left: 2px;
+}
+
+.information_status {
+    text-align: center;
+}
+
+.information_assignee {
+    text-align: right;
+    padding-right: 2px;
 }
 
 a:link {
@@ -106,6 +126,8 @@ input, select, textarea,button {
 
 .TicketText {
     color: black;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .Progress {
@@ -129,14 +151,14 @@ input, select, textarea,button {
 
 .FormElement {
     display: inline-block;
-    font-size: 20px;
+    font-size: 1.5em;
     margin: 10px;
     margin-bottom: 30px;
 }
 
 .FormButton {
     display: inline-block;
-    height: 40px;
+    height: 2em;
 }
 
 .LoginInputElement {
@@ -148,7 +170,7 @@ input, select, textarea,button {
     color: black;
     width: 150px;
     margin-top: 20px;
-    height: 30px;
+    height: 2em;
 }
 
 .LoginCenter {
@@ -160,5 +182,5 @@ input, select, textarea,button {
 }
 
 .EditDeletePresButton {
-    width: 30px;
+    width: 2em;
 }

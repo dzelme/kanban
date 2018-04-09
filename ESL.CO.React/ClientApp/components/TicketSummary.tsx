@@ -3,7 +3,7 @@
 export default class TicketSummary extends React.Component<{ summary: string }> {
     public render() {
 
-        return <div className="TicketText"><h3>{TicketSummary.maxTextSize(this.props.summary)}</h3></div>
+        return <div className="TicketText"><h4>{TicketSummary.maxTextSize(this.props.summary)}</h4></div>
     }
 
     private static maxTextSize(summary: string) {
