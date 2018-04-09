@@ -50,13 +50,13 @@ namespace ESL.CO.React.JiraIntegration
 
             var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + id.ToString() + "/configuration", credentials, id);
 
-            var colorList = new ColorList();
-            colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + id.ToString() + "/strategy/priority", credentials, id);
-
             if (boardConfig == null)  //
             {
                 return TryGetBoardFromCache(id, cache);
             }
+
+            var colorList = new ColorList();
+            colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + id.ToString() + "/strategy/priority", credentials, id);
 
             board.Name = boardConfig.Name;
             board.CardColors = colorList.CardColors;

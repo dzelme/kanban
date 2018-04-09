@@ -16,6 +16,7 @@ namespace ESL.CO.Tests
         private Mock<IJiraClient> jiraClient;
         private BoardCreator controller;
         private BoardConfig boardConfiguration;
+        private ColorList colorList;
         private Board cachedBoard;
         private Board testBoard;
         private IssueList issuePageOne;
@@ -71,6 +72,44 @@ namespace ESL.CO.Tests
                                }
                             }
                         }
+                    }
+                }
+
+               
+            };
+
+            colorList = new ColorList()
+            {
+                CardColors = new List<CardColor>{
+                    new CardColor()
+                    {
+                         Color = "#ff0000",
+                         DisplayValue = "Blocker",
+                         Value = "1"
+                    },
+                    new CardColor()
+                    {
+                         Color = "#ffc0c0",
+                         DisplayValue = "Critical",
+                         Value = "2"
+                    },
+                   new CardColor()
+                    {
+                         Color = "#c2ffc2",
+                         DisplayValue = "Major",
+                         Value = "3"
+                    },
+                    new CardColor()
+                    {
+                         Color = "#ffffc2",
+                         DisplayValue = "Minor",
+                         Value = "4"
+                    },
+                     new CardColor()
+                    {
+                          Color = "#bfbfbf",
+                         DisplayValue = "Trivial" ,
+                         Value = "5"
                     }
                 }
             };
@@ -268,10 +307,11 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
+        public void CreateBoardModel_Should_Retrive_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, 74)).Returns(Task.FromResult(colorList));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
@@ -286,10 +326,11 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
+        public void CreateBoardModel_Should_Retrive_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, 74)).Returns(Task.FromResult(colorList));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
@@ -304,11 +345,12 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_One_Page()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_One_Page()
         {
             // Arrange
 
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, 74)).Returns(Task.FromResult(colorList));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult(issueOnlyPage));
 
             // Act
@@ -326,11 +368,12 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_Multiple_Page()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_Multiple_Page()
         {
             // Arrange
          
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, 74)).Returns(Task.FromResult(colorList));
 
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
             {
@@ -357,7 +400,7 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_And_Cache_Empty_So_Create_New_Board()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_And_Cache_Empty_So_Create_New_Board()
         {
             // Arrange
          
@@ -386,11 +429,12 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrieve_Board_Config_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_So_Load_From_Cache()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_So_Load_From_Cache()
         {
             // Arrange
            
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, 74)).Returns(Task.FromResult(colorList));
 
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
             {
