@@ -24,7 +24,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
         this.nextSlide = this.nextSlide.bind(this);
 
-        ApiClient.getAPresentation(this.props.presentationID)
+        ApiClient.getSinglePresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
@@ -69,7 +69,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     boardLoad() {
         clearInterval(this.refreshTimer);
 
-        ApiClient.getAPresentation(this.props.presentationID)
+        ApiClient.getSinglePresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)

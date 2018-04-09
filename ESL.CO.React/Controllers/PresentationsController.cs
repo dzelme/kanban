@@ -96,7 +96,7 @@ namespace ESL.CO.React.Controllers
         /// a response with status code 200 together with an object containing all data about the presentation.
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAPresentation(string id)
+        public async Task<IActionResult> GetSinglePresentation(string id)
         {
             var boardPresentationDbModel = dbClient.GetAPresentation(id);
             if (boardPresentationDbModel == null)

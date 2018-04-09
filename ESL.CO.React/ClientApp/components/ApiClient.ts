@@ -111,7 +111,7 @@ export class ApiClient {
     }
 
     // PresentationsController
-    static getAPresentation(id: string): Promise<BoardPresentation> {  //400?
+    static getSinglePresentation(id: string): Promise<BoardPresentation> {  //400?
         return ApiClient.get('api/admin/presentations/' + id) as Promise<BoardPresentation>;
     }
 
