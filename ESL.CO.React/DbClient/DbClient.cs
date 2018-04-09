@@ -5,6 +5,7 @@ using ESL.CO.React.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 
 namespace ESL.CO.React.DbConnection
 {
@@ -78,10 +79,10 @@ namespace ESL.CO.React.DbConnection
         /// <returns>A list of objects containg information about all presentations saved in database.</returns>
         public async Task<List<BoardPresentationDbModel>> GetPresentationsListAsync()
         {
-            var aggregate = presentationCollection
-                .Aggregate()
-                .Sort(new BsonDocument { { "_id", 1 } });
-            var results = await aggregate.ToListAsync();
+            var results = await presentationCollection
+                .Find(FilterDefinition<BoardPresentationDbModel>.Empty)
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .ToListAsync();
 
             return results;
         }
@@ -102,19 +103,19 @@ namespace ESL.CO.React.DbConnection
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
-                .Sort(new BsonDocument { { "_id", 1 } });
+                .Project(new BsonDocument {
+                    { "_id", 0 },
+                    { "BoardId", "$_id" },
+                    { "TimesShown", "$TimesShown" },
+                    { "LastShown","$LastShown" }
+                })
+                .Sort(new BsonDocument { { "BoardId", 1 } });
             var results = await aggregate.ToListAsync();
 
             var statisticsList = new List<StatisticsModel>();
-            for (int i = 0; i < results.Count; i++)
+            foreach (var item in results)
             {
-                var statisticsModel = new StatisticsModel
-                {
-                    BoardId = results[i]["_id"].AsString,
-                    TimesShown = results[i]["TimesShown"].AsInt32,
-                    LastShown = results[i]["LastShown"].AsString
-                };
-                statisticsList.Add(statisticsModel);
+                statisticsList.Add(BsonSerializer.Deserialize<StatisticsModel>(item));
             }
 
             return statisticsList;
@@ -127,27 +128,25 @@ namespace ESL.CO.React.DbConnection
         /// <returns>A list of objects containing information about requests to Jira REST API for the specified board.</returns>
         public async Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id)
         {
-            var aggregate = statisticsCollection
-                .Aggregate()
-                .Match(new BsonDocument {
-                    { "Type", "p" },
-                    { "BoardId", id }
-                })
+            var filter = 
+                Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
+                Builders<StatisticsDbModel>.Filter.Eq("Type", "p");
+            var results = await statisticsCollection
+                .Find(filter)
+                .Project(Builders<StatisticsDbModel>.Projection
+                    .Include("Time")
+                    .Include("Link")
+                    .Include("ResponseStatus")
+                    .Include("Exception")
+                    .Exclude("_id"))
                 .Sort(new BsonDocument { { "Time", -1 } })
-                .Limit(100);
-            var results = await aggregate.ToListAsync();
+                .Limit(100)
+                .ToListAsync();
 
             var connectionStatsList = new List<StatisticsConnectionsModel>();
-            for (int i = 0; i < results.Count; i++)
+            foreach (var item in results)
             {
-                var connectionStatsEntry = new StatisticsConnectionsModel
-                {
-                    Time = results.ElementAt(i).Time.ToString(),
-                    Link = results.ElementAt(i).Link,
-                    ResponseStatus = results.ElementAt(i).ResponseStatus,
-                    Exception = results.ElementAt(i).Exception
-                };
-                connectionStatsList.Add(connectionStatsEntry);
+                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionsModel>(item));
             }
 
             return connectionStatsList;
