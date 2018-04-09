@@ -89,7 +89,7 @@ namespace ESL.CO.React.DbConnection
             }
             networkStats.Enqueue(networkStatsEntry);
 
-            Update(id, entry);
+            //Update(id, entry);
         }
 
         public int GeneratePresentationId()

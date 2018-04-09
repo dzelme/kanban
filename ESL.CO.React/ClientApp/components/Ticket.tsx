@@ -91,7 +91,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
 
         var numberHex = parseInt(colorHex, 16);
 
-        var r = (numberHex >> 16) + 50;
+        var r = (numberHex >> 16) + 125;
         if (r > 255) {
             r = 255;
         }
@@ -99,7 +99,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
             r = 50;
         }
 
-        var g = (numberHex & 0x0000FF) + 50;
+        var g = (numberHex & 0x0000FF) + 125;
         if (g > 255) {
             g = 255;
         }
@@ -107,7 +107,7 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
             g = 50;
         }
 
-        var b = ((numberHex >> 8) & 0x00FF) + 50;
+        var b = ((numberHex >> 8) & 0x00FF) + 125;
         if (b > 255) {
             b = 255;
         }

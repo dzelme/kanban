@@ -128,6 +128,7 @@ interface BoardReaderState {
 }
 
 interface ColumnReaderState {
+    presentationID: string;
     boardList: Value[];
     currentIndex: number;
     boardId: number;
