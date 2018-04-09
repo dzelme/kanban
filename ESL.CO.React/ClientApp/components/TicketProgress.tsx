@@ -22,7 +22,7 @@ export default class TicketProgress extends React.Component<{ issue: Issue, colo
         return <div className="Progress">
             <div className="ProgressBar" style={TicketProgress.Overdue(this.props.issue.fields.dueDate, this.props.issue.fields.resolutionDate, this.props.issue.fields.progress.percent)}>
                 <div style={TicketProgress.ProgressBar(this.props.issue.fields.progress.percent, this.props.color)}></div>
-                <strong><p className="ProgressTime">{TicketProgress.RemainingTimeCalculation(this.props.issue.fields.timeTracking.remainingEstimateSeconds)}</p></strong>
+                <p className="ProgressTime">{TicketProgress.RemainingTimeCalculation(this.props.issue.fields.timeTracking.remainingEstimateSeconds)}</p>
             </div>
         </div>
     }

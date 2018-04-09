@@ -20,7 +20,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             loading: true
         };
 
-        ApiClient.getAPresentation(this.props.match.params.presentationId)
+        ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
@@ -48,9 +48,8 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     boardLoad() {
-        clearInterval(this.refreshTimer);
-
-        ApiClient.getAPresentation(this.props.match.params.presentationId)
+ 
+        ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
@@ -70,14 +69,10 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     RefreshRate() {
-        this.refreshTimer = setInterval(
-            () => this.boardLoad(),
-            this.state.boardList[0].refreshRate*1000
-        );
+        this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[0].refreshRate * 1000);
     }
 
-    //AD: increments timesShown board statistic
-    increment() {
+    updateStatistics() {
         ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
     }
 
@@ -105,7 +100,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    {this.increment()}
+                    {this.updateStatistics()}
 
                 </div>;
             }

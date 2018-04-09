@@ -8,7 +8,7 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, c
     public render() {
 
         return <div className='column-wrapper'>
-            <div style={style}><ColumnTitle name={this.props.column.name} issueCount={this.props.column.issues.length} /></div>
+            <div><ColumnTitle name={this.props.column.name} issueCount={this.props.column.issues.length} /></div>
 
             {
                 this.props.column.issues.map((issue, index) =>
@@ -17,8 +17,4 @@ export default class ColumnFill extends React.Component<{ column: BoardColumn, c
             }
         </div>
     }
-}
-
-const style = {
-    background: '#555'
 }
