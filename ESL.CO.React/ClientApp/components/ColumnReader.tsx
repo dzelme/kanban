@@ -123,7 +123,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    this.slideShow()
+                    {this.slideShow()}
                         
                 </div>;              
             }
