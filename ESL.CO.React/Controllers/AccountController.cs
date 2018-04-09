@@ -80,7 +80,7 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Checks user's Jira credentials.
         /// </summary>
         /// <param name="credentials"></param>
         /// <returns></returns>

@@ -3,12 +3,9 @@
 export interface Value {
     id: string;
     name: string;
-    //type: string;
     visibility: boolean;
     timeShown: number;
     refreshRate: number;
-    //timesShown: number;
-    //lastShown: string;
 }
 
 export interface Board {
@@ -113,14 +110,6 @@ interface JiraConnectionLogEntry {
     exception: string;
 }
 
-//interface StatisticsEntry {
-//    id: string;
-//    name: string;
-//    timesShown: number;
-//    lastShown: string;
-//    networkStats: JiraConnectionLogEntry[];
-//}
-
 interface StatisticsModel {
     boardId: string;
     boardName: string;
@@ -180,7 +169,6 @@ interface PresentationListState {
 }
 
 interface StatisticsListState {
-    //statsList: StatisticsEntry[];
     statsList: StatisticsModel[];
     loading: boolean;
 }

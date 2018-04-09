@@ -91,7 +91,7 @@ namespace ESL.CO.React.DbConnection
         /// Gets board statistics for all boards that have been viewed at least once.
         /// </summary>
         /// <returns>A list of objects containing board view statistics.</returns>
-        public async Task<List<StatisticsModel>> GetStatisticsListAsync()
+        public async Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync()
         {
             var aggregate = statisticsCollection
                 .Aggregate()
@@ -103,13 +103,15 @@ namespace ESL.CO.React.DbConnection
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
-                .Project(new BsonDocument {
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .Project(new BsonDocument
+                {
                     { "_id", 0 },
                     { "BoardId", "$_id" },
                     { "TimesShown", "$TimesShown" },
                     { "LastShown","$LastShown" }
-                })
-                .Sort(new BsonDocument { { "BoardId", 1 } });
+                });
+            
             var results = await aggregate.ToListAsync();
 
             var statisticsList = new List<StatisticsModel>();
@@ -168,7 +170,7 @@ namespace ESL.CO.React.DbConnection
         /// Deletes the specified presentation.
         /// </summary>
         /// <param name="id">The id of the presentation to be deleted.</param>
-        public void DeleteAPresentation(string id)
+        public void DeletePresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
             presentationCollection.DeleteOne(filter);

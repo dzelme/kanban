@@ -147,7 +147,7 @@ namespace ESL.CO.React.Controllers
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {
-            dbClient.DeleteAPresentation(id);
+            dbClient.DeletePresentation(id);
         }
     }
 }

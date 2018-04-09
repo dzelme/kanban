@@ -98,12 +98,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     RefreshRate() {
         this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[this.state.currentIndex].refreshRate * 1000);
     }
-
-    //AD: increments timesShown board statistic
-    increment() {
-        //ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
-    }
-
+    
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.boardChanged;
     }
