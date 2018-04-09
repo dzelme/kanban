@@ -16,10 +16,9 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             currentIndex: 0,
             boardId: this.props.boardList[0].id,
             board: {
-                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], cardColors: [], hasChanged: false
             },
             boardChanged: false,
-            colorList: [],
             sameBoard: false,
             loading: true
         };
@@ -32,11 +31,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
-
-                        ApiClient.colorList(this.state.boardId, dataPres.credentials)
-                            .then(dataColor => {
-                                this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, colorList: dataColor, sameBoard: false }, this.RefreshRate);
-                            });
+                        this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, colorList: dataBoard.cardColors, sameBoard: false }, this.RefreshRate);
                     });
             });     
     }
@@ -68,28 +63,22 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
     boardLoad() {
 
-        ApiClient.getPresentation(this.props.presentationID)
+        ApiClient.getPresentation(this.state.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
 
                         if (dataBoard.id == this.state.boardId) {
-                            ApiClient.colorList(this.state.boardId, dataPres.credentials)
-                                .then(dataColor => {
-
-                                    if (dataBoard.id == this.state.boardId) {
-                                        if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                                            this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
-                                        }
-                                        else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
-                                            this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: true }, this.RefreshRate);
-                                        }
-                                        else {
-                                            this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true, sameBoard: false }, this.RefreshRate);
-                                        }
-                                    }
-                                });
+                            if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
+                                   this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
+                            }
+                            else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
+                                    this.setState({ board: dataBoard, colorList: dataBoard.cardColors, boardChanged: true, sameBoard: true }, this.RefreshRate);
+                            }
+                             else {
+                                 this.setState({ board: dataBoard, colorList: dataBoard.cardColors, boardChanged: true, sameBoard: false }, this.RefreshRate);
+                            }
                         }
                     });
             });      
@@ -121,7 +110,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                 return <div>
 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
-                    <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
+                    <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {this.slideShow()}
                         

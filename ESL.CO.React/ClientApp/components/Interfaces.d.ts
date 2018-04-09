@@ -15,6 +15,7 @@ export interface Board {
     message: string;
     columns: BoardColumn[];
     rows: BoardRow[];
+    cardColors: CardColor[];
     hasChanged: boolean;
 }
 
@@ -130,7 +131,6 @@ interface ColumnReaderState {
     boardId: string;
     board: Board;
     boardChanged: boolean;
-    colorList: CardColor[];
     sameBoard: boolean;
     loading: boolean;
 }
@@ -139,7 +139,6 @@ interface ReaderFromURLState {
     boardList: Value[];
     board: Board;
     boardChanged: boolean;
-    colorList: CardColor[];
     loading: boolean;
 }
 
