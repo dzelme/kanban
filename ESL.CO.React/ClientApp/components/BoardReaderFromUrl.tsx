@@ -20,7 +20,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             loading: true
         };
 
-        ApiClient.getAPresentation(this.props.match.params.presentationId)
+        ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
@@ -50,7 +50,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     boardLoad() {
         clearInterval(this.refreshTimer);
 
-        ApiClient.getAPresentation(this.props.match.params.presentationId)
+        ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)

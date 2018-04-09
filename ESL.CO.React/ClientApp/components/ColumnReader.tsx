@@ -29,7 +29,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         this.nextSlide = this.nextSlide.bind(this);
         this.boardLoad = this.boardLoad.bind(this);
 
-        ApiClient.getAPresentation(this.props.presentationID)
+        ApiClient.getPresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
@@ -65,13 +65,13 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     slideShow() {
-        this.increment();  //AD: increments timesShown board statistic
+        this.updateStatistics();
         this.showTimer = setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown * 1000);
     }
 
     boardLoad() {
 
-        ApiClient.getAPresentation(this.state.presentationID)
+        ApiClient.getPresentation(this.state.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
@@ -102,8 +102,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[this.state.currentIndex].refreshRate * 1000);
     }
 
-    //AD: increments timesShown board statistic
-    increment() {
+    updateStatistics() {
         ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
     }
 
@@ -131,7 +130,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    {(this.state.boardList.length == 1) ? this.increment() : (this.state.sameBoard == false) ? this.slideShow() : this.increment()} 
+                    {(this.state.boardList.length == 1) ? this.updateStatistics() : (this.state.sameBoard == false) ? this.slideShow() : this.updateStatistics()} 
                         
                 </div>;              
             }
