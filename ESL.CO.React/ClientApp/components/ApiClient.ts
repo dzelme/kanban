@@ -140,11 +140,6 @@ export class ApiClient {
         return ApiClient.post('api/Statistics/GetNetworkStatisticsList', id)
     }
 
-    // StatisticsController
-    static saveToStatistics(id: string, name: string) {
-        return ApiClient.unhandledPost('api/Statistics/SaveToStatistics?id=' + id, name)  //unhandled?
-    }
-
     // SettingsController
     static saveUserSettings(boardList: Value[], id: string) {
         return ApiClient.post('api/Settings/SaveUserSettings?id=' + id, boardList)

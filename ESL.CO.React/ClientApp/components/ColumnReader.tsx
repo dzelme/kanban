@@ -4,8 +4,6 @@ import BoardTable from './BoardTable';
 import { ColumnReaderState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-// test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
-// error because generated file hass all boards with visibility false
 export default class ColumnReader extends React.Component<{ boardList: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     
@@ -107,7 +105,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
     //AD: increments timesShown board statistic
     increment() {
-        ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
+        //ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
     }
 
     shouldComponentUpdate(nextProps, nextState) {

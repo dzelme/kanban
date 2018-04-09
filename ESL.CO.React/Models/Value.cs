@@ -11,7 +11,6 @@ namespace ESL.CO.React.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        //public string Type { get; set; }
 
         public bool Visibility { get; set; }  // vai attēlot attiecīgo Paneli slaidrādē;
         [Range(1, 100, ErrorMessage = "Value for {0} must be between {1} and {2}.")]  // range values should equal the ones in UserSettings in appsettings.json
@@ -23,7 +22,6 @@ namespace ESL.CO.React.Models
         {
             Id = "0";
             Name = "";
-            //Type = "";
             Visibility = false;
         }
     }

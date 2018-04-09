@@ -7,12 +7,12 @@ namespace ESL.CO.React.DbConnection
     public interface IDbClient
     {
         int GeneratePresentationId();
-        T GetOne<T>(string id);
+        BoardPresentationDbModel GetAPresentation(string id);
         Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
-        Task<List<JiraConnectionLogEntry>> GetStatisticsConnectionsListAsync(string id);
+        Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id);
         Task<List<StatisticsModel>> GetStatisticsListAsync();
-        void Remove<T>(string id);
+        void DeleteAPresentation(string id);
         Task SavePresentationsAsync(BoardPresentation entry);
-        Task SaveStatisticsAsync(Statistics entry);
+        Task SaveStatisticsAsync(StatisticsDbModel entry);
     }
 }

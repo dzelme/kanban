@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ESL.CO.React.DbConnection
+namespace ESL.CO.React.Models
 {
     public class StatisticsModel
     {

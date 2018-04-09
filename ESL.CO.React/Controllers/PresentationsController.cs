@@ -33,8 +33,8 @@ namespace ESL.CO.React.Controllers
         /// <summary>
         /// Helper function to get board names from Jira.
         /// </summary>
-        /// <param name="boardPresentationDbModel">??????????????????</param>
-        /// <returns>?????????????</returns>
+        /// <param name="boardPresentationDbModel">An object containing presentation data stored in db, which will be supplemented with board names from Jira.</param>
+        /// <returns>An object containing all necessary information about a presentation.</returns>
         private async Task<BoardPresentation> AddNameToPresentationBoards(BoardPresentationDbModel boardPresentationDbModel)
         {
             var boardPresentation = new BoardPresentation
@@ -98,7 +98,7 @@ namespace ESL.CO.React.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAPresentation(string id)
         {
-            var boardPresentationDbModel = dbClient.GetOne<BoardPresentationDbModel>(id);
+            var boardPresentationDbModel = dbClient.GetAPresentation(id);
             if (boardPresentationDbModel == null)
             {
                 return BadRequest("Presentation with the specified ID not found!");
@@ -127,14 +127,6 @@ namespace ESL.CO.React.Controllers
                 if (string.IsNullOrEmpty(boardPresentation.Id))
                 {
                     boardPresentation.Id = dbClient.GeneratePresentationId().ToString();  //
-                    //dbClient.SavePresentationsAsync(boardPresentation); //
-                    
-                    //boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
-                    //dbClient.Save(boardPresentation);
-                }
-                else
-                {
-                    //dbClient.Update(boardPresentation.Id, boardPresentation);
                 }
                 dbClient.SavePresentationsAsync(boardPresentation); //
             }
@@ -155,7 +147,7 @@ namespace ESL.CO.React.Controllers
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {
-            dbClient.Remove<BoardPresentationDbModel>(id);
+            dbClient.DeleteAPresentation(id);
         }
     }
 }

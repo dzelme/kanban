@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.Models
 {
-    public class Statistics
+    public class StatisticsDbModel
     {
         [BsonId, BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
@@ -19,9 +19,9 @@ namespace ESL.CO.React.Models
         public string ResponseStatus { get; set; }
         public string Exception { get; set; }
 
-        public Statistics() { }
+        public StatisticsDbModel() { }
 
-        public Statistics(string id, string link = "", string responseStatus = "", string exception = "", string time = "")
+        public StatisticsDbModel(string id, string link = "", string responseStatus = "", string exception = "", string time = "")
         {
             string pattern = "dd.MM.yyyy HH:mm:ss";
 
