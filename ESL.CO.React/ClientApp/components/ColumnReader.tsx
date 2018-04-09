@@ -6,10 +6,12 @@ import { ApiClient } from './ApiClient';
 
 export default class ColumnReader extends React.Component<{ boardList: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
+    showTimer: number;
     
     constructor(props) {
         super(props);
         this.state = {
+            presentationID: "",
             boardList: this.props.boardList,
             currentIndex: 0,
             boardId: this.props.boardList[0].id,
@@ -23,6 +25,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         };
 
         this.nextSlide = this.nextSlide.bind(this);
+        this.boardLoad = this.boardLoad.bind(this);
 
         ApiClient.getSinglePresentation(this.props.presentationID)
             .then(dataPres => {
@@ -32,14 +35,14 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                         ApiClient.colorList(this.state.boardId, dataPres.credentials)
                             .then(dataColor => {
-                                this.setState({ board: dataBoard, loading: false, boardChanged: true, colorList: dataColor, sameBoard: false }, this.RefreshRate);
+                                this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, colorList: dataColor, sameBoard: false }, this.RefreshRate);
                             });
-
                     });
             });     
     }
 
     nextSlide() {
+        clearTimeout(this.refreshTimer);
 
         var index;
 
@@ -50,7 +53,6 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             index = this.state.currentIndex + 1;
         }
 
-
         const newState = {
             currentIndex: index,
             boardId: this.state.boardList[index].id,
@@ -60,14 +62,12 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         this.setState(newState, this.boardLoad);
     }
 
-
     slideShow() {
-        this.increment();  //AD: increments timesShown board statistic
-        setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown*1000);
+        this.updateStatistics();
+        this.showTimer = setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown * 1000);
     }
 
     boardLoad() {
-        clearInterval(this.refreshTimer);
 
         ApiClient.getSinglePresentation(this.props.presentationID)
             .then(dataPres => {
@@ -97,10 +97,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     RefreshRate() {
-        this.refreshTimer = setInterval(
-            () => this.boardLoad(),
-            this.state.boardList[this.state.currentIndex].refreshRate * 1000
-        );
+        this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[this.state.currentIndex].refreshRate * 1000);
     }
 
     //AD: increments timesShown board statistic
@@ -132,11 +129,9 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    {(this.state.boardList.length == 1) ? this.increment() : (this.state.sameBoard == false) ? this.slideShow() : this.increment()} 
+                    {(this.state.boardList.length == 1) ? this.updateStatistics() : (this.state.sameBoard == false) ? this.slideShow() : this.updateStatistics()} 
                         
-
-                </div>;
-                
+                </div>;              
             }
         }
     }

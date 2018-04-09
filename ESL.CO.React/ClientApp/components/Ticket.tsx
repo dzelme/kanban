@@ -89,32 +89,33 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
 
         var colorHex = color.slice(1);
 
-        var numberHex = parseInt(colorHex, 16);
+        var r = parseInt(colorHex.substring(0, colorHex.length / 3), 16);
+        var g = parseInt(colorHex.substring(colorHex.length / 3, 2 * colorHex.length / 3), 16);
+        var b = parseInt(colorHex.substring(2 * colorHex.length / 3, 3 * colorHex.length / 3), 16);
 
-        var r = (numberHex >> 16) + 50;
-        if (r > 255) {
-            r = 255;
-        }
-        else if (r < 50) {
-            r = 50;
-        }
+        r /= 255, g /= 255, b /= 255;
 
-        var g = (numberHex & 0x0000FF) + 50;
-        if (g > 255) {
-            g = 255;
-        }
-        else if (g < 50) {
-            g = 50;
-        }
+        var max = Math.max(r, g, b);
+        var min = Math.min(r, g, b);
 
-        var b = ((numberHex >> 8) & 0x00FF) + 50;
-        if (b > 255) {
-            b = 255;
-        }
-        else if (b < 50) {
-            b = 50;
-        }
+        var h = (max + min) / 2;
+        var s = (max + min) / 2;
+        var l = (max + min) / 2;
 
-        return "#" + (g | (b << 8) | (r << 16)).toString(16);
+        if (max == min) {
+            h = s = 0;
+        }
+        else {
+            var difference = max - min;
+
+            s = l > 0.5 ? difference / (2 - max - min) : difference / (max + min);
+
+            switch (max) {
+                case r: h = 60 * ((g - b) / difference + (g < b ? 6 : 0)); break;
+                case g: h = 60 * ((b - r) / difference + 2); break;
+                case b: h = 60 * ((r - g) / difference + 4); break;
+            }
+        }
+        return "hsl("+ h + "," + s*100 + "%," + 90 + "%)";
     }
 }
