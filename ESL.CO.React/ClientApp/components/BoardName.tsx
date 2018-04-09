@@ -11,7 +11,6 @@ const styleList = {
 const styleActive = {
     width: '',
     background: '#333',
-    color: 'white',
 }
 
 export default class BoardName extends React.Component<{ presentationId: string, name: string, fromCache: boolean, message: string, boardlist: Value[] }> {
@@ -26,7 +25,7 @@ export default class BoardName extends React.Component<{ presentationId: string,
         return <div className="BoardNames">
             {
                 this.props.boardlist.map((board, index) =>
-                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index} className="NamesBar"><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3>{this.props.fromCache ? <h4>Dati no keša</h4> : ""}<h4>{this.props.message}</h4></Link></div>
+                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index} className="NamesBar"><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3>{this.props.fromCache ? <h4>Dati no keša{this.props.message}</h4> : ""}</Link></div>
                     )
             }
         </div>
