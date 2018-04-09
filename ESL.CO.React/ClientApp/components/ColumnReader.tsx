@@ -63,7 +63,6 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     slideShow() {
-        this.updateStatistics();
         this.showTimer = setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown * 1000);
     }
 
@@ -129,7 +128,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    {(this.state.boardList.length == 1) ? this.updateStatistics() : (this.state.sameBoard == false) ? this.slideShow() : this.updateStatistics()} 
+                    this.slideShow()
                         
                 </div>;              
             }

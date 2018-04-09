@@ -101,9 +101,6 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
-
-                    {this.updateStatistics()}
-
                 </div>;
             }
         }
