@@ -14,7 +14,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: strin
             titleList:[]
         };
 
-        ApiClient.getSinglePresentation(this.props.match.params.id)
+        ApiClient.getPresentation(this.props.match.params.id)
             .then(data => {
                 this.setState({ boardList: data.boards.values }, this.makeTitleList);
             });

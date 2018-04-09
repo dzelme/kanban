@@ -38,7 +38,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
         this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
 
-        ApiClient.getSinglePresentation(this.props.match.params.id)
+        ApiClient.getPresentation(this.props.match.params.id)
             .then(data => {
                 this.setState({ boardPresentation: data, credentials: data.credentials }, this.handleFetch);
             });
