@@ -57,7 +57,7 @@ export class Login extends React.Component<RouteComponentProps<{}>, Authenticati
 
                 <div className="LoginCenter">
                     <h3>Lietotājvārds</h3>
-                    <input className="LoginInputElement" name='username' type="text" required value={this.state.credentials.username} onChange={this.handleChange} />
+                    <input className="LoginInputElement" name='username' type="text" autoFocus required value={this.state.credentials.username} onChange={this.handleChange} />
                         </div>
 
                 <div className="LoginCenter">

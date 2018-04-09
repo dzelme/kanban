@@ -27,7 +27,7 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// Checks the credentials submitted by user.
+        /// Checks user credentials and the corresponding role before issuing a JWT token.
         /// </summary>
         /// <param name="credentials">User's username and password combination to be checked.</param>
         /// <returns>
@@ -79,7 +79,11 @@ namespace ESL.CO.React.Controllers
             return Ok();
         }
 
-
+        /// <summary>
+        /// Checks user's Jira credentials.
+        /// </summary>
+        /// <param name="credentials"></param>
+        /// <returns></returns>
         [HttpPost("[action]")]
         public IActionResult CheckCredentials([FromBody] Credentials credentials)
         {

@@ -6,16 +6,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ESL.CO.React.Models
 {
-    public class BoardPresentation
+    public class BoardPresentationDbModel
     {
         [BsonId]
         public string Id { get; set; }
         public string Title { get; set; }
         public string Owner { get; set; }
         public Credentials Credentials { get; set; }
-        public FullBoardList Boards { get; set; }
+        public List<BoardDbModel> Boards { get; set; }
 
-        public BoardPresentation()
+        public BoardPresentationDbModel()
         {
             Id = "";
             Title = "";

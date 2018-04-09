@@ -75,8 +75,8 @@ namespace ESL.CO.Tests
                 }
             };
 
-            cachedBoard = new Board(74);
-            testBoard = new Board(80);
+            cachedBoard = new Board("74");
+            testBoard = new Board("80");
 
             issuePageOne = new IssueList()
             {
@@ -237,30 +237,30 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74 )).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74" )).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
-            memoryCache.Setup(s=>s.TryGetValue(74, out board)).Returns(true);
+            memoryCache.Setup(s=>s.TryGetValue("74", out board)).Returns(true);
 
             // Act
-            var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("74", credentials, memoryCache.Object).Result;
 
             // Assert
             Assert.True(actual.FromCache);
-            Assert.Equal(74,actual.Id);
+            Assert.Equal("74",actual.Id);
         }
 
         [Fact]
         public void CreateBoardModel_Should_Create_New_Board_Because_Jira_Not_Aviable_And_Cache_Empty()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult<BoardConfig>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult<BoardConfig>(null));
 
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
+            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
             // Act
-            var actual = controller.CreateBoardModel(80, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("80", credentials, memoryCache.Object).Result;
 
             // Assert
             Assert.Equal(testBoard, actual);
@@ -271,32 +271,32 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74")).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
 
             // Act
-            var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("74", credentials, memoryCache.Object).Result;
 
             // Assert
             Assert.True(actual.FromCache);
-            Assert.Equal(74,actual.Id);
+            Assert.Equal("74",actual.Id);
         }
 
         [Fact]
         public void CreateBoardModel_Should_Retrive_Board_Config_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult<IssueList>(null));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74")).Returns(Task.FromResult<IssueList>(null));
 
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
+            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
             // Act
-            var actual = controller.CreateBoardModel(80, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("80", credentials, memoryCache.Object).Result;
 
             // Assert
             Assert.False(actual.FromCache);
@@ -308,16 +308,16 @@ namespace ESL.CO.Tests
         {
             // Arrange
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, 74)).Returns(Task.FromResult(issueOnlyPage));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74")).Returns(Task.FromResult(issueOnlyPage));
 
             // Act
-            var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("74", credentials, memoryCache.Object).Result;
 
             // Assert
 
             Assert.Equal("Test Board", actual.Name);
-            Assert.Equal(74, actual.Id);
+            Assert.Equal("74", actual.Id);
             Assert.Equal(3, actual.Columns.Count());
             Assert.Single(actual.Rows);
             Assert.Single(actual.Columns[0].Issues);
@@ -330,9 +330,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74")).Returns((string a, string b, string i) =>
             {
                 switch (a)
                 {
@@ -343,12 +343,12 @@ namespace ESL.CO.Tests
             });
 
             // Act
-            var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("74", credentials, memoryCache.Object).Result;
 
             // Assert
 
             Assert.Equal("Test Board", actual.Name);
-            Assert.Equal(74, actual.Id);
+            Assert.Equal("74", actual.Id);
             Assert.Equal(3, actual.Columns.Count());
             Assert.Equal(2, actual.Rows.Count());
             Assert.Equal(2, actual.Columns[0].Issues.Count());
@@ -361,9 +361,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
          
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74")).Returns((string a, string b, int i) =>
             {
                 switch (a)
                 {
@@ -374,10 +374,10 @@ namespace ESL.CO.Tests
             });
 
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(80, out board)).Returns(false);
+            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
             // Act
-            var actual = controller.CreateBoardModel(80, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("80", credentials, memoryCache.Object).Result;
 
             // Assert
 
@@ -390,9 +390,9 @@ namespace ESL.CO.Tests
         {
             // Arrange
            
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, 74)).Returns(Task.FromResult(boardConfiguration));
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74")).Returns(Task.FromResult(boardConfiguration));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, 74)).Returns((string a, string b, int i) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74")).Returns((string a, string b, string i) =>
             {
                 switch (a)
                 {
@@ -403,14 +403,14 @@ namespace ESL.CO.Tests
             });
 
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(true);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
 
             // Act
-            var actual = controller.CreateBoardModel(74, credentials, memoryCache.Object).Result;
+            var actual = controller.CreateBoardModel("74", credentials, memoryCache.Object).Result;
 
             // Assert
             Assert.True(actual.FromCache);
-            Assert.Equal(74,actual.Id);
+            Assert.Equal("74",actual.Id);
         }
     }
 }

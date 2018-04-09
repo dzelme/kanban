@@ -1,18 +1,15 @@
 ﻿import * as React from 'react';
 
 export interface Value {
-    id: number;
+    id: string;
     name: string;
-    type: string;
     visibility: boolean;
     timeShown: number;
     refreshRate: number;
-    //timesShown: number;
-    //lastShown: string;
 }
 
 export interface Board {
-    id: number;
+    id: string;
     name: string;
     fromCache: boolean;
     message: string;
@@ -113,12 +110,11 @@ interface JiraConnectionLogEntry {
     exception: string;
 }
 
-interface StatisticsEntry {
-    id: string;
-    name: string;
+interface StatisticsModel {
+    boardId: string;
+    boardName: string;
     timesShown: number;
     lastShown: string;
-    networkStats: JiraConnectionLogEntry[];
 }
 
 interface BoardReaderState {
@@ -131,7 +127,7 @@ interface ColumnReaderState {
     presentationID: string;
     boardList: Value[];
     currentIndex: number;
-    boardId: number;
+    boardId: string;
     board: Board;
     boardChanged: boolean;
     colorList: CardColor[];
@@ -173,7 +169,7 @@ interface PresentationListState {
 }
 
 interface StatisticsListState {
-    statsList: StatisticsEntry[];
+    statsList: StatisticsModel[];
     loading: boolean;
 }
 

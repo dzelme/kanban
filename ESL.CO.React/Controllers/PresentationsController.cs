@@ -24,10 +24,45 @@ namespace ESL.CO.React.Controllers
         public PresentationsController(
             IJiraClient jiraClient,
             IDbClient dbClient
-            )
+        )
         {
             this.jiraClient = jiraClient;
             this.dbClient = dbClient;
+        }
+
+        /// <summary>
+        /// Helper function to get board names from Jira.
+        /// </summary>
+        /// <param name="boardPresentationDbModel">An object containing presentation data stored in db, which will be supplemented with board names from Jira.</param>
+        /// <returns>An object containing all necessary information about a presentation.</returns>
+        private async Task<BoardPresentation> AddNameToPresentationBoards(BoardPresentationDbModel boardPresentationDbModel)
+        {
+            var boardPresentation = new BoardPresentation
+            {
+                Id = boardPresentationDbModel.Id,
+                Title = boardPresentationDbModel.Title,
+                Owner = boardPresentationDbModel.Owner,
+                Credentials = boardPresentationDbModel.Credentials,
+                Boards = new FullBoardList
+                {
+                    Values = new List<Value>()
+                }
+            };
+
+            foreach (var boardDbModel in boardPresentationDbModel.Boards)
+            {
+                var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
+                boardPresentation.Boards.Values.Add(new Value
+                {
+                    Id = boardDbModel.Id,
+                    Name = (await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString)).Name,
+                    Visibility = boardDbModel.Visibility,
+                    TimeShown = boardDbModel.TimeShown,
+                    RefreshRate = boardDbModel.RefreshRate
+                });
+            }
+
+            return boardPresentation;
         }
 
         /// <summary>
@@ -38,10 +73,18 @@ namespace ESL.CO.React.Controllers
         /// </returns>
         [Authorize(Roles = "Admins")]
         [HttpGet]
-        public IActionResult GetPresentations()
+        public async Task<IActionResult> GetPresentations()
         {
-            var presentationList = dbClient.GetList<BoardPresentation>();
-            return Ok(presentationList);
+            var boardPresentationDbModelList = await dbClient.GetPresentationsListAsync();
+            var boardPresentationList = new List<BoardPresentation>();
+
+            foreach (var boardPresentationDbModel in boardPresentationDbModelList)
+            {
+                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                boardPresentationList.Add(boardPresentation);
+            }
+
+           return Ok(boardPresentationList);
         }
 
         /// <summary>
@@ -53,15 +96,16 @@ namespace ESL.CO.React.Controllers
         /// a response with status code 200 together with an object containing all data about the presentation.
         /// </returns>
         [HttpGet("{id}")]
-        public IActionResult GetAPresentation(string id)
+        public async Task<IActionResult> GetSinglePresentation(string id)
         {
-            var boardPresentation = dbClient.GetOne<BoardPresentation>(id);
-            if (boardPresentation == null)
+            var boardPresentationDbModel = dbClient.GetAPresentation(id);
+            if (boardPresentationDbModel == null)
             {
                 return BadRequest("Presentation with the specified ID not found!");
             }
             else
             {
+                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
                 return Ok(boardPresentation);
             }
         }
@@ -82,13 +126,9 @@ namespace ESL.CO.React.Controllers
             {
                 if (string.IsNullOrEmpty(boardPresentation.Id))
                 {
-                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
-                    dbClient.Save(boardPresentation);
+                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();  //
                 }
-                else
-                {
-                    dbClient.Update(boardPresentation.Id, boardPresentation);
-                }
+                dbClient.SavePresentationsAsync(boardPresentation); //
             }
             else
             {
@@ -107,7 +147,7 @@ namespace ESL.CO.React.Controllers
         [HttpDelete("{id}")]
         public void DeletePresentation(string id)
         {
-            dbClient.Remove<BoardPresentation>(id);
+            dbClient.DeletePresentation(id);
         }
     }
 }

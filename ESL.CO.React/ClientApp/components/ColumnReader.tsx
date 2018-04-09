@@ -4,8 +4,6 @@ import BoardTable from './BoardTable';
 import { ColumnReaderState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-// test when no appSettings.json - currently creates error @boardId: this.props.boardlist[0].id
-// error because generated file hass all boards with visibility false
 export default class ColumnReader extends React.Component<{ boardList: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     showTimer: number;
@@ -18,7 +16,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             currentIndex: 0,
             boardId: this.props.boardList[0].id,
             board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
             colorList: [],
@@ -65,13 +63,12 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     slideShow() {
-        this.updateStatistics();
         this.showTimer = setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown * 1000);
     }
 
     boardLoad() {
 
-        ApiClient.getPresentation(this.state.presentationID)
+        ApiClient.getPresentation(this.props.presentationID)
             .then(dataPres => {
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
@@ -101,11 +98,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     RefreshRate() {
         this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[this.state.currentIndex].refreshRate * 1000);
     }
-
-    updateStatistics() {
-        ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
-    }
-
+    
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.boardChanged;
     }
@@ -130,7 +123,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
 
-                    {(this.state.boardList.length == 1) ? this.updateStatistics() : (this.state.sameBoard == false) ? this.slideShow() : this.updateStatistics()} 
+                    {this.slideShow()}
                         
                 </div>;              
             }

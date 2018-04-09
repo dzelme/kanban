@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import 'isomorphic-fetch';
-import { Credentials, Board, Value, StatisticsEntry, JiraConnectionLogEntry, BoardPresentation, CardColor } from './Interfaces';
+import { Credentials, Board, Value, StatisticsModel, JiraConnectionLogEntry, BoardPresentation, CardColor } from './Interfaces';
 
 function handleResponse(response: Response): Promise<any> {
     if (response.ok) return response.json();
@@ -96,12 +96,12 @@ export class ApiClient {
     }
 
     // SampleDataController: Gets color list
-    static colorList(id: number, credentials: Credentials): Promise<CardColor[]> {
+    static colorList(id: string, credentials: Credentials): Promise<CardColor[]> {
         return ApiClient.post('api/SampleData/ColorList?id=' + id.toString(), credentials) as Promise<CardColor[]>;
     }
 
     // SampleDataController: Gets board data
-    static boardData(id: number, credentials: Credentials): Promise<Board> {
+    static boardData(id: string, credentials: Credentials): Promise<Board> {
         return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials) as Promise<Board>;
     }
 
@@ -131,18 +131,13 @@ export class ApiClient {
     }
 
     // StatisticsController
-    static statisticsList(): Promise<StatisticsEntry[]> {
+    static statisticsList(): Promise<StatisticsModel[]> {  //
         return ApiClient.get('api/Statistics/GetStatisticsList')
     }
 
     // StatisticsController
     static networkStatistics(id: string): Promise<JiraConnectionLogEntry[]> {
         return ApiClient.post('api/Statistics/GetNetworkStatisticsList', id)
-    }
-
-    // StatisticsController
-    static saveToStatistics(id: string, name: string) {
-        return ApiClient.unhandledPost('api/Statistics/SaveToStatistics?id=' + id, name)
     }
 
     // SettingsController

@@ -5,7 +5,7 @@ import BoardTable from './BoardTable';
 import { ReaderFromURLState } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: number, presentationId: string }>, ReaderFromURLState> {
+export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: string, presentationId: string }>, ReaderFromURLState> {
     refreshTimer: number;
 
     constructor(props) {
@@ -13,7 +13,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         this.state = {
             boardList:[],
             board: {
-                id: 0, name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
             },
             boardChanged: false,
             colorList:[],
@@ -48,7 +48,8 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     boardLoad() {
- 
+        clearInterval(this.refreshTimer);
+
         ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
@@ -71,11 +72,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     RefreshRate() {
         this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[0].refreshRate * 1000);
     }
-
-    updateStatistics() {
-        ApiClient.saveToStatistics(this.state.board.id.toString(), this.state.board.name);
-    }
-
+    
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.boardChanged;
     }
@@ -99,9 +96,6 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
-
-                    {this.updateStatistics()}
-
                 </div>;
             }
         }

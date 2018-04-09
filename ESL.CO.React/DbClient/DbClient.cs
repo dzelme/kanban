@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Net.Http;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 
 namespace ESL.CO.React.DbConnection
 {
+    /// <summary>
+    /// A class for making requests to the application's MongoDB database.
+    /// </summary>
     public class DbClient : IDbClient
     {
         private MongoClient client;
         private IMongoDatabase db;
-        private IMongoCollection<StatisticsEntry> statsCollection;
-        private IMongoCollection<BoardPresentation> presCollection;
-        private IMongoCollection<Identity> idCollection;
-        private IMongoCollection<UserSettingsDbEntry> userSettingsCollection;
+        private IMongoCollection<StatisticsDbModel> statisticsCollection;
+        private IMongoCollection<BoardPresentationDbModel> presentationCollection;
         private readonly IOptions<DbSettings> dbSettings;
 
         public DbClient(IOptions<DbSettings> dbSettings)
@@ -25,93 +25,165 @@ namespace ESL.CO.React.DbConnection
             this.dbSettings = dbSettings;
             client = new MongoClient(dbSettings.Value.MongoDbUrl);
             db = client.GetDatabase(dbSettings.Value.DatabaseName);
-            statsCollection = db.GetCollection<StatisticsEntry>(dbSettings.Value.StatisticsCollectionName);
-            presCollection = db.GetCollection<BoardPresentation>(dbSettings.Value.PresentationsCollectionName);
-            idCollection = db.GetCollection<Identity>(dbSettings.Value.IdCollectionName);
-            userSettingsCollection = db.GetCollection<UserSettingsDbEntry>(dbSettings.Value.UserSettingsCollectionName);
+            statisticsCollection = db.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
+            presentationCollection = db.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
         }
 
-        private IMongoCollection<T> ResolveCollection<T>()
+        /// <summary>
+        /// Saves information about a Jira REST API request.
+        /// </summary>
+        /// <param name="entry">An object containing statistics information about the Jira requests.</param>
+        /// <returns>The result of the save operation.</returns>
+        public Task SaveStatisticsAsync(StatisticsDbModel entry)
         {
-            IMongoCollection<T> collection = null;
-            if (typeof(T) == statsCollection.GetType().GetGenericArguments().Single()) { collection = (IMongoCollection<T>)statsCollection; }
-            if (typeof(T) == presCollection.GetType().GetGenericArguments().Single()) { collection = (IMongoCollection<T>)presCollection; }
-            if (typeof(T) == userSettingsCollection.GetType().GetGenericArguments().Single()) { collection = (IMongoCollection<T>)userSettingsCollection; }
-
-            return collection;
+            if (entry.Id == null)
+                return statisticsCollection.InsertOneAsync(entry);
+            return statisticsCollection.ReplaceOneAsync(i => i.Id == entry.Id, entry, new UpdateOptions { IsUpsert = true });
         }
 
-        public T Save<T>(T entry)
+        /// <summary>
+        /// Saves a presentation to database.
+        /// </summary>
+        /// <param name="entry">An object containing presentation data to be saved.</param>
+        /// <returns>The result of the save operation.</returns>
+        public Task SavePresentationsAsync(BoardPresentation entry)
         {
-            var collection = ResolveCollection<T>();
-            collection.InsertOne(entry);
-            return entry;
+            var entryDbModel = new BoardPresentationDbModel
+            {
+                Id = entry.Id,
+                Title = entry.Title,
+                Owner = entry.Owner,
+                Credentials = entry.Credentials,
+                Boards = new List<BoardDbModel>()
+            };
+
+            foreach (var board in entry.Boards.Values)
+            {
+                entryDbModel.Boards.Add(new BoardDbModel
+                {
+                    Id = board.Id,
+                    Visibility = board.Visibility,
+                    TimeShown = board.TimeShown,
+                    RefreshRate = board.RefreshRate
+                });
+            }
+
+            if (entryDbModel.Id == null)
+                return presentationCollection.InsertOneAsync(entryDbModel);
+            return presentationCollection.ReplaceOneAsync(i => i.Id == entryDbModel.Id, entryDbModel, new UpdateOptions { IsUpsert = true });
         }
 
-        public IEnumerable<T> GetList<T>()
+        /// <summary>
+        /// Gets a list of all saved presentations.
+        /// </summary>
+        /// <returns>A list of objects containg information about all presentations saved in database.</returns>
+        public async Task<List<BoardPresentationDbModel>> GetPresentationsListAsync()
         {
-            var collection = ResolveCollection<T>();
-            return collection.Find(new BsonDocument()).ToList();
+            var results = await presentationCollection
+                .Find(FilterDefinition<BoardPresentationDbModel>.Empty)
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .ToListAsync();
+
+            return results;
         }
 
-        public T GetOne<T>(string id)
+        /// <summary>
+        /// Gets board statistics for all boards that have been viewed at least once.
+        /// </summary>
+        /// <returns>A list of objects containing board view statistics.</returns>
+        public async Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync()
         {
-            var collection = ResolveCollection<T>();
-            var filter = Builders<T>.Filter.Eq("Id", id);
-            var document = collection.Find(filter).FirstOrDefault();  //returns null if no match
+            var aggregate = statisticsCollection
+                .Aggregate()
+                .Match(new BsonDocument {
+                    { "Type", "p" },
+                })
+                .Group(new BsonDocument {
+                    { "_id", "$BoardId" },
+                    { "TimesShown", new BsonDocument("$sum", 1)},
+                    { "LastShown", new BsonDocument("$last", "$Time")}
+                })
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .Project(new BsonDocument
+                {
+                    { "_id", 0 },
+                    { "BoardId", "$_id" },
+                    { "TimesShown", "$TimesShown" },
+                    { "LastShown","$LastShown" }
+                });
+            
+            var results = await aggregate.ToListAsync();
+
+            var statisticsList = new List<StatisticsModel>();
+            foreach (var item in results)
+            {
+                statisticsList.Add(BsonSerializer.Deserialize<StatisticsModel>(item));
+            }
+
+            return statisticsList;
+        }
+
+        /// <summary>
+        /// Gets Jira request statistics for a specified board.
+        /// </summary>
+        /// <param name="id">The id of the board whose statistics about Jira connections will be obtained.</param>
+        /// <returns>A list of objects containing information about requests to Jira REST API for the specified board.</returns>
+        public async Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id)
+        {
+            var filter = 
+                Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
+                Builders<StatisticsDbModel>.Filter.Eq("Type", "p");
+            var results = await statisticsCollection
+                .Find(filter)
+                .Project(Builders<StatisticsDbModel>.Projection
+                    .Include("Time")
+                    .Include("Link")
+                    .Include("ResponseStatus")
+                    .Include("Exception")
+                    .Exclude("_id"))
+                .Sort(new BsonDocument { { "Time", -1 } })
+                .Limit(100)
+                .ToListAsync();
+
+            var connectionStatsList = new List<StatisticsConnectionsModel>();
+            foreach (var item in results)
+            {
+                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionsModel>(item));
+            }
+
+            return connectionStatsList;
+        }
+
+        /// <summary>
+        /// Gets all data about a single presentation.
+        /// </summary>
+        /// <param name="id">The id of the presentation whose data will be obtained.</param>
+        /// <returns>An object containing all data stored in the database about the specified presentation.</returns>
+        public BoardPresentationDbModel GetAPresentation(string id)
+        {
+            var filter = Builders<BoardPresentationDbModel>.Filter.Eq("_id", id);
+            var document = presentationCollection.Find(filter).FirstOrDefault();  //returns null if no match
             return document;
         }
 
-        public void Update<T>(string id, T entry)
+        /// <summary>
+        /// Deletes the specified presentation.
+        /// </summary>
+        /// <param name="id">The id of the presentation to be deleted.</param>
+        public void DeletePresentation(string id)
         {
-            Remove<T>(id);
-            Save<T>(entry);
+            var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
+            presentationCollection.DeleteOne(filter);
         }
 
-        public void Remove<T>(string id)
-        {
-            var collection = ResolveCollection<T>();
-            var filter = Builders<T>.Filter.Eq("Id", id);
-            collection.DeleteOne(filter);
-        }
-
-        public void UpdateNetworkStats(string id, string url, HttpResponseMessage response)
-        {
-            var entry = GetOne<StatisticsEntry>(id);
-            if(entry == null) { return; }  // starts to save network stats only after the board has been shown once
-
-            var networkStats = entry.NetworkStats;
-            var networkStatsEntry = new JiraConnectionLogEntry(url, response.StatusCode.ToString());
-
-            while (networkStats.Count() >= dbSettings.Value.NetworkStatisticsEntryCapacity)
-            {
-                networkStats.Dequeue();
-            }
-            networkStats.Enqueue(networkStatsEntry);
-
-            //Update(id, entry);
-        }
-
+        /// <summary>
+        /// Generates an auto-incremented id for new presentations.
+        /// </summary>
+        /// <returns>The id for a new presentation.</returns>
         public int GeneratePresentationId()
         {
-
-            var filter = Builders<Identity>.Filter.Eq("Id", "IncrementId");
-            var identity = idCollection.Find(filter).FirstOrDefault();
-            if (identity == null)
-            {
-                identity = new Identity
-                {
-                    Id = "IncrementId",
-                    SequenceValue = 0
-                };
-                idCollection.InsertOne(identity);
-            }
-
-            var update = Builders<Identity>.Update
-                .Set("SequenceValue", ++identity.SequenceValue);  //
-            idCollection.UpdateOne(filter, update);
-
-            return identity.SequenceValue;
+            var id = (int)presentationCollection.Count(new BsonDocument());
+            return ++id;
         }
     }
 }

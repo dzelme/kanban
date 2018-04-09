@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
+using System.Threading.Tasks;
+using ESL.CO.React.Models;
+using MongoDB.Bson;
 
 namespace ESL.CO.React.DbConnection
 {
     public interface IDbClient
     {
+        void DeletePresentation(string id);
         int GeneratePresentationId();
-        IEnumerable<T> GetList<T>();
-        T GetOne<T>(string id);
-        void Remove<T>(string id);
-        T Save<T>(T entry);
-        void Update<T>(string id, T entry);
-        void UpdateNetworkStats(string id, string url, HttpResponseMessage response);
+        BoardPresentationDbModel GetAPresentation(string id);
+        Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
+        Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id);
+        Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync();
+        Task SavePresentationsAsync(BoardPresentation entry);
+        Task SaveStatisticsAsync(StatisticsDbModel entry);
     }
 }

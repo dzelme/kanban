@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.DbConnection;
 using ESL.CO.React.Models;
@@ -25,50 +23,15 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// Saves relevant statistics about board views.
-        /// </summary>
-        /// <param name="id">The id of the board whose statistics will be saved.</param>
-        /// <param name="name">The name of the board whose statistics will be saved.</param>
-        [HttpPost("[action]")]
-        public void SaveToStatistics(string id, [FromBody] string name)
-        {
-            // inefficient, finds entry once here, once in update => make update return bool
-            var entry = dbClient.GetOne<StatisticsEntry>(id);
-            if (entry == null)
-            {
-                entry = new StatisticsEntry(id, name);
-                UpdateStatisticsEntry(entry);
-                dbClient.Save(entry);
-            }
-            else
-            {
-                UpdateStatisticsEntry(entry);
-                dbClient.Update(id, entry);
-            }
-
-            return;
-        }
-
-        /// <summary>
-        /// Updates a statistics entry's "times shown" counter and "last shown" date.
-        /// </summary>
-        /// <param name="entry">Statistics entry object whose properties will be updated.</param>
-        private void UpdateStatisticsEntry(StatisticsEntry entry)
-        {
-            checked { entry.TimesShown++; }  // checked...
-            entry.LastShown = DateTime.Now;
-        }
-
-        /// <summary>
         /// Gets the statistics data of all boards that have been viewed atleast once.
         /// </summary>
         /// <returns>A list of boards and their statistics data.</returns>
         [Authorize(Roles = "Admins")]
         [HttpGet("[action]")]
-        public IEnumerable<StatisticsEntry> GetStatisticsList()
+        public async Task<IEnumerable<StatisticsModel>> GetStatisticsList()
         {
-            var list = dbClient.GetList<StatisticsEntry>();
-            return list;
+            var statisticsList = await dbClient.GetStatisticsListAsync();
+            return statisticsList;
         }
 
         /// <summary>
@@ -78,10 +41,10 @@ namespace ESL.CO.React.Controllers
         /// <returns>A collection of network statistics entries.</returns>
         [Authorize(Roles = "Admins")]
         [HttpPost("[action]")]
-        public Queue<JiraConnectionLogEntry> GetNetworkStatisticsList([FromBody] string id)
+        public async Task<List<StatisticsConnectionsModel>> GetNetworkStatisticsList([FromBody] string id)
         {
-            var entry = dbClient.GetOne<StatisticsEntry>(id);
-            return entry.NetworkStats;
+            var connectionStatsList = await dbClient.GetStatisticsConnectionsListAsync(id);
+            return connectionStatsList;
         }
     }
 }

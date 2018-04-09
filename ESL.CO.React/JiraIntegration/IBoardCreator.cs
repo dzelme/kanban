@@ -6,6 +6,6 @@ namespace ESL.CO.React.JiraIntegration
 {
     public interface IBoardCreator
     {
-        Task<Board> CreateBoardModel(int id, string credentials, IMemoryCache cache);
+        Task<Board> CreateBoardModel(string id, string credentials, IMemoryCache cache);
     }
 }

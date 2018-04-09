@@ -7,10 +7,10 @@ namespace ESL.CO.Tests
     public class EqualityTests
     {
         [Theory]
-        [InlineData(620)]
-        [InlineData(0)]
-        [InlineData(-6)]
-        public void ReturnTrueGivenSameIds(int id)
+        [InlineData("620")]
+        [InlineData("0")]
+        [InlineData("-6")]
+        public void ReturnTrueGivenSameIds(string id)
         {
             var board1 = new Board(id);
             var board2 = new Board(id);
@@ -21,8 +21,8 @@ namespace ESL.CO.Tests
         [Fact]
         public void ReturnFalseGivenDifferentIds()
         {
-            var id1 = 620;
-            var id2 = 943;
+            var id1 = "620";
+            var id2 = "943";
 
             var board1 = new Board(id1);
             var board2 = new Board(id2);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
@@ -33,7 +33,7 @@ namespace ESL.CO.Tests
         [Fact]
         public void ReturnFalseGivenNullObject()
         {
-            var id = 620;
+            var id = "620";
 
             Board board1 = null;
             var board2 = new Board(id);
@@ -44,7 +44,7 @@ namespace ESL.CO.Tests
         [Fact]
         public void ReturnFalseGivenNullPropertyObject()
         {
-            var id = 620;
+            var id = "620";
 
             Board board1 = new Board
             {
@@ -122,7 +122,7 @@ namespace ESL.CO.Tests
         [Fact]
         public void ReturnTrueGivenEqualComplexObjects()
         {
-            var id = 620;
+            var id = "620";
 
             Board board1 = new Board
             {

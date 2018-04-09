@@ -14,13 +14,13 @@ namespace ESL.CO.React.JiraIntegration
 {
     public class CacheMethods
     {
-        public string GetBoardPath(int boardId)
+        public string GetBoardPath(string boardId)
         {
             var filePath = Path.Combine(@".\data\", boardId.ToString() + ".json");
             return filePath;
         }
 
-        public Board GetCachedBoard(int boardId)
+        public Board GetCachedBoard(string boardId)
         {
             // read from JSON to object, if file exists
             var filePath = GetBoardPath(boardId);
