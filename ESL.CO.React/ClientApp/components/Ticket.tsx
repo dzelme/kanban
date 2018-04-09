@@ -93,6 +93,8 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         var g = parseInt(colorHex.substring(colorHex.length / 3, 2 * colorHex.length / 3), 16);
         var b = parseInt(colorHex.substring(2 * colorHex.length / 3, 3 * colorHex.length / 3), 16);
 
+        console.log("R:" + r + " G: " + g + " B: " + b);
+
         r /= 255, g /= 255, b /= 255;
 
         var max = Math.max(r, g, b);
@@ -116,6 +118,14 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
                 case b: h = 60 * ((r - g) / difference + 4); break;
             }
         }
-        return "hsl("+ h + "," + s*100 + "%," + 90 + "%)";
+        
+        if (l*100 > 80) {
+            l = 100;
+        }
+        else {
+            l = 90; 
+        }
+        
+        return "hsl("+ h + "," + s*100 + "%," + l + "%)";
     }
 }
