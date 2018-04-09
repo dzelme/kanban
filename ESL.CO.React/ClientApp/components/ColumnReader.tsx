@@ -33,7 +33,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
 
                 ApiClient.boardData(this.state.boardId, dataPres.credentials)
                     .then(dataBoard => {
-                        this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, colorList: dataBoard.cardColors, sameBoard: false }, this.RefreshRate);
+                        this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, sameBoard: false }, this.RefreshRate);
                     });
             });     
     }
@@ -77,10 +77,10 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                                    this.setState({ boardChanged: false, sameBoard: true }, this.RefreshRate);
                             }
                             else if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == true) {
-                                    this.setState({ board: dataBoard, colorList: dataBoard.cardColors, boardChanged: true, sameBoard: true }, this.RefreshRate);
+                                    this.setState({ board: dataBoard, boardChanged: true, sameBoard: true }, this.RefreshRate);
                             }
                              else {
-                                 this.setState({ board: dataBoard, colorList: dataBoard.cardColors, boardChanged: true, sameBoard: false }, this.RefreshRate);
+                                 this.setState({ board: dataBoard, boardChanged: true, sameBoard: false }, this.RefreshRate);
                             }
                         }
                     });
