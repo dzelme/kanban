@@ -124,10 +124,6 @@ namespace ESL.CO.React.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(boardPresentation.Id))
-                {
-                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();
-                }
                 dbClient.SavePresentationsAsync(boardPresentation);
             }
             else

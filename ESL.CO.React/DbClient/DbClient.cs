@@ -48,6 +48,11 @@ namespace ESL.CO.React.DbConnection
         /// <returns>The result of the save operation.</returns>
         public Task SavePresentationsAsync(BoardPresentation entry)
         {
+            if (string.IsNullOrEmpty(entry.Id))
+            {
+                entry.Id = GeneratePresentationId().ToString();
+            }
+
             var entryDbModel = new BoardPresentationDbModel
             {
                 Id = entry.Id,
@@ -180,7 +185,7 @@ namespace ESL.CO.React.DbConnection
         /// Generates an auto-incremented id for new presentations.
         /// </summary>
         /// <returns>The id for a new presentation.</returns>
-        public int GeneratePresentationId()
+        private int GeneratePresentationId()
         {
             var id = (int)presentationCollection.Count(new BsonDocument());
             return ++id;
