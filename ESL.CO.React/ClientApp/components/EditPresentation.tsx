@@ -23,7 +23,6 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 }
             },
             boardList: [],
-            credentials: { username: "", password: "" },
             loading: true,
             authenticated: true
         };
@@ -40,7 +39,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
         ApiClient.getPresentation(this.props.match.params.id)
             .then(data => {
-                this.setState({ boardPresentation: data, credentials: data.credentials }, this.handleFetch);
+                this.setState({ boardPresentation: data }, this.handleFetch);
             });
     }
 
@@ -51,7 +50,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleAuth() {
-        ApiClient.checkCredentials(this.state.credentials)
+        ApiClient.savePresentation(this.state.boardPresentation)
             .then(response => {
                 if (response.status == 200) {
                     this.setState({ authenticated: true }, this.handleFetch);
@@ -63,7 +62,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleFetch() {
-        ApiClient.boardList(this.state.credentials)
+        ApiClient.boardList(this.state.boardPresentation.credentials)
             .then(data => {
                 this.setState({ boardPresentation: this.state.boardPresentation, boardList: data }, this.handleVisibility);
             });
@@ -88,7 +87,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 id: this.state.boardPresentation.id,
                 title: this.state.boardPresentation.title,
                 owner: this.state.boardPresentation.owner,
-                credentials: this.state.credentials,
+                credentials: this.state.boardPresentation.credentials,
                 boards: {
                     values: val,
                 }
@@ -106,15 +105,19 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         const target = event.target;
         const name = target.name;
 
+        let newBoardPresentation = this.state.boardPresentation;
+
         if (name == 'title') {
-            this.setState({ boardPresentation: { id: this.state.boardPresentation.id, title: event.target.value, owner: this.state.boardPresentation.owner, credentials: this.state.boardPresentation.credentials, boards: this.state.boardPresentation.boards } });
+            newBoardPresentation.title = event.target.value;
         }
         else if (name == 'username') {
-            this.setState({ credentials: { username: event.target.value, password: this.state.credentials.password } });
+            newBoardPresentation.credentials.username = event.target.value;
         }
         else {
-            this.setState({ credentials: { username: this.state.credentials.username, password: event.target.value } });
+            newBoardPresentation.credentials.password = event.target.value;
         }
+
+        this.setState({ boardPresentation: newBoardPresentation });
     }
 
     handleChangeBoardVisibility(id: string) {
@@ -188,10 +191,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                     Izveidotājs: <input id="owner" name="owner" type="text" disabled value={this.state.boardPresentation.owner} />
                 </div>
                 <div key="username" className="FormElement">
-                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.credentials.username} onChange={this.handleChange} />
+                    Lietotājvārds: <input id="username" required name="username" type="text" value={this.state.boardPresentation.credentials.username} onChange={this.handleChange} />
                 </div>
                 <div key="password" className="FormElement">
-                    Parole: <input id="password" required name="password" type="password" value={this.state.credentials.password} onChange={this.handleChange} />
+                    Parole: <input id="password" required name="password" type="password" value={this.state.boardPresentation.credentials.password} onChange={this.handleChange} />
                 </div>
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>

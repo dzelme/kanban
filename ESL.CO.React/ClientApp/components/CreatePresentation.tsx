@@ -22,7 +22,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: []
                 }
             },
-            boardList: [],
+            boardList: [],  //AD: FIX: boardList redundant, = boardPresentation.boards.values
             loading: true,
             authenticated: true
         };
@@ -39,10 +39,14 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
     handleAuth(event) {
         event.preventDefault();
-        ApiClient.checkCredentials(this.state.boardPresentation.credentials)
+        ApiClient.savePresentation(this.state.boardPresentation)
             .then(response => {
                 if (response.status == 200) {
-                    this.setState({ authenticated: true }, this.handleFetch);
+                    response.json().then(json => {
+                        let newBoardPresentation = this.state.boardPresentation;
+                        newBoardPresentation.id = json.id;
+                        this.setState({ boardPresentation: newBoardPresentation, authenticated: true }, this.handleFetch);
+                    })
                 }
                 else {
                     this.setState({ authenticated: false });

@@ -70,11 +70,6 @@ export class ApiClient {
             });
     }
 
-    // AccountController
-    static checkCredentials(credentials: Credentials): Promise<Response> {
-        return ApiClient.unhandledPost('api/account/CheckCredentials', credentials)
-    }
-
     // AccountController: Checks if the current user has a valid JWT token
     static hasValidJwt(redirect = true ): Promise<boolean> {
         var p = fetch('api/account/hasValidJwt', {
@@ -111,8 +106,8 @@ export class ApiClient {
     }
 
     // PresentationsController
-    static savePresentation(boardPresentation: BoardPresentation): Promise<BoardPresentation> {
-        return ApiClient.post('api/admin/presentations/', boardPresentation) as Promise<BoardPresentation>;
+    static savePresentation(boardPresentation: BoardPresentation): Promise<any> {
+        return ApiClient.unhandledPost('api/admin/presentations/', boardPresentation) as Promise<any>;
     }
 
     // PresentationsController
