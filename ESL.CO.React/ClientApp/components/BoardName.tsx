@@ -25,7 +25,7 @@ export default class BoardName extends React.Component<{ presentationId: string,
         return <div className="BoardNames">
             {
                 this.props.boardlist.map((board, index) =>
-                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index} className="NamesBar"><Link to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3>{this.props.fromCache ? <h4>Dati no keša{this.props.message}</h4> : ""}</Link></div>
+                    <div style={BoardName.statusColor(this.props.name, board.name)} key={index} className="NamesBar"><Link className="LinkText" to={"/k/" + this.props.presentationId + "/" + board.id}> <h3>{board.name}</h3>{this.props.fromCache ? <h4>Dati no keša{this.props.message}</h4> : ""}</Link></div>
                     )
             }
         </div>
