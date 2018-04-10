@@ -115,6 +115,7 @@ a:link {
 
 .TicketText {
     color: black;
+    word-wrap:break-word;
 }
 
 .Progress {
