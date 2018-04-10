@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ namespace ESL.CO.React.Controllers
         [HttpPost("[action]")]
         public async Task<IEnumerable<Value>> BoardList([FromBody] Credentials credentials)
         {
-            return await jiraClient.GetFullBoardList(credentials);
+            return (await jiraClient.GetFullBoardList(credentials)).OrderBy(board => Convert.ToInt32(board.Id));
         }
         
         /// <summary>
