@@ -42,7 +42,6 @@ namespace ESL.CO.React.JiraIntegration
                     if (savedBoard.Id == currentBoard.Id)
                     {
                         currentBoard.Name = savedBoard.Name;
-                        //currentBoard.Type = savedBoard.Type;
                         currentBoard.RefreshRate = Math.Max(savedBoard.RefreshRate, userSettings.Value.RefreshRateMin);
                         currentBoard.TimeShown = Math.Max(savedBoard.TimeShown, userSettings.Value.TimeShownMin);
                         currentBoard.Visibility = savedBoard.Visibility;

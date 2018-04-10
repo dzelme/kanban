@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-
     public class ColumnStatus
     {
         public string Id { get; set; }

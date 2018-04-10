@@ -15,7 +15,7 @@ namespace ESL.CO.React.DbConnection
     public class DbClient : IDbClient
     {
         private MongoClient client;
-        private IMongoDatabase db;
+        private IMongoDatabase database;
         private IMongoCollection<StatisticsDbModel> statisticsCollection;
         private IMongoCollection<BoardPresentationDbModel> presentationCollection;
         private readonly IOptions<DbSettings> dbSettings;
@@ -24,9 +24,9 @@ namespace ESL.CO.React.DbConnection
         {
             this.dbSettings = dbSettings;
             client = new MongoClient(dbSettings.Value.MongoDbUrl);
-            db = client.GetDatabase(dbSettings.Value.DatabaseName);
-            statisticsCollection = db.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
-            presentationCollection = db.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
+            database = client.GetDatabase(dbSettings.Value.DatabaseName);
+            statisticsCollection = database.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
+            presentationCollection = database.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
         }
 
         /// <summary>
@@ -159,10 +159,10 @@ namespace ESL.CO.React.DbConnection
         /// </summary>
         /// <param name="id">The id of the presentation whose data will be obtained.</param>
         /// <returns>An object containing all data stored in the database about the specified presentation.</returns>
-        public BoardPresentationDbModel GetAPresentation(string id)
+        public Task<BoardPresentationDbModel> GetPresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("_id", id);
-            var document = presentationCollection.Find(filter).FirstOrDefault();  //returns null if no match
+            var document = presentationCollection.Find(filter).FirstOrDefaultAsync();  //returns null if no match
             return document;
         }
 
@@ -170,10 +170,10 @@ namespace ESL.CO.React.DbConnection
         /// Deletes the specified presentation.
         /// </summary>
         /// <param name="id">The id of the presentation to be deleted.</param>
-        public void DeletePresentation(string id)
+        public Task DeletePresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
-            presentationCollection.DeleteOne(filter);
+            return presentationCollection.DeleteOneAsync(filter);
         }
 
         /// <summary>

@@ -8,6 +8,5 @@ namespace ESL.CO.React.Models
     public class ColumnConfig
     {
         public List<Column> Columns { get; set; }
-        //public string constraintType { get; set; }
     }
 }

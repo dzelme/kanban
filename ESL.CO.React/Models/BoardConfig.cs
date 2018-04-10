@@ -16,10 +16,6 @@ namespace ESL.CO.React.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        //public string self { get; set; }
-        //public Filter filter { get; set; }
-        //public SubQuery subQuery { get; set; }
         public ColumnConfig ColumnConfig { get; set; }
-        //public Ranking ranking { get; set; }
     }
 }

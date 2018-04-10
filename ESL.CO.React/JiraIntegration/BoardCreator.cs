@@ -50,7 +50,7 @@ namespace ESL.CO.React.JiraIntegration
 
             var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + id.ToString() + "/configuration", credentials, id);
 
-            if (boardConfig == null)  //
+            if (boardConfig == null)
             {
                 return TryGetBoardFromCache(id, cache);
             }
@@ -62,7 +62,7 @@ namespace ESL.CO.React.JiraIntegration
 
             FullIssueList li = new FullIssueList();
             IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id + "/issue", credentials, id);
-            if (issueList == null)  //
+            if (issueList == null)
             {
                 return TryGetBoardFromCache(id, cache);
             }
@@ -72,7 +72,7 @@ namespace ESL.CO.React.JiraIntegration
             {
                 issueList.StartAt += issueList.MaxResults;
                 issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, id);
-                if (issueList == null)  //
+                if (issueList == null)
                 {
                     return TryGetBoardFromCache(id, cache);
                 }
