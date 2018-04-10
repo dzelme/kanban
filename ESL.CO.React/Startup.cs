@@ -31,7 +31,6 @@ namespace ESL.CO.React
         {
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
-            services.Configure<Paths>(Configuration.GetSection("Paths"));  //redundant with db..
             services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
             services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
 
@@ -60,7 +59,7 @@ namespace ESL.CO.React
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

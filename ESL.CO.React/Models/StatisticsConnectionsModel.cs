@@ -11,15 +11,5 @@ namespace ESL.CO.React.Models
         public string Link { get;set; }
         public string ResponseStatus { get; set; }
         public string Exception { get; set; }
-
-        public StatisticsConnectionsModel(string link = "", string responseStatus = "", string exception ="", string time = "")
-        {
-            string pattern = "dd.MM.yyyy HH:mm:ss";
-
-            Time = (time == "") ? DateTime.Now.ToString(pattern) : DateTime.Parse(time).ToString(pattern);
-            Link = link;
-            ResponseStatus = responseStatus;
-            Exception = exception;
-        }
     }
 }

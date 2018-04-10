@@ -8,16 +8,12 @@ using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.Models
 {
-    public class StatisticsDbModel
+    public class StatisticsDbModel : StatisticsConnectionsModel
     {
         [BsonId, BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
         public string BoardId { get; set; }
         public string Type { get; set; }
-        public string Time { get; set; }
-        public string Link { get; set; }
-        public string ResponseStatus { get; set; }
-        public string Exception { get; set; }
 
         public StatisticsDbModel() { }
 
