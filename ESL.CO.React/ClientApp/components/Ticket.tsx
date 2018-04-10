@@ -123,7 +123,6 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         else {
             l = 90; 
         }
-        
         return "hsl("+ h + "," + s*100 + "%," + l + "%)";
     }
 }
