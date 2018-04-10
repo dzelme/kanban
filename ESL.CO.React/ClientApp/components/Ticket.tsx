@@ -93,8 +93,6 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
         var g = parseInt(colorHex.substring(colorHex.length / 3, 2 * colorHex.length / 3), 16);
         var b = parseInt(colorHex.substring(2 * colorHex.length / 3, 3 * colorHex.length / 3), 16);
 
-        console.log("R:" + r + " G: " + g + " B: " + b);
-
         r /= 255, g /= 255, b /= 255;
 
         var max = Math.max(r, g, b);

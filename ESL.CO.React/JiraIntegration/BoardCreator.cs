@@ -55,8 +55,7 @@ namespace ESL.CO.React.JiraIntegration
                 return TryGetBoardFromCache(id, cache);
             }
 
-            var colorList = new ColorList();
-            colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + id.ToString() + "/strategy/priority", credentials, id);
+            var colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + id.ToString() + "/strategy/priority", credentials, id);
 
             board.Name = boardConfig.Name;
             board.CardColors = colorList.CardColors;
