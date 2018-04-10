@@ -58,7 +58,12 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     slideShow() {
+        this.saveBoardViewStatistics();
         this.showTimer = setTimeout(this.nextSlide, this.state.boardList[this.state.currentIndex].timeShown * 1000);
+    }
+
+    saveBoardViewStatistics() {
+        ApiClient.saveBoardViewStatistics(this.state.board.id);
     }
 
     boardLoad() {
@@ -112,8 +117,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
                     <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
-                    {this.slideShow()}
-                        
+                    {(this.state.boardList.length <= 1) ? this.saveBoardViewStatistics() : this.slideShow()}
                 </div>;              
             }
         }

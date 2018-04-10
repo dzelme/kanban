@@ -7,9 +7,8 @@ namespace ESL.CO.React.DbConnection
 {
     public interface IDbClient
     {
-        void DeletePresentation(string id);
-        int GeneratePresentationId();
-        BoardPresentationDbModel GetAPresentation(string id);
+        Task DeletePresentation(string id);
+        Task<BoardPresentationDbModel> GetPresentation(string id);
         Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
         Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id);
         Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync();

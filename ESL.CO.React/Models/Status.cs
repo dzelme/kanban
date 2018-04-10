@@ -7,13 +7,8 @@ namespace ESL.CO.React.Models
 {
     public class Status : IEquatable<Status>
     {
-        //public string self { get; set; }
-        //public string description { get; set; }
-        //public string iconUrl { get; set; }
         public string Id { get; set; }  //which column belongs to
         public string Name { get; set; }  //e.g., to do, backlog
-      
-        //public StatusCategory statusCategory { get; set; }
 
         public Status()
         {
@@ -22,16 +17,6 @@ namespace ESL.CO.React.Models
         }
 
         #region Equality
-
-        //public static bool operator == (Status a, Status b)
-        //{
-        //    return a.Equals(b);
-        //}
-
-        //public static bool operator != (Status a, Status b)
-        //{
-        //    return a.Equals(b);
-        //}
 
         public bool Equals(Status other)
         {

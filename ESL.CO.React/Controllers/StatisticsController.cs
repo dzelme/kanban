@@ -23,6 +23,18 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
+        /// Saves board view statistics to database.
+        /// </summary>
+        /// <param name="id">The id of the board whose statistics will be saved.</param>
+        /// <returns>A response with status code 200.</returns>
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SaveBoardViewStatistics([FromBody] string id)
+        {
+            await dbClient.SaveStatisticsAsync(new StatisticsDbModel(id, "view"));
+            return Ok();
+        }
+
+        /// <summary>
         /// Gets the statistics data of all boards that have been viewed atleast once.
         /// </summary>
         /// <returns>A list of boards and their statistics data.</returns>

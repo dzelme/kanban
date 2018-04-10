@@ -59,6 +59,10 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
             });
     }
 
+    saveBoardViewStatistics() {
+        ApiClient.saveBoardViewStatistics(this.state.board.id);
+    }
+
     RefreshRate() {
         this.refreshTimer = setTimeout(this.boardLoad, this.state.boardList[0].refreshRate * 1000);
     }
@@ -87,6 +91,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
+                    {this.saveBoardViewStatistics()}
                 </div>;
             }
         }

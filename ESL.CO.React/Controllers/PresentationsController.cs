@@ -96,9 +96,9 @@ namespace ESL.CO.React.Controllers
         /// a response with status code 200 together with an object containing all data about the presentation.
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSinglePresentation(string id)
+        public async Task<IActionResult> GetPresentation(string id)
         {
-            var boardPresentationDbModel = dbClient.GetAPresentation(id);
+            var boardPresentationDbModel = await dbClient.GetPresentation(id);
             if (boardPresentationDbModel == null)
             {
                 return BadRequest("Presentation with the specified ID not found!");
@@ -124,18 +124,14 @@ namespace ESL.CO.React.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(boardPresentation.Id))
-                {
-                    boardPresentation.Id = dbClient.GeneratePresentationId().ToString();  //
-                }
-                dbClient.SavePresentationsAsync(boardPresentation); //
+                dbClient.SavePresentationsAsync(boardPresentation);
             }
             else
             {
                 return BadRequest("invalid data"); //
             }
 
-            boardPresentation.Credentials = null;  // better way?
+            boardPresentation.Credentials = null;
             return Ok (boardPresentation);
         }
 

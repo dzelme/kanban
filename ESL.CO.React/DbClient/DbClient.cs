@@ -15,7 +15,7 @@ namespace ESL.CO.React.DbConnection
     public class DbClient : IDbClient
     {
         private MongoClient client;
-        private IMongoDatabase db;
+        private IMongoDatabase database;
         private IMongoCollection<StatisticsDbModel> statisticsCollection;
         private IMongoCollection<BoardPresentationDbModel> presentationCollection;
         private readonly IOptions<DbSettings> dbSettings;
@@ -24,9 +24,9 @@ namespace ESL.CO.React.DbConnection
         {
             this.dbSettings = dbSettings;
             client = new MongoClient(dbSettings.Value.MongoDbUrl);
-            db = client.GetDatabase(dbSettings.Value.DatabaseName);
-            statisticsCollection = db.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
-            presentationCollection = db.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
+            database = client.GetDatabase(dbSettings.Value.DatabaseName);
+            statisticsCollection = database.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
+            presentationCollection = database.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
         }
 
         /// <summary>
@@ -48,6 +48,11 @@ namespace ESL.CO.React.DbConnection
         /// <returns>The result of the save operation.</returns>
         public Task SavePresentationsAsync(BoardPresentation entry)
         {
+            if (string.IsNullOrEmpty(entry.Id))
+            {
+                entry.Id = GeneratePresentationId().ToString();
+            }
+
             var entryDbModel = new BoardPresentationDbModel
             {
                 Id = entry.Id,
@@ -96,7 +101,7 @@ namespace ESL.CO.React.DbConnection
             var aggregate = statisticsCollection
                 .Aggregate()
                 .Match(new BsonDocument {
-                    { "Type", "p" },
+                    { "Type", "view" },
                 })
                 .Group(new BsonDocument {
                     { "_id", "$BoardId" },
@@ -132,7 +137,7 @@ namespace ESL.CO.React.DbConnection
         {
             var filter = 
                 Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
-                Builders<StatisticsDbModel>.Filter.Eq("Type", "p");
+                Builders<StatisticsDbModel>.Filter.Eq("Type", "connection");
             var results = await statisticsCollection
                 .Find(filter)
                 .Project(Builders<StatisticsDbModel>.Projection
@@ -159,10 +164,10 @@ namespace ESL.CO.React.DbConnection
         /// </summary>
         /// <param name="id">The id of the presentation whose data will be obtained.</param>
         /// <returns>An object containing all data stored in the database about the specified presentation.</returns>
-        public BoardPresentationDbModel GetAPresentation(string id)
+        public Task<BoardPresentationDbModel> GetPresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("_id", id);
-            var document = presentationCollection.Find(filter).FirstOrDefault();  //returns null if no match
+            var document = presentationCollection.Find(filter).FirstOrDefaultAsync();  //returns null if no match
             return document;
         }
 
@@ -170,17 +175,17 @@ namespace ESL.CO.React.DbConnection
         /// Deletes the specified presentation.
         /// </summary>
         /// <param name="id">The id of the presentation to be deleted.</param>
-        public void DeletePresentation(string id)
+        public Task DeletePresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
-            presentationCollection.DeleteOne(filter);
+            return presentationCollection.DeleteOneAsync(filter);
         }
 
         /// <summary>
         /// Generates an auto-incremented id for new presentations.
         /// </summary>
         /// <returns>The id for a new presentation.</returns>
-        public int GeneratePresentationId()
+        private int GeneratePresentationId()
         {
             var id = (int)presentationCollection.Count(new BsonDocument());
             return ++id;
