@@ -85,22 +85,5 @@ namespace ESL.CO.React.Controllers
             }
             return board;
         }
-
-        /// <summary>
-        /// Obtains a list of priority colors for Kanban issues/tickets.
-        /// </summary>
-        /// <param name="id">Id of the board whose priority colors will be obtained.</param>
-        /// <param name="credentials">Jira user login credentials for making requests.</param>
-        /// <returns>A list of objects containing data about the board's issue priority colors.</returns>
-        [HttpPost("[action]")]
-        public async Task<IEnumerable<CardColor>> ColorList(string id, [FromBody] Credentials credentials)
-        {
-            var credentialsString = credentials.Username + ":" + credentials.Password;
-            var colorList = new ColorList();
-            colorList = await jiraClient.GetBoardDataAsync<ColorList> ("greenhopper/1.0/cardcolors/" + id + "/strategy/priority", credentialsString, id);
-
-            if (colorList == null) { return null; }
-            return colorList.CardColors;
-        }
     }
 }

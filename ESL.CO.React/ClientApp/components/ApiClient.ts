@@ -95,11 +95,6 @@ export class ApiClient {
         return ApiClient.post('api/SampleData/BoardList', credentials) as Promise<Value[]>;
     }
 
-    // SampleDataController: Gets color list
-    static colorList(id: string, credentials: Credentials): Promise<CardColor[]> {
-        return ApiClient.post('api/SampleData/ColorList?id=' + id.toString(), credentials) as Promise<CardColor[]>;
-    }
-
     // SampleDataController: Gets board data
     static boardData(id: string, credentials: Credentials): Promise<Board> {
         return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials) as Promise<Board>;

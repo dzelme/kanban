@@ -13,10 +13,9 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         this.state = {
             boardList:[],
             board: {
-                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], hasChanged: false
+                id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], cardColors: [], hasChanged: false
             },
             boardChanged: false,
-            colorList:[],
             loading: true
         };
 
@@ -25,12 +24,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
-
-                        ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
-                            .then(dataColor => {
-                                this.setState({ boardList: dataPres.boards.values, board: dataBoard, boardChanged: true, colorList: dataColor }, this.makeList);
-                            });
-
+                         this.setState({ boardList: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
                     });
             });
     }
@@ -48,23 +42,19 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     boardLoad() {
-        clearInterval(this.refreshTimer);
-
+ 
         ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
                 ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
                     .then(dataBoard => {
 
-                        ApiClient.colorList(this.props.match.params.boardId, dataPres.credentials)
-                            .then(dataColor => {
-                                if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
-                                    this.setState({ boardChanged: false }, this.RefreshRate);
-                                }
-                                else {
-                                    this.setState({ board: dataBoard, colorList: dataColor, boardChanged: true }, this.RefreshRate);
-                                }                             
-                            });                                           
+                         if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
+                             this.setState({ boardChanged: false }, this.RefreshRate);
+                         }
+                         else {
+                             this.setState({ board: dataBoard, boardChanged: true }, this.RefreshRate);
+                         }                                                                       
                     });
             });
     }
@@ -95,7 +85,8 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
                 return <div>
 
                     <div>  <BoardName presentationId={this.props.match.params.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
-                    <div id='board'><BoardTable board={this.state.board} colorList={this.state.colorList} /></div>
+                    <div id='board'><BoardTable board={this.state.board} /></div>
+
                 </div>;
             }
         }

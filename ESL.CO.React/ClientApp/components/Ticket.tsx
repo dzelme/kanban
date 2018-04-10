@@ -116,6 +116,14 @@ export default class Ticket extends React.Component<{ issue: Issue, colorList: C
                 case b: h = 60 * ((r - g) / difference + 4); break;
             }
         }
-        return "hsl("+ h + "," + s*100 + "%," + 90 + "%)";
+        
+        if (l*100 > 80) {
+            l = 100;
+        }
+        else {
+            l = 90; 
+        }
+        
+        return "hsl("+ h + "," + s*100 + "%," + l + "%)";
     }
 }
