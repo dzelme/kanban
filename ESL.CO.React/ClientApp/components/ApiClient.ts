@@ -134,9 +134,4 @@ export class ApiClient {
     static networkStatistics(id: string): Promise<JiraConnectionLogEntry[]> {
         return ApiClient.post('api/Statistics/GetNetworkStatisticsList', id)
     }
-
-    // SettingsController
-    static saveUserSettings(boardList: Value[], id: string) {
-        return ApiClient.post('api/Settings/SaveUserSettings?id=' + id, boardList)
-    }
 }
