@@ -82,6 +82,7 @@ namespace ESL.CO.React.Controllers
             foreach (var boardPresentationDbModel in boardPresentationDbModelList)
             {
                 var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                boardPresentation.Credentials = null;
                 boardPresentationList.Add(boardPresentation);
             }
 
@@ -107,6 +108,7 @@ namespace ESL.CO.React.Controllers
             else
             {
                 var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                //boardPresentation.Credentials = null;
                 return Ok(boardPresentation);
             }
         }
