@@ -97,7 +97,7 @@ export class ApiClient {
 
     // SampleDataController: Gets board data
     static boardData(id: string, credentials: Credentials): Promise<Board> {
-        return ApiClient.post('api/SampleData/BoardData?id=' + id.toString(), credentials) as Promise<Board>;
+        return ApiClient.post('api/SampleData/BoardData?id=' + id, credentials) as Promise<Board>;
     }
 
     // PresentationsController
@@ -126,7 +126,12 @@ export class ApiClient {
     }
 
     // StatisticsController
-    static statisticsList(): Promise<StatisticsModel[]> {  //
+    static saveBoardViewStatistics(id: string) {
+        return ApiClient.post('api/Statistics/SaveBoardViewStatistics', id)
+    }
+
+    // StatisticsController
+    static statisticsList(): Promise<StatisticsModel[]> {
         return ApiClient.get('api/Statistics/GetStatisticsList')
     }
 

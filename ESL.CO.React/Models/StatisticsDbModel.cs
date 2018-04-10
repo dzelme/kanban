@@ -21,12 +21,12 @@ namespace ESL.CO.React.Models
 
         public StatisticsDbModel() { }
 
-        public StatisticsDbModel(string id, string link = "", string responseStatus = "", string exception = "", string time = "")
+        public StatisticsDbModel(string id, string type, string link = "", string responseStatus = "", string exception = "", string time = "")
         {
             string pattern = "dd.MM.yyyy HH:mm:ss";
 
             BoardId = id;
-            Type = "p";
+            Type = type;
             Time = (time == "") ? DateTime.Now.ToString(pattern) : DateTime.Parse(time).ToString(pattern);
             Link = link;
             ResponseStatus = responseStatus;

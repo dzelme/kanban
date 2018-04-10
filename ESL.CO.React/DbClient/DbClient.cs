@@ -96,7 +96,7 @@ namespace ESL.CO.React.DbConnection
             var aggregate = statisticsCollection
                 .Aggregate()
                 .Match(new BsonDocument {
-                    { "Type", "p" },
+                    { "Type", "view" },
                 })
                 .Group(new BsonDocument {
                     { "_id", "$BoardId" },
@@ -132,7 +132,7 @@ namespace ESL.CO.React.DbConnection
         {
             var filter = 
                 Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
-                Builders<StatisticsDbModel>.Filter.Eq("Type", "p");
+                Builders<StatisticsDbModel>.Filter.Eq("Type", "connection");
             var results = await statisticsCollection
                 .Find(filter)
                 .Project(Builders<StatisticsDbModel>.Projection

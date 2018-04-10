@@ -52,7 +52,7 @@ namespace ESL.CO.React.JiraIntegration
                     if (!string.IsNullOrEmpty(id))  // not to store data about general Jira requests (not specific to a particular board)
                     {
                         dbClient.SaveStatisticsAsync(
-                            new StatisticsDbModel(id, url, response.StatusCode.ToString(), response.ReasonPhrase));
+                            new StatisticsDbModel(id, "connection", url, response.StatusCode.ToString(), response.ReasonPhrase));
                     }
                     return serializer.Deserialize<T>(jsonReader);
                 }
@@ -65,7 +65,7 @@ namespace ESL.CO.React.JiraIntegration
             if (!string.IsNullOrEmpty(id))  // not to store data about general Jira requests (not specific to a particular board)
             {
                 dbClient.SaveStatisticsAsync(
-                    new StatisticsDbModel(id, url, response.StatusCode.ToString(), response.ReasonPhrase));
+                    new StatisticsDbModel(id, "connection", url, response.StatusCode.ToString(), response.ReasonPhrase));
             }
 
             return default(T);  //null
