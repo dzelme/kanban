@@ -52,10 +52,11 @@ namespace ESL.CO.React.Controllers
             foreach (var boardDbModel in boardPresentationDbModel.Boards)
             {
                 var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
+                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString);
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
-                    Name = (await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString)).Name,
+                    Name = (boardName == null) ? "" : boardName.Name,
                     Visibility = boardDbModel.Visibility,
                     TimeShown = boardDbModel.TimeShown,
                     RefreshRate = boardDbModel.RefreshRate
