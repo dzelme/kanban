@@ -165,7 +165,6 @@ interface EditPresentationState {
 
 interface CreatePresentationState {
     boardPresentation: BoardPresentation;
-    boardList: Value[];
     authenticated: boolean;
     loading: boolean;
 }

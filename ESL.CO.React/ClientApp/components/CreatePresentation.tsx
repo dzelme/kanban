@@ -22,7 +22,6 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: []
                 }
             },
-            boardList: [],  //AD: FIX: boardList redundant, = boardPresentation.boards.values
             loading: true,
             authenticated: true
         };
@@ -57,7 +56,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     handleFetch() {
         ApiClient.boardList(this.state.boardPresentation.credentials)
             .then(data => {
-                this.setState({ boardList: data, loading: false });
+                let newBoardPresentation = this.state.boardPresentation;
+                newBoardPresentation.boards.values = data;
+                this.setState({ boardPresentation: newBoardPresentation, loading: false });
             });
     }
 
@@ -66,7 +67,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         var val = new Array();
 
-        this.state.boardList.map(board => {
+        this.state.boardPresentation.boards.values.map(board => {
             if (board.visibility == true) { val.push(board); }
         })
 
@@ -103,48 +104,42 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
         }
     }
 
-    handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardList;
+    handleChangeSettings(id: string, setting: string, value: number) {
+        var newBoardList = this.state.boardPresentation.boards.values;
 
-        this.state.boardList.map((board, index) => {
+        this.state.boardPresentation.boards.values.map((board, index) => {
             if (board.id.toString() == id) {
-                newBoardlist[index].visibility = !newBoardlist[index].visibility
+                if (setting == "visibility") {
+                    newBoardList[index].visibility = !newBoardList[index].visibility;
+                }
+                if (setting == "timeShown") {
+                    newBoardList[index].timeShown = value;
+                }
+                if (setting == "refreshRate") {
+                    newBoardList[index].refreshRate = value;
+                }
 
+                let newBoardPresentation = this.state.boardPresentation;
+                newBoardPresentation.boards.values = newBoardList;
                 this.setState({
-                    boardList: newBoardlist
+                    boardPresentation: newBoardPresentation
                 });
             }
         })
     }
 
+    handleChangeBoardVisibility(id: string) {
+        this.handleChangeSettings(id, "visibility", 0);
+    }
+
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardlist = this.state.boardList;
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
-
-            this.state.boardList.map((board, index) => {
-
-                if (board.id.toString() == id) {
-                    newBoardlist[index].timeShown = value
-
-                    this.setState({
-                        boardList: newBoardlist
-                    });
-                }
-            })
+            this.handleChangeSettings(id, "timeShown", value);
         }
-        else {
-            this.state.boardList.map((board, index) => {
-
-                if (board.id.toString() == id) {
-                    newBoardlist[index].refreshRate = value
-
-                    this.setState({
-                        boardList: newBoardlist
-                    });
-                }
-            })
+        if (name == 'refreshRate') {
+            this.handleChangeSettings(id, "refreshRate", value);
         }
     }
 
@@ -155,7 +150,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         let contents = this.state.loading
             ? null
-            : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
+            : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardPresentation.boards.values, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
 
         let error = this.state.authenticated
             ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
