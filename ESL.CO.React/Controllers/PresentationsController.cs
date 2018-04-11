@@ -50,10 +50,11 @@ namespace ESL.CO.React.Controllers
                 }
             };
 
+            var credentials = (await dbClient.GetPresentation(boardPresentationDbModel.Id)).Credentials;
+
             foreach (var boardDbModel in boardPresentationDbModel.Boards)
             {
-                var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
-                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString);
+                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentials);
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
@@ -109,7 +110,7 @@ namespace ESL.CO.React.Controllers
             else
             {
                 var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
-                //boardPresentation.Credentials = null;
+                boardPresentation.Credentials.Password = null;
                 return Ok(boardPresentation);
             }
         }
@@ -125,9 +126,15 @@ namespace ESL.CO.React.Controllers
         /// </returns>
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public IActionResult SavePresentation([FromBody] BoardPresentation boardPresentation)
+        public async Task<IActionResult> SavePresentation([FromBody] BoardPresentation boardPresentation)
         {
-            if (ldapClient.CheckCredentials(boardPresentation.Credentials.Username, boardPresentation.Credentials.Password, false))
+            var credentials = boardPresentation.Credentials;
+            if(!string.IsNullOrEmpty(boardPresentation.Id))
+            {
+                credentials = (await dbClient.GetPresentation(boardPresentation.Id)).Credentials;
+            }
+
+            if (ldapClient.CheckCredentials(credentials.Username, credentials.Password, false))
             {
                 if (ModelState.IsValid)
                 {
