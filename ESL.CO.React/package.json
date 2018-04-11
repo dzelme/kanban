@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "@types/history": "4.6.0",
+    "@types/jest": "22.2.2",
     "@types/react": "15.0.35",
     "@types/react-dom": "15.5.1",
     "@types/react-hot-loader": "3.0.3",
