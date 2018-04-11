@@ -2,7 +2,7 @@
 import 'isomorphic-fetch';
 import jwt_decode from 'jwt-decode';
 import { RouteComponentProps } from 'react-router';
-import { CreatePresentationState, Value } from './Interfaces';
+import { CreatePresentationState, Value, BoardPresentation } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 export class CreatePresentation extends React.Component<RouteComponentProps<{}>, CreatePresentationState> {
@@ -54,7 +54,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     }
 
     handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
+        ApiClient.boardListFromCredentials(this.state.boardPresentation.credentials)
             .then(data => {
                 let newBoardPresentation = this.state.boardPresentation;
                 newBoardPresentation.boards.values = data;
@@ -71,8 +71,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
             if (board.visibility == true) { val.push(board); }
         })
 
-        this.setState({
-            boardPresentation: {
+        let presentation = {
                 id: this.state.boardPresentation.id,
                 title: this.state.boardPresentation.title,
                 owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
@@ -81,11 +80,11 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: val,
                 }
             }
-        }, this.postPresentation)
-    }
+        this.postPresentation(presentation)
+    }; 
 
-    postPresentation() {
-        ApiClient.savePresentation(this.state.boardPresentation)
+    postPresentation(presentation: BoardPresentation) {
+        ApiClient.savePresentation(presentation)
             .then(() => open('./admin/presentations', '_self'));
     }
 

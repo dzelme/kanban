@@ -229,7 +229,7 @@ namespace ESL.CO.React.DbConnection
         private async Task<int> GeneratePresentationId()
         {
             var presentationList = await GetPresentationsListAsync();
-            var last = presentationList.Last();
+            var last = (presentationList.Any()) ? presentationList.Last() : null;
             var id = (last == null) ? 0 : Convert.ToInt32(last.Id);
             return ++id;
         }

@@ -85,9 +85,14 @@ export class ApiClient {
         return p.then(response => response.ok);
     }
 
-    // SampleDataController: Gets board list
-    static boardList(credentials: Credentials): Promise<Value[]> {
-        return ApiClient.post('api/SampleData/BoardList', credentials) as Promise<Value[]>;
+    // SampleDataController: Gets board list using credentials
+    static boardListFromCredentials(credentials: Credentials): Promise<Value[]> {
+        return ApiClient.post('api/SampleData/BoardListFromCredentials', credentials) as Promise<Value[]>;
+    }
+
+    // SampleDataController: Gets board list using presentation id
+    static boardListFromId(id: string): Promise<Value[]> {
+        return ApiClient.post('api/SampleData/BoardListFromId', id) as Promise<Value[]>;
     }
 
     // SampleDataController: Gets board data

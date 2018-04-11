@@ -50,11 +50,9 @@ namespace ESL.CO.React.Controllers
                 }
             };
 
-            var credentials = (await dbClient.GetPresentation(boardPresentationDbModel.Id)).Credentials;
-
             foreach (var boardDbModel in boardPresentationDbModel.Boards)
             {
-                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentials);
+                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, boardPresentation.Credentials);
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
@@ -128,13 +126,12 @@ namespace ESL.CO.React.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePresentation([FromBody] BoardPresentation boardPresentation)
         {
-            var credentials = boardPresentation.Credentials;
             if(!string.IsNullOrEmpty(boardPresentation.Id))
             {
-                credentials = (await dbClient.GetPresentation(boardPresentation.Id)).Credentials;
+                boardPresentation.Credentials = (await dbClient.GetPresentation(boardPresentation.Id)).Credentials;
             }
 
-            if (ldapClient.CheckCredentials(credentials.Username, credentials.Password, false))
+            if (ldapClient.CheckCredentials(boardPresentation.Credentials.Username, boardPresentation.Credentials.Password, false))
             {
                 if (ModelState.IsValid)
                 {

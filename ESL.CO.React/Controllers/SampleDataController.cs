@@ -55,11 +55,23 @@ namespace ESL.CO.React.Controllers
         /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
         [Authorize]
         [HttpPost("[action]")]
-        public async Task<IEnumerable<Value>> BoardList([FromBody] Credentials credentials)
+        public async Task<IEnumerable<Value>> BoardListFromCredentials([FromBody] Credentials credentials)
         {
             return (await jiraClient.GetFullBoardList(credentials)).OrderBy(board => Convert.ToInt32(board.Id));
         }
-        
+
+        /// <summary>
+        /// Obtains the full currently available board list from Jira REST API.
+        /// </summary>
+        /// <param name="id">Jira credentials for obtaining the data.</param>
+        /// <returns>A task of obtaining the list of all currently available Kanban boards.</returns>
+        [Authorize]
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<Value>> BoardListFromId([FromBody] string id)
+        {
+            return (await jiraClient.GetFullBoardList(null, id)).OrderBy(board => Convert.ToInt32(board.Id));
+        }
+
         /// <summary>
         /// Gets board data, checks if the data has changed (compared to cached version), saves to cache if it has.
         /// </summary>

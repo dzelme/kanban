@@ -78,9 +78,12 @@ namespace ESL.CO.React.JiraIntegration
         /// </summary>
         /// <param name="credentials">Jira user login credentials for making requests.</param>
         /// <returns>A full list of boards (objects containing board data) that are available to the user whose credentials were passed as a parameter.</returns>
-        public async Task<IEnumerable<Value>> GetFullBoardList(Credentials credentials)
+        public async Task<IEnumerable<Value>> GetFullBoardList(Credentials credentials = null, string id = null)
         {
+            if (id != null) { credentials = (await dbClient.GetPresentation(id))?.Credentials; }
+
             var boardList = await GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials);
+            if (boardList == null) { return new List<Value>(); }
 
             FullBoardList fullBoardList = new FullBoardList
             {

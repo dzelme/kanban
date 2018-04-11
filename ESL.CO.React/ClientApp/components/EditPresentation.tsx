@@ -2,7 +2,7 @@
 import 'isomorphic-fetch';
 import jwt_decode from 'jwt-decode';
 import { RouteComponentProps } from 'react-router';
-import { EditPresentationState, Value } from './Interfaces';
+import { EditPresentationState, Value, BoardPresentation } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 export class EditPresentation extends React.Component<RouteComponentProps<{ id: string }>, EditPresentationState> {
@@ -62,7 +62,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
+        ApiClient.boardListFromId(this.state.boardPresentation.id)
             .then(data => {
                 this.setState({ boardPresentation: this.state.boardPresentation, boardList: data }, this.handleVisibility);
             });
@@ -82,22 +82,20 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             if (board.visibility == true) { val.push(board); }
         })
 
-        this.setState({
-            boardPresentation: {
-                id: this.state.boardPresentation.id,
-                title: this.state.boardPresentation.title,
-                owner: this.state.boardPresentation.owner,
-                credentials: this.state.boardPresentation.credentials,
-                boards: {
-                    values: val,
-                }
+        let presentation = {
+            id: this.state.boardPresentation.id,
+            title: this.state.boardPresentation.title,
+            owner: this.state.boardPresentation.owner,
+            credentials: this.state.boardPresentation.credentials,
+            boards: {
+                values: val,
             }
-        }, this.postPresentation)
-
+        }
+        this.postPresentation(presentation)
     }
 
-    postPresentation() {
-        ApiClient.savePresentation(this.state.boardPresentation)
+    postPresentation(presentation: BoardPresentation) {
+        ApiClient.savePresentation(presentation)
             .then(() => open('./admin/presentations', '_self'));
     }
 
