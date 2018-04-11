@@ -138,7 +138,7 @@ namespace ESL.CO.React.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    dbClient.SavePresentationsAsync(boardPresentation);
+                    await dbClient.SavePresentationsAsync(boardPresentation);
                 }
                 else
                 {

@@ -48,11 +48,11 @@ namespace ESL.CO.React.DbConnection
         /// </summary>
         /// <param name="entry">An object containing presentation data to be saved.</param>
         /// <returns>The result of the save operation.</returns>
-        public Task SavePresentationsAsync(BoardPresentation entry)
+        public async Task<Task> SavePresentationsAsync(BoardPresentation entry)
         {
             if (string.IsNullOrEmpty(entry.Id))
             {
-                entry.Id = GeneratePresentationId().ToString();
+                entry.Id = (await GeneratePresentationId()).ToString();
             }
 
             var entryDbModel = new BoardPresentationDbModel
@@ -88,7 +88,6 @@ namespace ESL.CO.React.DbConnection
         {
             var results = await presentationCollection
                 .Find(FilterDefinition<BoardPresentationDbModel>.Empty)
-                //.Sort(new BsonDocument { { "_id", 1 } })
                 .ToListAsync();
 
             return results.OrderBy(board => Convert.ToInt32(board.Id));
@@ -224,12 +223,14 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// Generates an auto-incremented id for new presentations.
+        /// Generates an auto-incremented id (as current max id + 1) for new presentations.
         /// </summary>
         /// <returns>The id for a new presentation.</returns>
-        private int GeneratePresentationId()
+        private async Task<int> GeneratePresentationId()
         {
-            var id = (int)presentationCollection.Count(new BsonDocument());
+            var presentationList = await GetPresentationsListAsync();
+            var last = presentationList.Last();
+            var id = (last == null) ? 0 : Convert.ToInt32(last.Id);
             return ++id;
         }
     }
