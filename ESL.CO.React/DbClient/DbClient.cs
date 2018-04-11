@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
@@ -83,14 +84,14 @@ namespace ESL.CO.React.DbConnection
         /// Gets a list of all saved presentations.
         /// </summary>
         /// <returns>A list of objects containg information about all presentations saved in database.</returns>
-        public async Task<List<BoardPresentationDbModel>> GetPresentationsListAsync()
+        public async Task<IEnumerable<BoardPresentationDbModel>> GetPresentationsListAsync()
         {
             var results = await presentationCollection
                 .Find(FilterDefinition<BoardPresentationDbModel>.Empty)
-                .Sort(new BsonDocument { { "_id", 1 } })
+                //.Sort(new BsonDocument { { "_id", 1 } })
                 .ToListAsync();
 
-            return results;
+            return results.OrderBy(board => Convert.ToInt32(board.Id));
         }
 
         /// <summary>
