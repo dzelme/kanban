@@ -9,7 +9,7 @@
     "skipDefaultLibCheck": true,
     //"strict": true,
     "noImplicitAny": false,
-    "types": [ "webpack-env" ]
+    "types": [ "webpack-env", "jest" ]
   },
   "exclude": [
       "bin",
