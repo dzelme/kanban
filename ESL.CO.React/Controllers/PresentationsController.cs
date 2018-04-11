@@ -56,7 +56,7 @@ namespace ESL.CO.React.Controllers
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
-                    Name = (boardName == null) ? "" : boardName.Name,
+                    Name = (boardName == null) ? "<panelis nepieejams>" : boardName.Name,
                     Visibility = boardDbModel.Visibility,
                     TimeShown = boardDbModel.TimeShown,
                     RefreshRate = boardDbModel.RefreshRate
