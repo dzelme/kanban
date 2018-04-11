@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders keyname prop 1`] = `
+<div
+  className="TicketText"
+>
+  <h5>
+    123
+  </h5>
+</div>
+`;
