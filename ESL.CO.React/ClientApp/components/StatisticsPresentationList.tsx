@@ -59,7 +59,7 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
                             <td key={presentation.presentationId + "title"}>{presentation.title}</td>
                             <td key={presentation.presentationId + "boards"}>
                                 {presentation.boards.values.map((board, index) =>
-                                    <Link key={index} className="LinkText" to={'/admin/statistics/' + presentation.presentationId + "/" + board.id}>{board.name}; </Link>
+                                    <Link key={index} className="LinkText" to={'/admin/statistics/' + presentation.presentationId + "/" + board.id}>{board.id}; </Link>
                                 )}
                             </td>
                             <td key={presentation.presentationId + "timesShown"}>{presentation.timesShown.toString()}</td>
