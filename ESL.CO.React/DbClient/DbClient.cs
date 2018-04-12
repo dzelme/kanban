@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
+using ESL.CO.React.JiraIntegration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
@@ -93,9 +94,9 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// ////////////////////////////////////////////////////////////////////////////////
+        /// Gets view statistics for all presentations that have been viewed at least once.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of objects containing presentation view statistics.</returns>
         public async Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationListAsync()
         {
             var aggregate = statisticsCollection
@@ -122,29 +123,10 @@ namespace ESL.CO.React.DbConnection
             var statisticsPresentationList = new List<StatisticsPresentationModel>();
             foreach (var item in results)
             {
-                var statisticsListElement = BsonSerializer.Deserialize<StatisticsPresentationModel>(item);
-                statisticsListElement = await AddTitleAndBoardIds(statisticsListElement);
-                statisticsPresentationList.Add(statisticsListElement);
+                statisticsPresentationList.Add(BsonSerializer.Deserialize<StatisticsPresentationModel>(item));
             }
 
             return statisticsPresentationList;
-        }
-
-        /// <summary>
-        /// Gets the title and board id list for the specified presentation's database representation model.
-        /// </summary>
-        /// <param name="statisticsListElement">The presentation's database representation model that will be appended.</param>
-        /// <returns>The appended presentation model.</returns>
-        private async Task<StatisticsPresentationModel> AddTitleAndBoardIds(StatisticsPresentationModel statisticsListElement)
-        {
-            var presentationDbEntry = await GetPresentation(statisticsListElement.PresentationId);
-            statisticsListElement.Title = presentationDbEntry.Title;
-            statisticsListElement.Boards = new FullBoardList { Values = new List<Value>() };
-            foreach (var board in presentationDbEntry.Boards)
-            {
-                statisticsListElement.Boards.Values.Add(new Value { Id = board.Id });
-            }
-            return statisticsListElement;
         }
 
         /// <summary>

@@ -137,7 +137,7 @@ export class ApiClient {
 
     // StatisticsController
     static statisticsBoardList(presentationId: string): Promise<StatisticsBoardModel[]> {
-        return ApiClient.get('api/Statistics/GetStatisticsBoardList?boardId=' + presentationId)
+        return ApiClient.get('api/Statistics/GetStatisticsBoardList?presentationId=' + presentationId)
     }
 
     // StatisticsController

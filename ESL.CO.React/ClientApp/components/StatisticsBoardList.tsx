@@ -55,7 +55,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
                     {statisticsBoardList.map(board =>
                         <tr key={board.boardId + "row"}>
                             <td key={board.boardId + ""}>{board.boardId}</td>
-                            <td key={board.boardId + "name"}>{board.boardId}</td>
+                            <td key={board.boardId + "name"}>{board.boardName}</td>
                             <td key={board.boardId + "timesShown"}>{board.timesShown.toString()}</td>
                             <td key={board.boardId + "lastShown"}>{board.lastShown}</td>
                             <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Savienojums</button></Link></td>

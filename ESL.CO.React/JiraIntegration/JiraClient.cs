@@ -33,7 +33,8 @@ namespace ESL.CO.React.JiraIntegration
         /// <typeparam name="T">Determines the type of object whose information will be retrieved.</typeparam>
         /// <param name="url">Request specific part of the URL required to make different Jira REST API requests.</param>
         /// <param name="credentials">Jira user login credentials for making requests.</param>
-            /// <param name="id">Board id required for creating board specific connection logs.</param>
+        /// <param name="boardId">Board id required for saving board specific statistics.</param>
+        /// <param name="presentationId">Presentation id required for saving presentation specific statistics.</param>
         /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
         public async Task<T> GetBoardDataAsync<T>(string url, string credentials, string boardId = "", string presentationId = "")
         {
