@@ -29,6 +29,3 @@ export const routes = <Layout>
     <Route exact path='/p/:id' component={BoardReader} />
     <Route exact path='/k/:presentationId/:boardId' component={BoardReaderFromUrl} />
 </Layout>;
-
-//<Route exact path='/admin/statistics' component={StatisticsBoardList} />
-//    <Route path="/admin/statistics/:id" component={StatisticsConnectionList} />
