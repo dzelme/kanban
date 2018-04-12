@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import ColumnReader from './ColumnReader';
-import { BoardReaderState } from './Interfaces';
+import { BoardReaderState, StatisticsDbModel } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 export class BoardReader extends React.Component<RouteComponentProps<{ id: string }>, BoardReaderState> {
@@ -19,7 +19,12 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: strin
                 this.setState({ boardList: data.boards.values }, this.makeTitleList);
             });
 
-        ApiClient.saveViewStatistics(this.props.match.params.id, "presentation");
+        let stats = {
+            presentationId: this.props.match.params.id,
+            boardId: "",
+            type: "presentation"
+        }
+        ApiClient.saveViewStatistics(stats);
     }
 
     makeTitleList() {
@@ -35,7 +40,7 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: strin
     public render() {
         let boardInfo = this.state.loading
             ? <p><em>Loading...</em></p>
-            : (this.state.boardList.length != 0) ? <ColumnReader boardList={this.state.boardList} presentationID={this.props.match.params.id} titleList={this.state.titleList} /> : <h1 >No boards selected</h1>
+            : (this.state.boardList.length != 0) ? <ColumnReader boardList={this.state.boardList} presentationId={this.props.match.params.id} titleList={this.state.titleList} /> : <h1 >No boards selected</h1>
         
         return<div>{boardInfo}</div>
     }

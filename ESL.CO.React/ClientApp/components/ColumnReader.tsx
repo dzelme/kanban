@@ -4,14 +4,14 @@ import BoardTable from './BoardTable';
 import { ColumnReaderState, Value } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-export default class ColumnReader extends React.Component<{ boardList: Value[], presentationID: string, titleList: string[] }, ColumnReaderState> {
+export default class ColumnReader extends React.Component<{ boardList: Value[], presentationId: string, titleList: string[] }, ColumnReaderState> {
     refreshTimer: number;
     showTimer: number;
     
     constructor(props) {
         super(props);
         this.state = {
-            presentationID: "",
+            presentationId: "",
             boardList: this.props.boardList,
             currentIndex: 0,
             boardId: this.props.boardList[0].id,
@@ -26,12 +26,12 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
         this.nextSlide = this.nextSlide.bind(this);
         this.boardLoad = this.boardLoad.bind(this);
 
-        ApiClient.getPresentation(this.props.presentationID)
+        ApiClient.getPresentation(this.props.presentationId)
             .then(dataPres => {
 
-                ApiClient.boardData(this.state.boardId, dataPres.credentials)
+                ApiClient.boardData(this.state.boardId, this.props.presentationId)
                     .then(dataBoard => {
-                        this.setState({ board: dataBoard, presentationID: this.props.presentationID, loading: false, boardChanged: true, sameBoard: false }, this.RefreshRate);
+                        this.setState({ board: dataBoard, presentationId: this.props.presentationId, loading: false, boardChanged: true, sameBoard: false }, this.RefreshRate);
                     });
             });     
     }
@@ -63,15 +63,20 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     saveBoardViewStatistics() {
-        ApiClient.saveViewStatistics(this.state.board.id, "board");
+        let stats = {
+            presentationId: this.state.presentationId,
+            boardId: this.state.board.id,
+            type: "board"
+        }
+        ApiClient.saveViewStatistics(stats);
     }
 
     boardLoad() {
 
-        ApiClient.getPresentation(this.state.presentationID)
+        ApiClient.getPresentation(this.state.presentationId)
             .then(dataPres => {
 
-                ApiClient.boardData(this.state.boardId, dataPres.credentials)
+                ApiClient.boardData(this.state.boardId, this.props.presentationId)
                     .then(dataBoard => {
 
                         if (dataBoard.id == this.state.boardId) {
@@ -114,7 +119,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
             else {
                 return <div>
 
-                    <div>  <BoardName presentationId={this.props.presentationID} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
+                    <div>  <BoardName presentationId={this.props.presentationId} name={this.state.board.name} fromCache={this.state.board.fromCache} message={this.state.board.message} boardlist={this.state.boardList} /></div>
                     <div id='board'><BoardTable board={this.state.board} /></div>
 
                     {(this.state.boardList.length <= 1) ? this.saveBoardViewStatistics() : this.slideShow()}

@@ -33,9 +33,9 @@ namespace ESL.CO.React.JiraIntegration
         /// <typeparam name="T">Determines the type of object whose information will be retrieved.</typeparam>
         /// <param name="url">Request specific part of the URL required to make different Jira REST API requests.</param>
         /// <param name="credentials">Jira user login credentials for making requests.</param>
-        /// <param name="id">Board id required for creating board specific connection logs.</param>
+            /// <param name="id">Board id required for creating board specific connection logs.</param>
         /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, string id = "")
+        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, string boardId = "", string presentationId = "")
         {
             var baseUri = new Uri("https://jira.returnonintelligence.com/rest/");
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
@@ -49,10 +49,10 @@ namespace ESL.CO.React.JiraIntegration
                 using (var reader = new StreamReader(stream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    if (!string.IsNullOrEmpty(id))  // not to store data about general Jira requests (not specific to a particular board)
+                    if (!string.IsNullOrEmpty(boardId))  // not to store data about general Jira requests (not specific to a particular board)
                     {
                         dbClient.SaveStatisticsAsync(
-                            new StatisticsDbModel(id, "connection", url, response.StatusCode.ToString(), response.ReasonPhrase));
+                            new StatisticsDbModel("connection", presentationId, boardId, url, response.StatusCode.ToString(), response.ReasonPhrase));
                     }
                     return serializer.Deserialize<T>(jsonReader);
                 }
@@ -62,10 +62,10 @@ namespace ESL.CO.React.JiraIntegration
                 //HttpError error = response.Content.ReadAsStringAsync().Result;
             }
 
-            if (!string.IsNullOrEmpty(id))  // not to store data about general Jira requests (not specific to a particular board)
+            if (!string.IsNullOrEmpty(boardId))  // not to store data about general Jira requests (not specific to a particular board)
             {
                 dbClient.SaveStatisticsAsync(
-                    new StatisticsDbModel(id, "connection", url, response.StatusCode.ToString(), response.ReasonPhrase));
+                    new StatisticsDbModel("connection", presentationId, boardId, url, response.StatusCode.ToString(), response.ReasonPhrase));
             }
 
             return default(T);  //null

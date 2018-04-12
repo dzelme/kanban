@@ -35,7 +35,7 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
             : StatisticsPresentationList.renderStatisticsPresentationList(this.state.statisticsPresentationList);
 
         return <div className='top-padding'>
-            <h1>Statistika</h1>
+            <h1>Prezentāciju statistika</h1>
             {contents}
         </div>;
     }
@@ -54,17 +54,17 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
             </thead>
             <tbody>
                     {statisticsPresentationList.map(presentation =>
-                        <tr key={presentation.itemId + "row"}>
-                            <td key={presentation.itemId + ""}>{presentation.itemId}</td>
-                            <td key={presentation.itemId + "title"}>{presentation.title}</td>
-                            <td key={presentation.itemId + "boards"}>
+                        <tr key={presentation.presentationId + "row"}>
+                            <td key={presentation.presentationId + ""}>{presentation.presentationId}</td>
+                            <td key={presentation.presentationId + "title"}>{presentation.title}</td>
+                            <td key={presentation.presentationId + "boards"}>
                                 {presentation.boards.values.map((board, index) =>
-                                    <Link key={index} className="LinkText" to={'/admin/statistics/' + presentation.itemId + "/" + board.id}>{board.name}; </Link>
+                                    <Link key={index} className="LinkText" to={'/admin/statistics/' + presentation.presentationId + "/" + board.id}>{board.name}; </Link>
                                 )}
                             </td>
-                            <td key={presentation.itemId + "timesShown"}>{presentation.timesShown.toString()}</td>
-                            <td key={presentation.itemId + "lastShown"}>{presentation.lastShown}</td>
-                            <td><Link to={'/admin/statistics/' + presentation.itemId}><button className="btn btn-default">Paneļu statistika</button></Link></td>
+                            <td key={presentation.presentationId + "timesShown"}>{presentation.timesShown.toString()}</td>
+                            <td key={presentation.presentationId + "lastShown"}>{presentation.lastShown}</td>
+                            <td><Link to={'/admin/statistics/' + presentation.presentationId}><button className="btn btn-default">Apskatīt</button></Link></td>
                         </tr>
                     )}
                 </tbody>

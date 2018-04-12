@@ -22,16 +22,17 @@ namespace ESL.CO.React.Controllers
             this.dbClient = dbClient;
         }
 
-        /// <summary>
-        /// Saves board or presentation view statistics to database.
-        /// </summary>
-        /// <param name="id">The id of the board or presentation whose statistics will be saved.</param>
-        /// <param name="type">The type of view statistics to be saved: board or presentation.</param>
-        /// <returns>A response with status code 200.</returns>
+            /// <summary>
+            /// Saves board or presentation view statistics to database.
+            /// </summary>
+            /// <param name="id">The id of the board or presentation whose statistics will be saved.</param>
+            /// <param name="type">The type of view statistics to be saved: board or presentation.</param>
+            /// <returns>A response with status code 200.</returns>
         [HttpPost("[action]")]
-        public async Task<IActionResult> SaveViewStatistics(string id, [FromBody] string type)
+        public async Task<IActionResult> SaveViewStatistics([FromBody] StatisticsDbModel entry)
         {
-            await dbClient.SaveStatisticsAsync(new StatisticsDbModel(id, type));
+            entry.Time = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
+            await dbClient.SaveStatisticsAsync(entry);
             return Ok();
         }
 
@@ -44,28 +45,28 @@ namespace ESL.CO.React.Controllers
             return statisticsList;
         }
 
-        /// <summary>
-        /// Gets the statistics data of all boards that have been viewed atleast once.
-        /// </summary>
-        /// <returns>A list of boards and their statistics data.</returns>
+            /// <summary>
+            /// Gets the statistics data of all boards that have been viewed atleast once.
+            /// </summary>
+            /// <returns>A list of boards and their statistics data.</returns>
         [Authorize(Roles = "Admins")]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardList()
+        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardList(string boardId)
         {
-            var statisticsList = await dbClient.GetStatisticsBoardListAsync();
+            var statisticsList = await dbClient.GetStatisticsBoardListAsync(boardId);
             return statisticsList;
         }
 
-        /// <summary>
-        /// Gets the entire collection of network statistics entries.
-        /// </summary>
-        /// <param name="id">The id of the board whose network statistics will be obtained.</param>
-        /// <returns>A collection of network statistics entries.</returns>
+            /// <summary>
+            /// Gets the entire collection of network statistics entries.
+            /// </summary>
+            /// <param name="id">The id of the board whose network statistics will be obtained.</param>
+            /// <returns>A collection of network statistics entries.</returns>
         [Authorize(Roles = "Admins")]
         [HttpPost("[action]")]
-        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionList([FromBody] string id)
+        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionList(string boardId, [FromBody] string presentationId)
         {
-            var connectionStatsList = await dbClient.GetStatisticsConnectionsListAsync(id);
+            var connectionStatsList = await dbClient.GetStatisticsConnectionsListAsync(presentationId, boardId);
             return connectionStatsList;
         }
     }

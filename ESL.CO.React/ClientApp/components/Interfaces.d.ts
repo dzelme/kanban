@@ -104,8 +104,14 @@ export interface BoardPresentation {
     boards: FullBoardList;
 }
 
+interface StatisticsDbModel {
+    presentationId: string;
+    boardId: string;
+    type: string;
+}
+
 interface StatisticsPresentationModel {
-    itemId: string;
+    presentationId: string;
     title: string;
     boards: FullBoardList;
     timesShown: number;
@@ -113,7 +119,7 @@ interface StatisticsPresentationModel {
 }
 
 interface StatisticsBoardModel {
-    itemId: string;
+    boardId: string;
     boardName: string;
     timesShown: number;
     lastShown: string;
@@ -133,7 +139,7 @@ interface BoardReaderState {
 }
 
 interface ColumnReaderState {
-    presentationID: string;
+    presentationId: string;
     boardList: Value[];
     currentIndex: number;
     boardId: string;
@@ -143,7 +149,7 @@ interface ColumnReaderState {
     loading: boolean;
 }
 
-interface ReaderFromURLState {
+interface BoardReaderFromUrlState {
     boardList: Value[];
     board: Board;
     boardChanged: boolean;

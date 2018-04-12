@@ -8,7 +8,7 @@ namespace ESL.CO.React.Models
 {
     public class StatisticsPresentationModel
     {
-        public string ItemId { get; set; }
+        public string PresentationId { get; set; }
         public string Title { get; set; }
         public FullBoardList Boards { get; set; }
         public int TimesShown { get; set; }
@@ -16,7 +16,7 @@ namespace ESL.CO.React.Models
 
         public StatisticsPresentationModel()
         {
-            ItemId = "";
+            PresentationId = "";
             Title = "";
             Boards = new FullBoardList { Values = new List<Value>() };
             TimesShown = 0;

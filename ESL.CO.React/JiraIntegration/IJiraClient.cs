@@ -7,7 +7,7 @@ namespace ESL.CO.React.JiraIntegration
 {
     public interface IJiraClient
     {
-        Task<T> GetBoardDataAsync<T>(string url, string credentials, string id = "");
+        Task<T> GetBoardDataAsync<T>(string url, string credentials, string boardId = "", string presentationId = "");
         Task<IEnumerable<Value>> GetFullBoardList(Credentials credentials);
     }
 

@@ -16,7 +16,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
     }
 
     componentWillMount() {
-        ApiClient.statisticsConnectionList(this.props.match.params.boardId)
+        ApiClient.statisticsConnectionList(this.props.match.params.presentationId, this.props.match.params.boardId)
             .then(data => {
                 this.setState({ statisticsConnectionList: data, loading: false });
             });
@@ -31,7 +31,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
             : StatisticsConnectionList.renderStatisticsBoard(this.state.statisticsConnectionList);
 
         return <div className='top-padding'>
-            <h1>Paneļa #{this.props.match.params.boardId} : Savienojumi</h1>
+            <h1>Prezentācijas #{this.props.match.params.presentationId} paneļa #{this.props.match.params.boardId} savienojumu statistika</h1>
             {contents}
         </div>;
     }

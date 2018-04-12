@@ -9,8 +9,8 @@ namespace ESL.CO.React.DbConnection
         Task DeletePresentation(string id);
         Task<BoardPresentationDbModel> GetPresentation(string id);
         Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
-        Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync();
-        Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string id);
+        Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync(string presentationId);
+        Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string presentationId, string boardId);
         Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationListAsync();
         Task SavePresentationsAsync(BoardPresentation entry);
         Task SaveStatisticsAsync(StatisticsDbModel entry);

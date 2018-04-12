@@ -17,7 +17,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
     }
 
     componentWillMount() {
-        ApiClient.statisticsBoardList()
+        ApiClient.statisticsBoardList(this.props.match.params.presentationId)
             .then(data => {
                 this.setState({
                     statisticsBoardList: data,
@@ -35,7 +35,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
             : StatisticsBoardList.renderStatisticsBoardList(this.state.statisticsBoardList, this.props.match.params.presentationId);
 
         return <div className='top-padding'>
-            <h1>Statistika</h1>
+            <h1>Prezentācijas #{this.props.match.params.presentationId} paneļu statistika</h1>
             {contents}
         </div>;
     }
@@ -53,12 +53,12 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
             </thead>
             <tbody>
                     {statisticsBoardList.map(board =>
-                        <tr key={board.itemId + "row"}>
-                            <td key={board.itemId + ""}>{board.itemId}</td>
-                            <td key={board.itemId + "name"}>{board.itemId}</td>
-                            <td key={board.itemId + "timesShown"}>{board.timesShown.toString()}</td>
-                            <td key={board.itemId + "lastShown"}>{board.lastShown}</td>
-                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.itemId}><button className="btn btn-default">Savienojums</button></Link></td>
+                        <tr key={board.boardId + "row"}>
+                            <td key={board.boardId + ""}>{board.boardId}</td>
+                            <td key={board.boardId + "name"}>{board.boardId}</td>
+                            <td key={board.boardId + "timesShown"}>{board.timesShown.toString()}</td>
+                            <td key={board.boardId + "lastShown"}>{board.lastShown}</td>
+                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Savienojums</button></Link></td>
                         </tr>
                     )}
                 </tbody>

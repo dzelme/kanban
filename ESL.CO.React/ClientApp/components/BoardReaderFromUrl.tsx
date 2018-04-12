@@ -2,16 +2,16 @@
 import { RouteComponentProps } from 'react-router';
 import BoardName from './BoardName';
 import BoardTable from './BoardTable';
-import { ReaderFromURLState } from './Interfaces';
+import { BoardReaderFromUrlState } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
-export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: string, presentationId: string }>, ReaderFromURLState> {
+export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ boardId: string, presentationId: string }>, BoardReaderFromUrlState> {
     refreshTimer: number;
 
     constructor(props) {
         super(props);
         this.state = {
-            boardList:[],
+            boardList: [],
             board: {
                 id: "0", name: "", fromCache: false, message: "", columns: [], rows: [], cardColors: [], hasChanged: false
             },
@@ -22,7 +22,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
-                ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
+                ApiClient.boardData(this.props.match.params.boardId, this.props.match.params.presentationId)
                     .then(dataBoard => {
                          this.setState({ boardList: dataPres.boards.values, board: dataBoard, boardChanged: true }, this.makeList);
                     });
@@ -46,7 +46,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
         ApiClient.getPresentation(this.props.match.params.presentationId)
             .then(dataPres => {
 
-                ApiClient.boardData(this.props.match.params.boardId, dataPres.credentials)
+                ApiClient.boardData(this.props.match.params.boardId, this.props.match.params.presentationId)
                     .then(dataBoard => {
 
                          if (this.state.board.id == dataBoard.id && dataBoard.hasChanged == false) {
@@ -60,7 +60,12 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     saveBoardViewStatistics() {
-        ApiClient.saveViewStatistics(this.state.board.id, "board");
+        let stats = {
+            presentationId: this.props.match.params.presentationId,
+            boardId: this.state.board.id,
+            type: "board"
+        }
+        ApiClient.saveViewStatistics(stats);
     }
 
     RefreshRate() {

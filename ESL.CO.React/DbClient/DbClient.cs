@@ -104,7 +104,7 @@ namespace ESL.CO.React.DbConnection
                     { "Type", "presentation" },
                 })
                 .Group(new BsonDocument {
-                    { "_id", "$ItemId" },
+                    { "_id", "$PresentationId" },
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
@@ -112,7 +112,7 @@ namespace ESL.CO.React.DbConnection
                 .Project(new BsonDocument
                 {
                     { "_id", 0 },
-                    { "ItemId", "$_id" },
+                    { "PresentationId", "$_id" },
                     { "TimesShown", "$TimesShown" },
                     { "LastShown","$LastShown" }
                 });
@@ -129,18 +129,20 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// Gets board statistics for all boards that have been viewed at least once.
+        /// Gets presentation specific view statistics for all boards that have been viewed as part of the specified presentation at least once.
         /// </summary>
+        /// <param name="presentationId">The id of the presentation whose board statistics will be obtained.</param>
         /// <returns>A list of objects containing board view statistics.</returns>
-        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync()
+        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync(string presentationId)
         {
             var aggregate = statisticsCollection
                 .Aggregate()
                 .Match(new BsonDocument {
                     { "Type", "board" },
+                    { "PresentationId", presentationId }
                 })
                 .Group(new BsonDocument {
-                    { "_id", "$ItemId" },
+                    { "_id", "$BoardId" },
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
@@ -148,7 +150,7 @@ namespace ESL.CO.React.DbConnection
                 .Project(new BsonDocument
                 {
                     { "_id", 0 },
-                    { "ItemId", "$_id" },
+                    { "BoardId", "$_id" },
                     { "TimesShown", "$TimesShown" },
                     { "LastShown","$LastShown" }
                 });
@@ -165,14 +167,16 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// Gets Jira request statistics for a specified board.
+        /// Gets presentation specific Jira request statistics for a specified board as part of the specified presentation.
         /// </summary>
-        /// <param name="id">The id of the board whose statistics about Jira connections will be obtained.</param>
+        /// <param name="presentationId">The id of the presentation containing the board whose Jira connections statistics will be obtained.</param>
+        /// <param name="boardId">The id of the board whose Jira connections statistics will be obtained.</param>
         /// <returns>A list of objects containing information about requests to Jira REST API for the specified board.</returns>
-        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string id)
+        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string presentationId, string boardId)
         {
-            var filter = 
-                Builders<StatisticsDbModel>.Filter.Eq("ItemId", id) &
+            var filter =
+                Builders<StatisticsDbModel>.Filter.Eq("PresentationId", presentationId) &
+                Builders<StatisticsDbModel>.Filter.Eq("BoardId", boardId) &
                 Builders<StatisticsDbModel>.Filter.Eq("Type", "connection");
             var results = await statisticsCollection
                 .Find(filter)
