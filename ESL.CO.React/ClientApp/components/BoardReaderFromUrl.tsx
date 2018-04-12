@@ -60,7 +60,7 @@ export class BoardReaderFromUrl extends React.Component<RouteComponentProps<{ bo
     }
 
     saveBoardViewStatistics() {
-        ApiClient.saveBoardViewStatistics(this.state.board.id);
+        ApiClient.saveViewStatistics(this.state.board.id, "board");
     }
 
     RefreshRate() {

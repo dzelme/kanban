@@ -23,15 +23,25 @@ namespace ESL.CO.React.Controllers
         }
 
         /// <summary>
-        /// Saves board view statistics to database.
+        /// Saves board or presentation view statistics to database.
         /// </summary>
-        /// <param name="id">The id of the board whose statistics will be saved.</param>
+        /// <param name="id">The id of the board or presentation whose statistics will be saved.</param>
+        /// <param name="type">The type of view statistics to be saved: board or presentation.</param>
         /// <returns>A response with status code 200.</returns>
         [HttpPost("[action]")]
-        public async Task<IActionResult> SaveBoardViewStatistics([FromBody] string id)
+        public async Task<IActionResult> SaveViewStatistics(string id, [FromBody] string type)
         {
-            await dbClient.SaveStatisticsAsync(new StatisticsDbModel(id, "view"));
+            await dbClient.SaveStatisticsAsync(new StatisticsDbModel(id, type));
             return Ok();
+        }
+
+
+        [Authorize(Roles = "Admins")]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationList()
+        {
+            var statisticsList = await dbClient.GetStatisticsPresentationListAsync();
+            return statisticsList;
         }
 
         /// <summary>
@@ -40,9 +50,9 @@ namespace ESL.CO.React.Controllers
         /// <returns>A list of boards and their statistics data.</returns>
         [Authorize(Roles = "Admins")]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<StatisticsModel>> GetStatisticsList()
+        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardList()
         {
-            var statisticsList = await dbClient.GetStatisticsListAsync();
+            var statisticsList = await dbClient.GetStatisticsBoardListAsync();
             return statisticsList;
         }
 
@@ -53,7 +63,7 @@ namespace ESL.CO.React.Controllers
         /// <returns>A collection of network statistics entries.</returns>
         [Authorize(Roles = "Admins")]
         [HttpPost("[action]")]
-        public async Task<List<StatisticsConnectionsModel>> GetNetworkStatisticsList([FromBody] string id)
+        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionList([FromBody] string id)
         {
             var connectionStatsList = await dbClient.GetStatisticsConnectionsListAsync(id);
             return connectionStatsList;

@@ -63,7 +63,7 @@ export default class ColumnReader extends React.Component<{ boardList: Value[], 
     }
 
     saveBoardViewStatistics() {
-        ApiClient.saveBoardViewStatistics(this.state.board.id);
+        ApiClient.saveViewStatistics(this.state.board.id, "board");
     }
 
     boardLoad() {

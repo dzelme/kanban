@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
-using MongoDB.Bson;
 
 namespace ESL.CO.React.DbConnection
 {
@@ -10,8 +9,9 @@ namespace ESL.CO.React.DbConnection
         Task DeletePresentation(string id);
         Task<BoardPresentationDbModel> GetPresentation(string id);
         Task<List<BoardPresentationDbModel>> GetPresentationsListAsync();
-        Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id);
-        Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync();
+        Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync();
+        Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string id);
+        Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationListAsync();
         Task SavePresentationsAsync(BoardPresentation entry);
         Task SaveStatisticsAsync(StatisticsDbModel entry);
     }

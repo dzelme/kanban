@@ -8,11 +8,11 @@ using Microsoft.Extensions.Options;
 
 namespace ESL.CO.React.Models
 {
-    public class StatisticsDbModel : StatisticsConnectionsModel
+    public class StatisticsDbModel : StatisticsConnectionModel
     {
         [BsonId, BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-        public string BoardId { get; set; }
+        public string Id { get; set; }  // database entry primary key
+        public string ItemId { get; set; }  // board or presentation id
         public string Type { get; set; }
 
         public StatisticsDbModel() { }
@@ -21,7 +21,7 @@ namespace ESL.CO.React.Models
         {
             string pattern = "dd.MM.yyyy HH:mm:ss";
 
-            BoardId = id;
+            ItemId = id;
             Type = type;
             Time = (time == "") ? DateTime.Now.ToString(pattern) : DateTime.Parse(time).ToString(pattern);
             Link = link;

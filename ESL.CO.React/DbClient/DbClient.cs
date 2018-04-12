@@ -93,18 +93,18 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// Gets board statistics for all boards that have been viewed at least once.
+        /// ////////////////////////////////////////////////////////////////////////////////
         /// </summary>
-        /// <returns>A list of objects containing board view statistics.</returns>
-        public async Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync()
+        /// <returns></returns>
+        public async Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationListAsync()
         {
             var aggregate = statisticsCollection
                 .Aggregate()
                 .Match(new BsonDocument {
-                    { "Type", "view" },
+                    { "Type", "presentation" },
                 })
                 .Group(new BsonDocument {
-                    { "_id", "$BoardId" },
+                    { "_id", "$ItemId" },
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
@@ -112,17 +112,53 @@ namespace ESL.CO.React.DbConnection
                 .Project(new BsonDocument
                 {
                     { "_id", 0 },
-                    { "BoardId", "$_id" },
+                    { "ItemId", "$_id" },
+                    { "TimesShown", "$TimesShown" },
+                    { "LastShown","$LastShown" }
+                });
+
+            var results = await aggregate.ToListAsync();
+
+            var statisticsList = new List<StatisticsPresentationModel>();
+            foreach (var item in results)
+            {
+                statisticsList.Add(BsonSerializer.Deserialize<StatisticsPresentationModel>(item));
+            }
+
+            return statisticsList;
+        }
+
+        /// <summary>
+        /// Gets board statistics for all boards that have been viewed at least once.
+        /// </summary>
+        /// <returns>A list of objects containing board view statistics.</returns>
+        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync()
+        {
+            var aggregate = statisticsCollection
+                .Aggregate()
+                .Match(new BsonDocument {
+                    { "Type", "board" },
+                })
+                .Group(new BsonDocument {
+                    { "_id", "$ItemId" },
+                    { "TimesShown", new BsonDocument("$sum", 1)},
+                    { "LastShown", new BsonDocument("$last", "$Time")}
+                })
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .Project(new BsonDocument
+                {
+                    { "_id", 0 },
+                    { "ItemId", "$_id" },
                     { "TimesShown", "$TimesShown" },
                     { "LastShown","$LastShown" }
                 });
             
             var results = await aggregate.ToListAsync();
 
-            var statisticsList = new List<StatisticsModel>();
+            var statisticsList = new List<StatisticsBoardModel>();
             foreach (var item in results)
             {
-                statisticsList.Add(BsonSerializer.Deserialize<StatisticsModel>(item));
+                statisticsList.Add(BsonSerializer.Deserialize<StatisticsBoardModel>(item));
             }
 
             return statisticsList;
@@ -133,10 +169,10 @@ namespace ESL.CO.React.DbConnection
         /// </summary>
         /// <param name="id">The id of the board whose statistics about Jira connections will be obtained.</param>
         /// <returns>A list of objects containing information about requests to Jira REST API for the specified board.</returns>
-        public async Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id)
+        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string id)
         {
             var filter = 
-                Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
+                Builders<StatisticsDbModel>.Filter.Eq("ItemId", id) &
                 Builders<StatisticsDbModel>.Filter.Eq("Type", "connection");
             var results = await statisticsCollection
                 .Find(filter)
@@ -150,10 +186,10 @@ namespace ESL.CO.React.DbConnection
                 .Limit(100)
                 .ToListAsync();
 
-            var connectionStatsList = new List<StatisticsConnectionsModel>();
+            var connectionStatsList = new List<StatisticsConnectionModel>();
             foreach (var item in results)
             {
-                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionsModel>(item));
+                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionModel>(item));
             }
 
             return connectionStatsList;

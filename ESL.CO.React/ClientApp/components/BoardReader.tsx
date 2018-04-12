@@ -18,6 +18,8 @@ export class BoardReader extends React.Component<RouteComponentProps<{ id: strin
             .then(data => {
                 this.setState({ boardList: data.boards.values }, this.makeTitleList);
             });
+
+        ApiClient.saveViewStatistics(this.props.match.params.id, "presentation");
     }
 
     makeTitleList() {
