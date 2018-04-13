@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
+using ESL.CO.React.JiraIntegration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
@@ -93,15 +94,53 @@ namespace ESL.CO.React.DbConnection
         }
 
         /// <summary>
-        /// Gets board statistics for all boards that have been viewed at least once.
+        /// Gets view statistics for all presentations that have been viewed at least once.
         /// </summary>
-        /// <returns>A list of objects containing board view statistics.</returns>
-        public async Task<IEnumerable<StatisticsModel>> GetStatisticsListAsync()
+        /// <returns>A list of objects containing presentation view statistics.</returns>
+        public async Task<IEnumerable<StatisticsPresentationModel>> GetStatisticsPresentationListAsync()
         {
             var aggregate = statisticsCollection
                 .Aggregate()
                 .Match(new BsonDocument {
-                    { "Type", "view" },
+                    { "Type", "presentation" },
+                })
+                .Group(new BsonDocument {
+                    { "_id", "$PresentationId" },
+                    { "TimesShown", new BsonDocument("$sum", 1)},
+                    { "LastShown", new BsonDocument("$last", "$Time")}
+                })
+                .Sort(new BsonDocument { { "_id", 1 } })
+                .Project(new BsonDocument
+                {
+                    { "_id", 0 },
+                    { "PresentationId", "$_id" },
+                    { "TimesShown", "$TimesShown" },
+                    { "LastShown","$LastShown" }
+                });
+
+            var results = await aggregate.ToListAsync();
+
+            var statisticsPresentationList = new List<StatisticsPresentationModel>();
+            foreach (var item in results)
+            {
+                statisticsPresentationList.Add(BsonSerializer.Deserialize<StatisticsPresentationModel>(item));
+            }
+
+            return statisticsPresentationList;
+        }
+
+        /// <summary>
+        /// Gets presentation specific view statistics for all boards that have been viewed as part of the specified presentation at least once.
+        /// </summary>
+        /// <param name="presentationId">The id of the presentation whose board statistics will be obtained.</param>
+        /// <returns>A list of objects containing board view statistics.</returns>
+        public async Task<IEnumerable<StatisticsBoardModel>> GetStatisticsBoardListAsync(string presentationId)
+        {
+            var aggregate = statisticsCollection
+                .Aggregate()
+                .Match(new BsonDocument {
+                    { "Type", "board" },
+                    { "PresentationId", presentationId }
                 })
                 .Group(new BsonDocument {
                     { "_id", "$BoardId" },
@@ -119,24 +158,26 @@ namespace ESL.CO.React.DbConnection
             
             var results = await aggregate.ToListAsync();
 
-            var statisticsList = new List<StatisticsModel>();
+            var statisticsList = new List<StatisticsBoardModel>();
             foreach (var item in results)
             {
-                statisticsList.Add(BsonSerializer.Deserialize<StatisticsModel>(item));
+                statisticsList.Add(BsonSerializer.Deserialize<StatisticsBoardModel>(item));
             }
 
             return statisticsList;
         }
 
         /// <summary>
-        /// Gets Jira request statistics for a specified board.
+        /// Gets presentation specific Jira request statistics for a specified board as part of the specified presentation.
         /// </summary>
-        /// <param name="id">The id of the board whose statistics about Jira connections will be obtained.</param>
+        /// <param name="presentationId">The id of the presentation containing the board whose Jira connections statistics will be obtained.</param>
+        /// <param name="boardId">The id of the board whose Jira connections statistics will be obtained.</param>
         /// <returns>A list of objects containing information about requests to Jira REST API for the specified board.</returns>
-        public async Task<List<StatisticsConnectionsModel>> GetStatisticsConnectionsListAsync(string id)
+        public async Task<List<StatisticsConnectionModel>> GetStatisticsConnectionsListAsync(string presentationId, string boardId)
         {
-            var filter = 
-                Builders<StatisticsDbModel>.Filter.Eq("BoardId", id) &
+            var filter =
+                Builders<StatisticsDbModel>.Filter.Eq("PresentationId", presentationId) &
+                Builders<StatisticsDbModel>.Filter.Eq("BoardId", boardId) &
                 Builders<StatisticsDbModel>.Filter.Eq("Type", "connection");
             var results = await statisticsCollection
                 .Find(filter)
@@ -150,10 +191,10 @@ namespace ESL.CO.React.DbConnection
                 .Limit(100)
                 .ToListAsync();
 
-            var connectionStatsList = new List<StatisticsConnectionsModel>();
+            var connectionStatsList = new List<StatisticsConnectionModel>();
             foreach (var item in results)
             {
-                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionsModel>(item));
+                connectionStatsList.Add(BsonSerializer.Deserialize<StatisticsConnectionModel>(item));
             }
 
             return connectionStatsList;

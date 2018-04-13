@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESL.CO.React.Models
 {
-    public class StatisticsConnectionsModel
+    public class StatisticsConnectionModel
     {
         public string Time { get; set; }
         public string Link { get;set; }

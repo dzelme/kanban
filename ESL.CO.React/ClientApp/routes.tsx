@@ -4,8 +4,9 @@ import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { CreatePresentation } from './components/CreatePresentation';
 import { BoardReader } from './components/BoardReader';
-import { StatisticsList } from './components/StatisticsList';
-import { StatisticsBoard } from './components/StatisticsBoard';
+import { StatisticsPresentationList } from './components/StatisticsPresentationList';
+import { StatisticsBoardList } from './components/StatisticsBoardList';
+import { StatisticsConnectionList } from './components/StatisticsConnectionList';
 import { Login } from './components/Login';
 import { Logout } from './components/Logout';
 import { PresentationList } from './components/PresentationList';
@@ -20,8 +21,9 @@ export const routes = <Layout>
     <Route exact path='/admin/presentations' component={PresentationList} />
     <Route path='/admin/presentations/create' component={CreatePresentation} />
     <Route path='/admin/presentations/edit/:id' component={EditPresentation} />
-    <Route exact path='/admin/statistics' component={StatisticsList} />
-    <Route path="/admin/statistics/:id" component={StatisticsBoard} />
+    <Route exact path='/admin/statistics' component={StatisticsPresentationList} />
+    <Route exact path="/admin/statistics/:presentationId" component={StatisticsBoardList} />
+    <Route exact path="/admin/statistics/:presentationId/:boardId" component={StatisticsConnectionList} />
     <Route exact path='/' component={Login} />
     <Route path='/' component={NavMenu} />
     <Route exact path='/p/:id' component={BoardReader} />

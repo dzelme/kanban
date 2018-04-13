@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.Models;
+using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 
@@ -20,16 +21,19 @@ namespace ESL.CO.React.Controllers
         private readonly IJiraClient jiraClient;
         private readonly IMemoryCache cache;
         private readonly IBoardCreator boardCreator;
+        private readonly IDbClient dbClient;
 
         public SampleDataController(
             IMemoryCache cache, 
             IJiraClient jiraClient, 
-            IBoardCreator boardCreator
+            IBoardCreator boardCreator,
+            IDbClient dbClient
             )
         {
             this.jiraClient = jiraClient;
             this.cache = cache;
             this.boardCreator = boardCreator;
+            this.dbClient = dbClient;
         }
 
         /// <summary>
@@ -63,10 +67,11 @@ namespace ESL.CO.React.Controllers
         /// <param name="credentials">Jira credentials for obtaining the data.</param>
         /// <returns>Board information.</returns>
         [HttpPost("[action]")]
-        public async Task<Board> BoardData(string id, [FromBody] Credentials credentials)
+        public async Task<Board> BoardData(string boardId, [FromBody] string presentationId)
         {
+            var credentials = (await dbClient.GetPresentation(presentationId))?.Credentials;
             var credentialsString = credentials.Username + ":" + credentials.Password;
-            var b = boardCreator.CreateBoardModel(id, credentialsString, cache);
+            var b = boardCreator.CreateBoardModel(boardId, presentationId, credentialsString, cache);
             Board board = null;
             try
             {
@@ -74,7 +79,7 @@ namespace ESL.CO.React.Controllers
                 if (NeedsRedraw(board))
                 {
                     board.HasChanged = true;
-                    cache.Set(id, board);
+                    cache.Set(boardId, board);
                     return board;
                 }
                 else return board;

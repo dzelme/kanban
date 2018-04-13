@@ -41,40 +41,40 @@ namespace ESL.CO.React.JiraIntegration
         /// <summary>
         /// Creates and fills a board object with appropriate information.
         /// </summary>
-        /// <param name="id">Id of the board whose object will be made.</param>
+        /// <param name="boardId">Id of the board whose object will be made.</param>
         /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
         /// <returns>A filled board object.</returns>
-        public async Task<Board> CreateBoardModel(string id, string credentials, IMemoryCache cache)
+        public async Task<Board> CreateBoardModel(string boardId, string presentationId, string credentials, IMemoryCache cache)
         {
-            var board = new Board(id);
+            var board = new Board(boardId);
 
-            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + id.ToString() + "/configuration", credentials, id);
+            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + boardId.ToString() + "/configuration", credentials, boardId, presentationId);
 
             if (boardConfig == null)
             {
-                return TryGetBoardFromCache(id, cache);
+                return TryGetBoardFromCache(boardId, cache);
             }
 
-            var colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + id.ToString() + "/strategy/priority", credentials, id);
+            var colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + boardId.ToString() + "/strategy/priority", credentials, boardId, presentationId);
 
             board.Name = boardConfig.Name;
             board.CardColors = colorList.CardColors;
 
             FullIssueList li = new FullIssueList();
-            IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id + "/issue", credentials, id);
+            IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + boardId + "/issue", credentials, boardId, presentationId);
             if (issueList == null)
             {
-                return TryGetBoardFromCache(id, cache);
+                return TryGetBoardFromCache(boardId, cache);
             }
 
             li.AllIssues.AddRange(issueList.Issues);
             while (issueList.StartAt + issueList.MaxResults < issueList.Total)
             {
                 issueList.StartAt += issueList.MaxResults;
-                issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + id + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, id);
+                issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + boardId + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, boardId, presentationId);
                 if (issueList == null)
                 {
-                    return TryGetBoardFromCache(id, cache);
+                    return TryGetBoardFromCache(boardId, cache);
                 }
                 li.AllIssues.AddRange(issueList.Issues);
             }

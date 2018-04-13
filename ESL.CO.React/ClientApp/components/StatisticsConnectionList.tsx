@@ -2,20 +2,23 @@
 import 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
-import { StatisticsBoardState, JiraConnectionLogEntry } from './Interfaces';
+import { StatisticsConnectionListState, StatisticsConnectionModel } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 //netiek sanemti props (undefined) no routes.tsx
-export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: string }>, StatisticsBoardState> {
-    constructor(props: RouteComponentProps<{ id: string }>) {
+export class StatisticsConnectionList extends React.Component<RouteComponentProps<{ presentationId: string, boardId: string }>, StatisticsConnectionListState> {
+    constructor(props: RouteComponentProps<{ presentationId: string, boardId: string }>) {
         super(props);
-        this.state = { connectionLog: [], loading: true };
+        this.state = {
+            statisticsConnectionList: [],
+            loading: true
+        };
     }
 
     componentWillMount() {
-        ApiClient.networkStatistics(this.props.match.params.id)
+        ApiClient.statisticsConnectionList(this.props.match.params.presentationId, this.props.match.params.boardId)
             .then(data => {
-                this.setState({ connectionLog: data, loading: false });
+                this.setState({ statisticsConnectionList: data, loading: false });
             });
     }
 
@@ -25,17 +28,16 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: s
         }
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : StatisticsBoard.renderStatisticsBoard(this.state.connectionLog);
+            : StatisticsConnectionList.renderStatisticsBoard(this.state.statisticsConnectionList);
 
         return <div className='top-padding'>
-            <h1>Paneļa #{this.props.match.params.id} : Savienojumi</h1>
+            <h1>Prezentācijas #{this.props.match.params.presentationId} paneļa #{this.props.match.params.boardId} savienojumu statistika</h1>
             {contents}
         </div>;
     }
 
-    private static renderStatisticsBoard(connectionLog: JiraConnectionLogEntry[]) {  //
-
-
+    private static renderStatisticsBoard(statisticsConnectionList: StatisticsConnectionModel[]) {  //
+        
         return <table className='table'>
             <thead>
                     <tr>
@@ -46,7 +48,7 @@ export class StatisticsBoard extends React.Component<RouteComponentProps<{ id: s
                     </tr>
             </thead>
             <tbody>
-                    {connectionLog.map(entry =>
+                    {statisticsConnectionList.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
                             <td key={entry.time + "time"}>{entry.time}</td>
                             <td key={entry.time + "link"}>{entry.link}</td>

@@ -104,18 +104,32 @@ export interface BoardPresentation {
     boards: FullBoardList;
 }
 
-interface JiraConnectionLogEntry {
-    time: string;
-    link: string;
-    responseStatus: string;
-    exception: string;
+interface StatisticsDbModel {
+    presentationId: string;
+    boardId: string;
+    type: string;
 }
 
-interface StatisticsModel {
+interface StatisticsPresentationModel {
+    presentationId: string;
+    title: string;
+    boards: FullBoardList;
+    timesShown: number;
+    lastShown: string;
+}
+
+interface StatisticsBoardModel {
     boardId: string;
     boardName: string;
     timesShown: number;
     lastShown: string;
+}
+
+interface StatisticsConnectionModel {
+    time: string;
+    link: string;
+    responseStatus: string;
+    exception: string;
 }
 
 interface BoardReaderState {
@@ -125,7 +139,7 @@ interface BoardReaderState {
 }
 
 interface ColumnReaderState {
-    presentationID: string;
+    presentationId: string;
     boardList: Value[];
     currentIndex: number;
     boardId: string;
@@ -135,7 +149,7 @@ interface ColumnReaderState {
     loading: boolean;
 }
 
-interface ReaderFromURLState {
+interface BoardReaderFromUrlState {
     boardList: Value[];
     board: Board;
     boardChanged: boolean;
@@ -167,12 +181,17 @@ interface PresentationListState {
     loading: boolean;
 }
 
-interface StatisticsListState {
-    statsList: StatisticsModel[];
+interface StatisticsPresentationListState {
+    statisticsPresentationList: StatisticsPresentationModel[];
     loading: boolean;
 }
 
-interface StatisticsBoardState {
-    connectionLog: JiraConnectionLogEntry[];
+interface StatisticsBoardListState {
+    statisticsBoardList: StatisticsBoardModel[];
+    loading: boolean;
+}
+
+interface StatisticsConnectionListState {
+    statisticsConnectionList: StatisticsConnectionModel[];
     loading: boolean;
 }

@@ -2,7 +2,7 @@
 
 namespace ESL.CO.React.Models
 {
-    public class StatisticsModel
+    public class StatisticsBoardModel
     {
         public string BoardId { get; set; }
         public string BoardName { get; set; }

@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import 'isomorphic-fetch';
-import { Credentials, Board, Value, StatisticsModel, JiraConnectionLogEntry, BoardPresentation, CardColor } from './Interfaces';
+import { Credentials, Board, Value, StatisticsDbModel, StatisticsPresentationModel, StatisticsBoardModel, StatisticsConnectionModel, BoardPresentation, CardColor } from './Interfaces';
 
 function handleResponse(response: Response): Promise<any> {
     if (response.ok) return response.json();
@@ -96,8 +96,8 @@ export class ApiClient {
     }
 
     // SampleDataController: Gets board data
-    static boardData(id: string, credentials: Credentials): Promise<Board> {
-        return ApiClient.post('api/SampleData/BoardData?id=' + id, credentials) as Promise<Board>;
+    static boardData(boardId: string, presentationId: string): Promise<Board> {
+        return ApiClient.post('api/SampleData/BoardData?boardId=' + boardId, presentationId) as Promise<Board>;
     }
 
     // PresentationsController
@@ -126,17 +126,22 @@ export class ApiClient {
     }
 
     // StatisticsController
-    static saveBoardViewStatistics(id: string) {
-        return ApiClient.post('api/Statistics/SaveBoardViewStatistics', id)
+    static saveViewStatistics(stats: StatisticsDbModel) {
+        return ApiClient.post('api/Statistics/SaveViewStatistics', stats)
     }
 
     // StatisticsController
-    static statisticsList(): Promise<StatisticsModel[]> {
-        return ApiClient.get('api/Statistics/GetStatisticsList')
+    static statisticsPresentationList(): Promise<StatisticsPresentationModel[]> {
+        return ApiClient.get('api/Statistics/GetStatisticsPresentationList')
     }
 
     // StatisticsController
-    static networkStatistics(id: string): Promise<JiraConnectionLogEntry[]> {
-        return ApiClient.post('api/Statistics/GetNetworkStatisticsList', id)
+    static statisticsBoardList(presentationId: string): Promise<StatisticsBoardModel[]> {
+        return ApiClient.get('api/Statistics/GetStatisticsBoardList?presentationId=' + presentationId)
+    }
+
+    // StatisticsController
+    static statisticsConnectionList(presentationId: string, boardId: string): Promise<StatisticsConnectionModel[]> {
+        return ApiClient.post('api/Statistics/GetStatisticsConnectionList?boardId=' + boardId, presentationId)
     }
 }
