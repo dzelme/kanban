@@ -25,6 +25,8 @@ namespace ESL.CO.Tests
         private SampleDataController controller;
         private Credentials credentials;
         private string credentialsString;
+        private string presentationId;
+        private BoardPresentationDbModel presentationDbModel;
 
         public SampleDataControllerTests()
         {
@@ -34,6 +36,13 @@ namespace ESL.CO.Tests
             dbClient = new Mock<IDbClient>();
             credentials = new Credentials { Username = "", Password = "" };
             credentialsString = credentials.Username + ":" + credentials.Password;
+            presentationId = "1";
+
+            presentationDbModel = new BoardPresentationDbModel
+            {
+                Id = presentationId,
+                Credentials = credentials,
+            };
 
             userSettings = Options.Create(new UserSettings
             {
@@ -48,7 +57,7 @@ namespace ESL.CO.Tests
             testBoard1 = new Board("74");
             testBoard2 = new Board("80");
 
-            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, boardCreator.Object);
+            controller = new SampleDataController(memoryCache.Object, jiraClient.Object, boardCreator.Object, dbClient.Object);
         }
 
         [Fact]
@@ -79,13 +88,14 @@ namespace ESL.CO.Tests
         public void BoardData_Should_Return_Board_With_HasChanged_True()
         {
             // Arrange
-            boardCreator.Setup(a => a.CreateBoardModel("74", credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
 
             // Act
-            var actual = controller.BoardData("74",credentials).Result;
+            var actual = controller.BoardData("74", presentationId).Result;
 
             // Assert
             Assert.True(actual.HasChanged);
@@ -95,13 +105,14 @@ namespace ESL.CO.Tests
         public void BoardData_Should_Return_Board_With_HasChanged_False()
         {
             // Arrange
-            boardCreator.Setup(a => a.CreateBoardModel("74", credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
 
             // Act
-            var actual = controller.BoardData("74",credentials).Result;
+            var actual = controller.BoardData("74", presentationId).Result;
 
             // Assert
             Assert.False(actual.HasChanged);
