@@ -109,7 +109,7 @@ namespace ESL.CO.React.DbConnection
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
-                .Sort(new BsonDocument { { "_id", 1 } })
+                .Sort(Builders<BsonDocument>.Sort.Descending("TimesShown").Descending("LastShown"))
                 .Project(new BsonDocument
                 {
                     { "_id", 0 },

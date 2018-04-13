@@ -8,7 +8,6 @@ namespace ESL.CO.React.Models
 {
     public class BoardPresentation
     {
-        [BsonId]
         public string Id { get; set; }
         public string Title { get; set; }
         public string Owner { get; set; }

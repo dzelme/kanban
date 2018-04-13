@@ -234,9 +234,9 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                         <tr>
                             <th>ID</th>
                             <th>Nosaukums</th>
-                            <th className="CheckBox">Iekļaut prezentācijā</th>
-                            <th>Attēlošanas laiks(s)</th>
-                            <th>Atjaunošanas laiks(s)</th>
+                            <th className="Center">Iekļaut prezentācijā</th>
+                            <th className="Center">Attēlošanas laiks(s)</th>
+                            <th className="Center">Atjaunošanas laiks(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -244,9 +244,9 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
-                                <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" min="0" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" min="0" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
+                                <td key={board.id + "visibility"} className="Center"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "timeShown"} className="Center"><input name={board.id + "timeShown"} type="number" min="0" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"} className="Center"><input name={board.id + "refreshRate"} type="number" min="0" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>
