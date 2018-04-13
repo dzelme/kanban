@@ -88,8 +88,7 @@ namespace ESL.CO.React.Controllers
         private async Task<IEnumerable<StatisticsBoardModel>> AddNames(IEnumerable<StatisticsBoardModel> statisticsList, string presentationId)
         {
             var credentials = (await dbClient.GetPresentation(presentationId))?.Credentials;
-            var credentialsString = credentials.Username + ":" + credentials.Password;
-            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentialsString);
+            var boardList = await jiraClient.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials);
             foreach (var boardModel in statisticsList)
             {
                 foreach (var board in boardList.Values)

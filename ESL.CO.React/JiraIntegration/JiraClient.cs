@@ -36,7 +36,7 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="boardId">Board id required for saving board specific statistics.</param>
         /// <param name="presentationId">Presentation id required for saving presentation specific statistics.</param>
         /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-        public async Task<T> GetBoardDataAsync<T>(string url, string credentials, string boardId = "", string presentationId = "")
+        public async Task<T> GetBoardDataAsync<T>(string url, Credentials credentials, string boardId = "", string presentationId = "")
         {
             var baseUri = new Uri("https://jira.returnonintelligence.com/rest/");
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));

@@ -82,8 +82,7 @@ namespace ESL.CO.React.Controllers
         public async Task<Board> BoardData(string boardId, [FromBody] string presentationId)
         {
             var credentials = (await dbClient.GetPresentation(presentationId))?.Credentials;
-            var credentialsString = credentials.Username + ":" + credentials.Password;
-            var b = boardCreator.CreateBoardModel(boardId, presentationId, credentialsString, cache);
+            var b = boardCreator.CreateBoardModel(boardId, presentationId, credentials, cache);
             Board board = null;
             try
             {

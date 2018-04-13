@@ -65,7 +65,7 @@ namespace ESL.CO.Tests
         {
             // Arrange
             dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
@@ -82,7 +82,7 @@ namespace ESL.CO.Tests
         {
             // Arrange
             dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);

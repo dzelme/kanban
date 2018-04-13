@@ -44,7 +44,7 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="boardId">Id of the board whose object will be made.</param>
         /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
         /// <returns>A filled board object.</returns>
-        public async Task<Board> CreateBoardModel(string boardId, string presentationId, string credentials, IMemoryCache cache)
+        public async Task<Board> CreateBoardModel(string boardId, string presentationId, Credentials credentials, IMemoryCache cache)
         {
             var board = new Board(boardId);
 
