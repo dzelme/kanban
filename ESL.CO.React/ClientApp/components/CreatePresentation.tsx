@@ -23,7 +23,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                 }
             },
             loading: true,
-            authenticated: true
+            authenticated: true,
+            error: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,11 +55,11 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     response.json().then(json => {
                         newBoardPresentation.id = json.id;
                         newBoardPresentation.boards = this.state.boardPresentation.boards;
-                        this.setState({ boardPresentation: newBoardPresentation, authenticated: true }, this.handleFetch);
+                        this.setState({ boardPresentation: newBoardPresentation, authenticated: true, error: "" }, this.handleFetch);
                     })
                 }
                 else {
-                    this.setState({ authenticated: false });
+                    this.setState({ authenticated: false, error: "Nekorekts lietotājvārds un/ vai parole!" });
                 }
             });
     }
@@ -107,6 +108,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
             .then(response => {
                 if (response.status == 200) {
                     open('./admin/presentations', '_self')
+                }
+                if (response.status == 400) {
+                    this.setState({ error: "Ievadītie dati nav pareizi. Pārbaudiet vērtību pieļaujamās robežas." });
                 }
             });
     }
@@ -180,10 +184,6 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
             ? null
             : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardPresentation.boards.values, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
 
-        let error = this.state.authenticated
-            ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
-            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
@@ -199,7 +199,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                 </div>
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
-            {error}
+
+            <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+            <h4 className="Error">{this.state.error}</h4>
             {contents}
         </div>;
     }

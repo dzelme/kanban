@@ -24,7 +24,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             },
             boardList: [],
             loading: true,
-            authenticated: true
+            error: ""
         };
 
         this.handleFetch = this.handleFetch.bind(this);
@@ -53,10 +53,10 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
         ApiClient.savePresentation(this.state.boardPresentation)
             .then(response => {
                 if (response.status == 200 || response.status == 400) {
-                    this.setState({ authenticated: true }, this.handleFetch);
+                    this.setState({ error: "" }, this.handleFetch);
                 }
                 else {
-                    this.setState({ authenticated: false, loading: true });
+                    this.setState({ error: "Nekorekts lietotājvārds un/ vai parole!", loading: true });
                 }
             });
     }
@@ -99,6 +99,9 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             .then(response => {
                 if (response.status == 200) {
                     open('./admin/presentations', '_self')
+                }
+                if (response.status == 400) {
+                    this.setState({ error: "Ievadītie dati nav pareizi. Pārbaudiet vērtību pieļaujamās robežas." });
                 }
             });
     }
@@ -182,11 +185,6 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             ? null
             : EditPresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
-        let error = this.state.authenticated
-            ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
-            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
-
-
         return <div className="top-padding">
 
             <h1>Rediģēt prezentāciju</h1>
@@ -207,7 +205,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>
 
-            {error}
+            <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+            <h4 className="Error">{this.state.error}</h4>
             {contents}
         </div>;
     }

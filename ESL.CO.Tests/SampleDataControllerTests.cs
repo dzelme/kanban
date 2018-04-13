@@ -61,30 +61,6 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void BoardList_Should_Retrieve_Values_From_Jira()
-        {
-            // Arrange
-            var boardList = new BoardList()
-            {
-                IsLast = true,
-                Values = new List<Value>() {
-                    new Value {  Id = "74" },
-                    new Value {  Id = "75" },
-                }
-            };
-
-            jiraClient.Setup(a => a.GetFullBoardList(credentials)).Returns(Task.FromResult<IEnumerable<Value>>(boardList.Values));
-
-            // Act
-            var actual = controller.BoardList(credentials).Result;
-
-            // Assert
-            Assert.Equal(2, actual.Count());
-            Assert.Contains(actual, x => x.Id == "74");
-            Assert.Contains(actual, x => x.Id == "75");
-        }
-
-        [Fact]
         public void BoardData_Should_Return_Board_With_HasChanged_True()
         {
             // Arrange
