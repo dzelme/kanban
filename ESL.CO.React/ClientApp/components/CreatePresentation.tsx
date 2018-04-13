@@ -33,17 +33,27 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
         this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
-
     }
 
     handleAuth(event) {
         event.preventDefault();
-        ApiClient.savePresentation(this.state.boardPresentation)
+
+        var newBoardPresentation = {
+            id: this.state.boardPresentation.id,
+            title: this.state.boardPresentation.title,
+            owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+            credentials: this.state.boardPresentation.credentials,
+            boards: {
+                values: []  // removed not to trigger invalid ModelState
+            }
+        }
+
+        ApiClient.savePresentation(newBoardPresentation)
             .then(response => {
-                if (response.status == 200) {
+                if (response.status == 200 || response.status == 400) {
                     response.json().then(json => {
-                        let newBoardPresentation = this.state.boardPresentation;
                         newBoardPresentation.id = json.id;
+                        newBoardPresentation.boards = this.state.boardPresentation.boards;
                         this.setState({ boardPresentation: newBoardPresentation, authenticated: true }, this.handleFetch);
                     })
                 }
@@ -56,9 +66,18 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     handleFetch() {
         ApiClient.boardListFromCredentials(this.state.boardPresentation.credentials)
             .then(data => {
-                let newBoardPresentation = this.state.boardPresentation;
-                newBoardPresentation.boards.values = data;
-                this.setState({ boardPresentation: newBoardPresentation, loading: false });
+                this.setState({
+                    boardPresentation: {
+                        id: this.state.boardPresentation.id,
+                        title: this.state.boardPresentation.title,
+                        owner: this.state.boardPresentation.owner,
+                        credentials: this.state.boardPresentation.credentials,
+                        boards: {
+                            values: data
+                        }
+                    },
+                    loading: false
+                });
             });
     }
 
@@ -85,7 +104,11 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
     postPresentation(presentation: BoardPresentation) {
         ApiClient.savePresentation(presentation)
-            .then(() => open('./admin/presentations', '_self'));
+            .then(response => {
+                if (response.status == 200) {
+                    open('./admin/presentations', '_self')
+                }
+            });
     }
 
     handleChange(event) {
@@ -104,7 +127,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
     }
 
     handleChangeSettings(id: string, setting: string, value: number) {
-        var newBoardList = this.state.boardPresentation.boards.values;
+        var newBoardList = this.state.boardPresentation.boards.values.concat();  // concat to clone (not reference the same)
 
         this.state.boardPresentation.boards.values.map((board, index) => {
             if (board.id.toString() == id) {
@@ -118,10 +141,16 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     newBoardList[index].refreshRate = value;
                 }
 
-                let newBoardPresentation = this.state.boardPresentation;
-                newBoardPresentation.boards.values = newBoardList;
                 this.setState({
-                    boardPresentation: newBoardPresentation
+                    boardPresentation: {
+                        id: this.state.boardPresentation.id,
+                        title: this.state.boardPresentation.title,
+                        owner: this.state.boardPresentation.owner,
+                        credentials: this.state.boardPresentation.credentials,
+                        boards: {
+                            values: newBoardList
+                        }
+                    },
                 });
             }
         })
@@ -194,8 +223,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" min="0" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" min="0" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
                             </tr>
                         )}
                     </tbody>

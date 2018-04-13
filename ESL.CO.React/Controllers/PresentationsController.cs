@@ -126,7 +126,7 @@ namespace ESL.CO.React.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePresentation([FromBody] BoardPresentation boardPresentation)
         {
-            if(!string.IsNullOrEmpty(boardPresentation.Id))
+            if(!string.IsNullOrEmpty(boardPresentation.Id) && boardPresentation.Credentials.Password == null)
             {
                 boardPresentation.Credentials = (await dbClient.GetPresentation(boardPresentation.Id)).Credentials;
             }
@@ -139,7 +139,7 @@ namespace ESL.CO.React.Controllers
                 }
                 else
                 {
-                    return BadRequest("invalid data"); //
+                    return BadRequest("Invalid user input. Check allowed range for time values.");
                 }
 
                 boardPresentation.Credentials = null;

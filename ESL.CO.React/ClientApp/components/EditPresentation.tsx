@@ -52,7 +52,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     handleAuth() {
         ApiClient.savePresentation(this.state.boardPresentation)
             .then(response => {
-                if (response.status == 200) {
+                if (response.status == 200 || response.status == 400) {
                     this.setState({ authenticated: true }, this.handleFetch);
                 }
                 else {
@@ -96,14 +96,24 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
 
     postPresentation(presentation: BoardPresentation) {
         ApiClient.savePresentation(presentation)
-            .then(() => open('./admin/presentations', '_self'));
+            .then(response => {
+                if (response.status == 200) {
+                    open('./admin/presentations', '_self')
+                }
+            });
     }
 
     handleChange(event) {
         const target = event.target;
         const name = target.name;
 
-        let newBoardPresentation = this.state.boardPresentation;
+        let newBoardPresentation = Object.create(this.state.boardPresentation);
+        newBoardPresentation.id = this.state.boardPresentation.id,
+        newBoardPresentation.title = this.state.boardPresentation.title,
+        newBoardPresentation.owner = this.state.boardPresentation.owner,
+        newBoardPresentation.credentials = this.state.boardPresentation.credentials,
+        newBoardPresentation.boards = this.state.boardPresentation.boards
+        
 
         if (name == 'title') {
             newBoardPresentation.title = event.target.value;
@@ -119,7 +129,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardList;
+        var newBoardlist = this.state.boardList.concat();  // to clone not reference
 
         this.state.boardList.map((board, index) => {
             if (board.id.toString() == id) {
@@ -133,7 +143,7 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
     }
 
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardList = this.state.boardList;
+        var newBoardList = this.state.boardList.concat();
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
@@ -236,8 +246,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
                                 <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
+                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" min="0" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)} /></td>
+                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" min="0" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)} /></td>
                             </tr>
                         )}
                     </tbody>
