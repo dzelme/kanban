@@ -180,3 +180,7 @@ a:link {
 .Error {
     color: lightcoral;
 }
+
+.Message {
+    padding-top: 0;
+}

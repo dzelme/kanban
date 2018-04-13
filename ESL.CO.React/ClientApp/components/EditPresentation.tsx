@@ -185,6 +185,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
             ? null
             : EditPresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes);
 
+        let error = (this.state.error == "") ? null : <h4 className="Message Error">{this.state.error}</h4>
+
         return <div className="top-padding">
 
             <h1>Rediģēt prezentāciju</h1>
@@ -204,9 +206,8 @@ export class EditPresentation extends React.Component<RouteComponentProps<{ id: 
                 </div>
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt izmaiņas <br /> autentifikācijas datos</button></div>
             </form>
-
-            <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
-            <h4 className="Error">{this.state.error}</h4>
+            <h4 className="Message">Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+            {error}
             {contents}
         </div>;
     }

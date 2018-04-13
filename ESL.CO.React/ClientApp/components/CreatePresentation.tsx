@@ -184,6 +184,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
             ? null
             : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardPresentation.boards.values, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
 
+        let error = (this.state.error == "") ? null : <h4 className="Message Error">{this.state.error}</h4>
+
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
 
@@ -199,9 +201,8 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                 </div>
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
-
-            <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
-            <h4 className="Error">{this.state.error}</h4>
+            <h4 className="Message">Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
+            {error}
             {contents}
         </div>;
     }
