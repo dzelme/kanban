@@ -115,18 +115,18 @@ interface StatisticsPresentationModel {
     title: string;
     boards: FullBoardList;
     timesShown: number;
-    lastShown: string;
+    lastShown: Date;
 }
 
 interface StatisticsBoardModel {
     boardId: string;
     boardName: string;
     timesShown: number;
-    lastShown: string;
+    lastShown: Date;
 }
 
 interface StatisticsConnectionModel {
-    time: string;
+    time: Date;
     link: string;
     responseStatus: string;
     exception: string;
