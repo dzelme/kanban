@@ -110,6 +110,7 @@ namespace ESL.CO.React.Controllers
             foreach (var presentationModel in statisticsList)
             {
                 var presentationDbEntry = await dbClient.GetPresentation(presentationModel.PresentationId);
+                if (presentationDbEntry == null) { continue; }
                 presentationModel.Title = presentationDbEntry.Title;
                 presentationModel.Boards = new FullBoardList { Values = new List<Value>() };
                 foreach (var board in presentationDbEntry.Boards)

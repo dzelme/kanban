@@ -219,7 +219,18 @@ namespace ESL.CO.React.DbConnection
         public Task DeletePresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
+            DeleteStatistics(id);
             return presentationCollection.DeleteOneAsync(filter);
+        }
+
+        /// <summary>
+        /// Deletes all statistics entries relating to the specified presentation.
+        /// </summary>
+        /// <param name="id">The id of the presentation whose statistics will be deleted.</param>
+        public Task DeleteStatistics(string id)
+        {
+            var statisticsFilter = Builders<StatisticsDbModel>.Filter.Eq("PresentationId", id);
+            return statisticsCollection.DeleteManyAsync(statisticsFilter);
         }
 
         /// <summary>
