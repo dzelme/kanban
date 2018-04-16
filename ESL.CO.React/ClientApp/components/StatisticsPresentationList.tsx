@@ -65,7 +65,7 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
                             </td>
                             <td key={presentation.presentationId + "timesShown"}>{presentation.timesShown.toString()}</td>
                             <td key={presentation.presentationId + "lastShown"}>{HelperFunctions.formatDate(presentation.lastShown)}</td>
-                            <td><Link to={'/admin/statistics/' + presentation.presentationId}><button className="btn btn-default">Apskatīt</button></Link></td>
+                            <td><Link className="LinkText" to={'/admin/statistics/' + presentation.presentationId}>Apskatīt</Link></td>
                         </tr>
                     )}
                 </tbody>

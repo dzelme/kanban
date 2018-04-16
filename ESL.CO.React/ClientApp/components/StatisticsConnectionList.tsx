@@ -37,7 +37,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
         </div>;
     }
 
-    private static renderStatisticsBoard(statisticsConnectionList: StatisticsConnectionModel[]) {  //
+    private static renderStatisticsBoard(statisticsConnectionList: StatisticsConnectionModel[]) {
         
         return <table className='table'>
             <thead>

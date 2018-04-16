@@ -58,7 +58,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
                             <td key={board.boardId + "name"}>{board.boardName}</td>
                             <td key={board.boardId + "timesShown"}>{board.timesShown.toString()}</td>
                             <td key={board.boardId + "lastShown"}>{HelperFunctions.formatDate(board.lastShown)}</td>
-                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Apskatīt</button></Link></td>
+                            <td><Link className="LinkText" to={'/admin/statistics/' + presentationId + '/' + board.boardId}>Apskatīt</Link></td>
                         </tr>
                     )}
                 </tbody>

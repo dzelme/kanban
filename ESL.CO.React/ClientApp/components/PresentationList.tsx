@@ -51,7 +51,7 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                         <th>Nosaukums</th>
                         <th>Izveidotājs</th>
                         <th>Paneļi</th>
-                        <th colSpan={2}>Darbības</th>
+                        <th colSpan={4}>Darbības</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +66,9 @@ export class PresentationList extends React.Component<RouteComponentProps<{}>, P
                                                   
                                 )}
                             </td>
-                            <td className="EditDeletePresButton"><Link to={'/admin/presentations/edit/' + presentation.id}><button className="btn btn-default">Rediģēt</button></Link></td>
+                            <td className="EditDeletePresButton"><Link className="LinkText" to={"/p/" + presentation.id}>Apskatīt</Link></td>
+                            <td className="EditDeletePresButton"><Link className="LinkText" to={'/admin/statistics/' + presentation.id}>Statistika</Link></td>
+                            <td className="EditDeletePresButton"><Link className="LinkText" to={'/admin/presentations/edit/' + presentation.id}>Rediģēt</Link></td>
                             <td className="EditDeletePresButton"><button className="btn btn-default" onClick={() => handleDelete(presentation.id)}>Dzēst</button></td>
                         </tr>
                     )}
