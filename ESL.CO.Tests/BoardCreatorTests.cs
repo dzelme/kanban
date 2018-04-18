@@ -7,10 +7,9 @@ using ESL.CO.React.JiraIntegration;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ESL.CO.Tests
 {
-    public class BoardCreatorTest
+    public class BoardCreatorTests
     {
         private Mock<IMemoryCache> memoryCache;
         private Mock<IJiraClient> jiraClient;
@@ -25,7 +24,7 @@ namespace ESL.CO.Tests
         private Credentials credentials;
         private string presentationId;
 
-        public BoardCreatorTest()
+        public BoardCreatorTests()
         {
             memoryCache = new Mock<IMemoryCache>();
             jiraClient = new Mock<IJiraClient>();
@@ -76,8 +75,6 @@ namespace ESL.CO.Tests
                         }
                     }
                 }
-
-               
             };
 
             colorList = new ColorList()
@@ -278,15 +275,16 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_From_Cache_If_Jira_Is_Not_Available()
         {
             // Arrange
-            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult<BoardConfig>(null));
-
+            jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult<BoardConfig>(null)).Verifiable();
             object board = cachedBoard;
-            memoryCache.Setup(s=>s.TryGetValue("74", out board)).Returns(true);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true).Verifiable();
 
             // Act
             var actual = controller.CreateBoardModel("74", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
+            jiraClient.Verify();
+            memoryCache.Verify();
             Assert.True(actual.FromCache);
             Assert.Equal("74",actual.Id);
         }
@@ -296,7 +294,6 @@ namespace ESL.CO.Tests
         {
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult<BoardConfig>(null));
-
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
@@ -304,18 +301,18 @@ namespace ESL.CO.Tests
             var actual = controller.CreateBoardModel("80", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
+            jiraClient.Verify();
             Assert.Equal(testBoard, actual);
             Assert.False(actual.FromCache);
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrive_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_So_Retreive_From_Cache()
         {
             // Arrange
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74", presentationId)).Returns(Task.FromResult<IssueList>(null));
-
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
 
@@ -323,25 +320,26 @@ namespace ESL.CO.Tests
             var actual = controller.CreateBoardModel("74", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
+            jiraClient.VerifyAll();
             Assert.True(actual.FromCache);
             Assert.Equal("74",actual.Id);
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrive_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_But_No_Issues_After_And_Cache_Is_Empty_So_Create_New_Board()
         {
             // Arrange
+            object board = cachedBoard;
+            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74", presentationId)).Returns(Task.FromResult<IssueList>(null));
-
-            object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
             // Act
             var actual = controller.CreateBoardModel("80", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
+            jiraClient.VerifyAll();
             Assert.False(actual.FromCache);
             Assert.Equal(testBoard, actual);
         }
@@ -350,16 +348,15 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_One_Page()
         {
             // Arrange
-
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74", presentationId)).Returns(Task.FromResult(issueOnlyPage));
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>("agile/1.0/board/74/issue", credentials, "74", presentationId)).Returns(Task.FromResult(issueOnlyPage)).Verifiable();
 
             // Act
             var actual = controller.CreateBoardModel("74", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
-
+            jiraClient.VerifyAll();
             Assert.Equal("Test Board", actual.Name);
             Assert.Equal("74", actual.Id);
             Assert.Equal(3, actual.Columns.Count());
@@ -370,13 +367,11 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_Multiple_Page()
+        public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_Multiple_Pages()
         {
             // Arrange
-         
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
-
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, Credentials b, string i, string p) =>
             {
                 switch (a)
@@ -391,7 +386,7 @@ namespace ESL.CO.Tests
             var actual = controller.CreateBoardModel("74", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
-
+            jiraClient.VerifyAll();
             Assert.Equal("Test Board", actual.Name);
             Assert.Equal("74", actual.Id);
             Assert.Equal(3, actual.Columns.Count());
@@ -405,10 +400,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_And_Cache_Empty_So_Create_New_Board()
         {
             // Arrange
-         
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
-
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, string b, int i, string p) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, Credentials b, int i, string p) =>
             {
                 switch (a)
                 {
@@ -417,7 +410,6 @@ namespace ESL.CO.Tests
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
-
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
 
@@ -425,7 +417,7 @@ namespace ESL.CO.Tests
             var actual = controller.CreateBoardModel("80", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
-
+            jiraClient.VerifyAll();
             Assert.Equal(testBoard, actual);
             Assert.False(actual.FromCache);
         }
@@ -434,10 +426,8 @@ namespace ESL.CO.Tests
         public void CreateBoardModel_Should_Retrieve_Board_Config_And_Color_List_From_Jira_And_Issues_From_First_Page_But_Not_From_Second_So_Load_From_Cache()
         {
             // Arrange
-           
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
-
             jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, Credentials b, string i, string p) =>
             {
                 switch (a)
@@ -447,7 +437,6 @@ namespace ESL.CO.Tests
                     default: return Task.FromResult<IssueList>(null);
                 }
             });
-
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
 
@@ -455,6 +444,7 @@ namespace ESL.CO.Tests
             var actual = controller.CreateBoardModel("74", presentationId, credentials, memoryCache.Object).Result;
 
             // Assert
+            jiraClient.VerifyAll();
             Assert.True(actual.FromCache);
             Assert.Equal("74",actual.Id);
         }

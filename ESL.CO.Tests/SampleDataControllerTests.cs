@@ -5,8 +5,6 @@ using ESL.CO.React.Models;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.DbConnection;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Options;
 using Moq;
 
@@ -61,64 +59,113 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void BoardData_Should_Return_Board_With_HasChanged_True()
+        public void BoardData_Should_Return_A_Board_With_Id_And_Flags_Only_If_Presentation_Not_Obtained_From_Database_And_Hence_Credentials_Are_Unknown()
         {
             // Arrange
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
-
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult<BoardPresentationDbModel>(null)).Verifiable();
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, It.IsAny<Credentials>(), memoryCache.Object)).Returns(Task.FromResult(testBoard1)).Verifiable();
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(false).Verifiable();
 
             // Act
             var actual = controller.BoardData("74", presentationId).Result;
-
+            
             // Assert
+            dbClient.Verify();
+            boardCreator.Verify();
+            memoryCache.Verify();
+            Assert.NotNull(actual);
+            Assert.Equal("74", actual.Id);
+            Assert.Empty(actual.Name);
+            Assert.Empty(actual.Columns);
+            Assert.Empty(actual.Rows);
+            Assert.Empty(actual.CardColors);
             Assert.True(actual.HasChanged);
         }
 
         [Fact]
-        public void BoardData_Should_Return_Board_With_HasChanged_False()
+        public void BoardData_Should_Return_A_Board_With_HasChanged_True_If_The_Board_Is_Not_In_Cache()
         {
             // Arrange
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
-
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel)).Verifiable();
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, It.IsAny<Credentials>(), memoryCache.Object)).Returns(Task.FromResult(testBoard1)).Verifiable();
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(false).Verifiable();
 
             // Act
             var actual = controller.BoardData("74", presentationId).Result;
 
             // Assert
+            dbClient.Verify();
+            boardCreator.Verify();
+            memoryCache.Verify();
+            Assert.NotNull(actual);
+            Assert.True(actual.HasChanged);
+        }
+
+        [Fact]
+        public void BoardData_Should_Return_A_Board_With_HasChanged_False_If_The_Board_Is_Unchanged_And_In_Cache()
+        {
+            // Arrange
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel)).Verifiable();
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, It.IsAny<Credentials>(), memoryCache.Object)).Returns(Task.FromResult(testBoard1)).Verifiable();
+            object board = cachedBoard;
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true).Verifiable();
+
+            // Act
+            var actual = controller.BoardData("74", presentationId).Result;
+
+            // Assert
+            dbClient.Verify();
+            boardCreator.Verify();
+            memoryCache.Verify();
+            Assert.NotNull(actual);
             Assert.False(actual.HasChanged);
         }
 
         [Fact]
-        public void NeedsRedraw_Should_Return_False()
+        public void NeedsRedraw_Should_Return_False_If_Board_Is_Unchanged_And_In_Cache()
         {
              // Arrange
              object board = cachedBoard;
-             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
+             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true).Verifiable();
           
             // Act
             var actual = controller.NeedsRedraw(testBoard1);
 
             // Assert
+            memoryCache.Verify();
             Assert.False(actual);
         }
 
         [Fact]
-        public void NeedsRedraw_Should_Return_True()
+        public void NeedsRedraw_Should_Return_True_If_Board_Is_Different_From_The_One_In_Cache()
         {
             // Arrange
             object board = cachedBoard;
-            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false);
+            memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true).Verifiable();
+            testBoard1.Name = "difference";
+
+            // Act
+            var actual = controller.NeedsRedraw(testBoard1);
+
+            // Assert
+            memoryCache.Verify();
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void NeedsRedraw_Should_Return_True_If_Board_Is_Not_In_Cache()
+        {
+            // Arrange
+            object board = cachedBoard;
+            memoryCache.Setup(s => s.TryGetValue("80", out board)).Returns(false).Verifiable();
 
             // Act
             var actual = controller.NeedsRedraw(testBoard2);
 
             // Assert
+            memoryCache.Verify();
             Assert.True(actual);
         }
     }

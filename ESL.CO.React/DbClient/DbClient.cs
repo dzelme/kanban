@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
-using ESL.CO.React.JiraIntegration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
@@ -21,7 +20,6 @@ namespace ESL.CO.React.DbConnection
         private IMongoCollection<StatisticsDbModel> statisticsCollection;
         private IMongoCollection<BoardPresentationDbModel> presentationCollection;
         private readonly IOptions<DbSettings> dbSettings;
-        private IMongoCollection<StatisticsDbModel> hamsterCollection;
 
         public DbClient(IOptions<DbSettings> dbSettings)
         {
@@ -34,7 +32,7 @@ namespace ESL.CO.React.DbConnection
             var index = statisticsCollection.Indexes.CreateOne
             (
                 Builders<StatisticsDbModel>.IndexKeys.Ascending("Time"),
-                new CreateIndexOptions { ExpireAfter = new TimeSpan(168, 0, 0) }
+                new CreateIndexOptions { ExpireAfter = new TimeSpan(dbSettings.Value.StatisticsEntryTtlHours, 0, 0) }
             );
         }
 
