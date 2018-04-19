@@ -16,6 +16,4 @@ namespace ESL.CO.React.Models
             Name = "";
         }
     }
-
-
 }

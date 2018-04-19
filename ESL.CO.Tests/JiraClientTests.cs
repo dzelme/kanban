@@ -23,6 +23,8 @@ namespace ESL.CO.Tests
         private BoardPresentationDbModel presentationDbModel;
         private BoardList firstPage, secondPage;
 
+        private HttpClient client;
+
         public JiraClientTests()
         {
             dbClient = new Mock<IDbClient>();
@@ -30,6 +32,13 @@ namespace ESL.CO.Tests
             messageHandler = new Mock<HttpMessageHandler>();  //
             credentials = new Credentials { Username = "", Password = "" };
             presentationId = "1";
+
+
+
+            var handler = new FakeHttpMessageHandler();
+            client = new HttpClient(handler);
+
+
 
             presentationDbModel = new BoardPresentationDbModel
             {
@@ -60,47 +69,51 @@ namespace ESL.CO.Tests
             };
         }
 
-        [Fact]  /////////////////////
-        public void GetBoardDataAsync_Should_Return_xxxxxxxx_If_Request_Successful()
-        {
-            //// Arrange
-            //const string testContent = "test content";
-            ////messageHandler.Protected()
-            ////    .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-            ////    .Returns(Task.FromResult(new HttpResponseMessage
-            ////    {
-            ////        StatusCode = HttpStatusCode.OK,
-            ////        Content = new StringContent(testContent)
-            ////    }));
-            ////var client = new HttpClient(messageHandler.Object);
+        //[Fact]  /////////////////////
+        //public void GetBoardDataAsync_Should_Return_xxxxxxxx_If_Request_Successful()
+        //{
+        //    //// Arrange
+        //    //const string testContent = "test content";
+        //    ////messageHandler.Protected()
+        //    ////    .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+        //    ////    .Returns(Task.FromResult(new HttpResponseMessage
+        //    ////    {
+        //    ////        StatusCode = HttpStatusCode.OK,
+        //    ////        Content = new StringContent(testContent)
+        //    ////    }));
+        //    ////var client = new HttpClient(messageHandler.Object);
 
-            ////// does not work cause snedasync not virtual
-            ////var ok = new HttpResponseMessage
-            ////{
-            ////    StatusCode = HttpStatusCode.OK,
-            ////    //Content = new StringContent(testContent)
-            ////};
-            ////client.Setup(a => a.SendAsync(It.IsAny<HttpRequestMessage>())).Returns(Task.FromResult(ok));
+        //    // does not work cause sendasync not virtual
+        //    var ok = new HttpResponseMessage
+        //    {
+        //        StatusCode = HttpStatusCode.OK,
+        //        Content = new StringContent(@"{""maxResults"":2,""startAt"":0,""isLast"":true,""values"":null}")
+        //    };
+        //    jiraClient.Setup(a => a.client.SendAsync(It.IsAny<HttpRequestMessage>())).Returns(Task.FromResult(ok)).Verifiable();
 
-            //// Act
-            //var actual = jiraClient.Object.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "").Result;
+        //    // Act
+        //    var actual = jiraClient.Object.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "").Result;
 
-            //// Assert
-            //Assert.NotNull(actual);
-        }
+        //    // Assert
+        //    jiraClient.Verify();
+        //    Assert.NotNull(actual);
+        //    Assert.True(actual.IsLast);
+        //}
 
 
         [Fact]
         public void GetFullBoardList_Should_Return_Empty_List_If_Presentation_Id_Provided_And_No_BoardList_Recieved()
         {
             // Arrange
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            jiraClient.Setup(s => s.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "")).Returns(Task.FromResult<BoardList>(null));
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel)).Verifiable();
+            jiraClient.Setup(s => s.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "")).Returns(Task.FromResult<BoardList>(null)).Verifiable();
 
             // Act
             var actual = jiraClient.Object.GetFullBoardList(null, presentationId).Result;
 
             // Assert
+            dbClient.Verify();
+            jiraClient.Verify();
             Assert.False(actual.Any());
         }
 
@@ -108,13 +121,13 @@ namespace ESL.CO.Tests
         public void GetFullBoardList_Should_Return_Empty_List_If_Credentials_Provided_And_No_BoardList_Recieved()
         {
             // Arrange
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            jiraClient.Setup(s => s.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "")).Returns(Task.FromResult<BoardList>(null));
+            jiraClient.Setup(s => s.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "")).Returns(Task.FromResult<BoardList>(null)).Verifiable();
 
             // Act
             var actual = jiraClient.Object.GetFullBoardList(credentials, null).Result;
 
             // Assert
+            jiraClient.Verify();
             Assert.False(actual.Any());
         }
 
@@ -123,7 +136,6 @@ namespace ESL.CO.Tests
         {
             // Arrange
             firstPage.IsLast = true;
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
             jiraClient
                 .Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), credentials, "", ""))
                 .Returns((string a, Credentials b, string i, string j) =>
@@ -134,12 +146,13 @@ namespace ESL.CO.Tests
                     case "agile/1.0/board?startAt=2": return Task.FromResult<BoardList>(null);
                     default: return Task.FromResult<BoardList>(null);
                 }
-            });
+            }).Verifiable();
 
             // Act
             var actual = jiraClient.Object.GetFullBoardList(credentials, null).Result;
 
             // Assert
+            jiraClient.Verify();
             Assert.Equal(2, actual.Count());
             Assert.Contains(actual, x => x.Id == "74");
             Assert.Contains(actual, x => x.Id == "75");
@@ -149,7 +162,7 @@ namespace ESL.CO.Tests
         public void GetFullBoardList_Should_Return_A_List_Of_Values_From_Multiple_Pages()
         {
             // Arrange
-            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
+            dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel)).Verifiable();
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardList>(It.IsAny<string>(), credentials, "", "")).Returns((string a, Credentials b, string i, string j) =>
             {
                 switch (a)
@@ -158,12 +171,14 @@ namespace ESL.CO.Tests
                     case "agile/1.0/board?startAt=2": return Task.FromResult(secondPage);
                     default: return Task.FromResult<BoardList>(null);
                 }
-            });
+            }).Verifiable();
 
             // Act
-            var actual = jiraClient.Object.GetFullBoardList(credentials, null).Result;
+            var actual = jiraClient.Object.GetFullBoardList(null, presentationId).Result;
 
             // Assert
+            dbClient.Verify();
+            jiraClient.Verify();
             Assert.Equal(4, actual.Count());
             Assert.Contains(actual, x => x.Id == "74");
             Assert.Contains(actual, x => x.Id == "75");

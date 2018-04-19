@@ -20,16 +20,16 @@ namespace ESL.CO.React.JiraIntegration
         /// <summary>
         /// Helper function for retrieving a board from cache.
         /// </summary>
-        /// <param name="id">Id of the board to be retrieved.</param>
+        /// <param name="board">A board object whose retrieval was interrupted and whose cached version will be retrieved.</param>
         /// <param name="cache">In-memory cache where previously displayed board objects are stored.</param>
         /// <returns>
         /// The requested board from cache or a newly made empty board with the requested id.
         /// </returns>
-        private Board TryGetBoardFromCache(string id, IMemoryCache cache)
+        private Board TryGetBoardFromCache(Board board, IMemoryCache cache)
         {
-            if (!cache.TryGetValue(id, out Board cachedBoard))
+            if (!cache.TryGetValue(board.Id, out Board cachedBoard))
             {
-                return new Board(id);
+                return board;
             }
             else
             {
@@ -48,23 +48,18 @@ namespace ESL.CO.React.JiraIntegration
         {
             var board = new Board(boardId);
 
-            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + boardId.ToString() + "/configuration", credentials, boardId, presentationId);
-
-            if (boardConfig == null)
-            {
-                return TryGetBoardFromCache(boardId, cache);
-            }
-
-            var colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + boardId.ToString() + "/strategy/priority", credentials, boardId, presentationId);
-
+            var boardConfig = await jiraClient.GetBoardDataAsync<BoardConfig>("agile/1.0/board/" + boardId + "/configuration", credentials, boardId, presentationId);
+            if (boardConfig == null) { return TryGetBoardFromCache(board, cache); }
             board.Name = boardConfig.Name;
-            board.CardColors = colorList.CardColors;
 
+            var colorList = await jiraClient.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/" + boardId + "/strategy/priority", credentials, boardId, presentationId);
+            if(colorList != null) { board.CardColors = colorList.CardColors; }
+            
             FullIssueList li = new FullIssueList();
             IssueList issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + boardId + "/issue", credentials, boardId, presentationId);
             if (issueList == null)
             {
-                return TryGetBoardFromCache(boardId, cache);
+                return TryGetBoardFromCache(board, cache);
             }
 
             li.AllIssues.AddRange(issueList.Issues);
@@ -74,7 +69,15 @@ namespace ESL.CO.React.JiraIntegration
                 issueList = await jiraClient.GetBoardDataAsync<IssueList>("agile/1.0/board/" + boardId + "/issue?startAt=" + issueList.StartAt.ToString(), credentials, boardId, presentationId);
                 if (issueList == null)
                 {
-                    return TryGetBoardFromCache(boardId, cache);
+                    var cacheCheckedBoard = TryGetBoardFromCache(board, cache);
+                    if (cacheCheckedBoard.FromCache)
+                    {
+                        return cacheCheckedBoard;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 li.AllIssues.AddRange(issueList.Issues);
             }

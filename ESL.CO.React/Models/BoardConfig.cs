@@ -13,7 +13,7 @@ namespace ESL.CO.React.Models
 
     public class BoardConfig
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public ColumnConfig ColumnConfig { get; set; }
