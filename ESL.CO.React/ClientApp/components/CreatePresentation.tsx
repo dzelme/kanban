@@ -2,7 +2,7 @@
 import 'isomorphic-fetch';
 import jwt_decode from 'jwt-decode';
 import { RouteComponentProps } from 'react-router';
-import { CreatePresentationState, Value } from './Interfaces';
+import { CreatePresentationState, Value, BoardPresentation } from './Interfaces';
 import { ApiClient } from './ApiClient';
 
 export class CreatePresentation extends React.Component<RouteComponentProps<{}>, CreatePresentationState> {
@@ -22,9 +22,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: []
                 }
             },
-            boardList: [],
             loading: true,
-            authenticated: true
+            authenticated: true,
+            error: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,26 +34,51 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeBoardVisibility = this.handleChangeBoardVisibility.bind(this);
         this.handleChangeBoardTimes = this.handleChangeBoardTimes.bind(this);
-
     }
 
     handleAuth(event) {
         event.preventDefault();
-        ApiClient.checkCredentials(this.state.boardPresentation.credentials)
+
+        var newBoardPresentation = {
+            id: this.state.boardPresentation.id,
+            title: this.state.boardPresentation.title,
+            owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+            credentials: this.state.boardPresentation.credentials,
+            boards: {
+                values: []  // removed not to trigger invalid ModelState
+            }
+        }
+
+        ApiClient.savePresentation(newBoardPresentation)
             .then(response => {
-                if (response.status == 200) {
-                    this.setState({ authenticated: true }, this.handleFetch);
+                if (response.status == 200 || response.status == 400) {
+                    response.json().then(json => {
+                        newBoardPresentation.id = json.id;
+                        newBoardPresentation.boards = this.state.boardPresentation.boards;
+                        this.setState({ boardPresentation: newBoardPresentation, authenticated: true, error: "" }, this.handleFetch);
+                    })
                 }
                 else {
-                    this.setState({ authenticated: false });
+                    this.setState({ authenticated: false, error: "Nekorekts lietotājvārds un/ vai parole!" });
                 }
             });
     }
 
     handleFetch() {
-        ApiClient.boardList(this.state.boardPresentation.credentials)
+        ApiClient.boardListFromCredentials(this.state.boardPresentation.credentials)
             .then(data => {
-                this.setState({ boardList: data, loading: false });
+                this.setState({
+                    boardPresentation: {
+                        id: this.state.boardPresentation.id,
+                        title: this.state.boardPresentation.title,
+                        owner: this.state.boardPresentation.owner,
+                        credentials: this.state.boardPresentation.credentials,
+                        boards: {
+                            values: data
+                        }
+                    },
+                    loading: false
+                });
             });
     }
 
@@ -62,12 +87,11 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         var val = new Array();
 
-        this.state.boardList.map(board => {
+        this.state.boardPresentation.boards.values.map(board => {
             if (board.visibility == true) { val.push(board); }
         })
 
-        this.setState({
-            boardPresentation: {
+        let presentation = {
                 id: this.state.boardPresentation.id,
                 title: this.state.boardPresentation.title,
                 owner: jwt_decode(sessionStorage.getItem('JwtToken'))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
@@ -76,12 +100,19 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                     values: val,
                 }
             }
-        }, this.postPresentation)
-    }
+        this.postPresentation(presentation)
+    }; 
 
-    postPresentation() {
-        ApiClient.savePresentation(this.state.boardPresentation)
-            .then(() => open('./admin/presentations', '_self'));
+    postPresentation(presentation: BoardPresentation) {
+        ApiClient.savePresentation(presentation)
+            .then(response => {
+                if (response.status == 200) {
+                    open('./admin/presentations', '_self')
+                }
+                if (response.status == 400) {
+                    this.setState({ error: "Ievadītie dati nav pareizi. Pārbaudiet vērtību pieļaujamās robežas." });
+                }
+            });
     }
 
     handleChange(event) {
@@ -99,48 +130,48 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
         }
     }
 
-    handleChangeBoardVisibility(id: string) {
-        var newBoardlist = this.state.boardList;
+    handleChangeSettings(id: string, setting: string, value: number) {
+        var newBoardList = this.state.boardPresentation.boards.values.concat();  // concat to clone (not reference the same)
 
-        this.state.boardList.map((board, index) => {
+        this.state.boardPresentation.boards.values.map((board, index) => {
             if (board.id.toString() == id) {
-                newBoardlist[index].visibility = !newBoardlist[index].visibility
+                if (setting == "visibility") {
+                    newBoardList[index].visibility = !newBoardList[index].visibility;
+                }
+                if (setting == "timeShown") {
+                    newBoardList[index].timeShown = value;
+                }
+                if (setting == "refreshRate") {
+                    newBoardList[index].refreshRate = value;
+                }
 
                 this.setState({
-                    boardList: newBoardlist
+                    boardPresentation: {
+                        id: this.state.boardPresentation.id,
+                        title: this.state.boardPresentation.title,
+                        owner: this.state.boardPresentation.owner,
+                        credentials: this.state.boardPresentation.credentials,
+                        boards: {
+                            values: newBoardList
+                        }
+                    },
                 });
             }
         })
     }
 
+    handleChangeBoardVisibility(id: string) {
+        this.handleChangeSettings(id, "visibility", 0);
+    }
+
     handleChangeBoardTimes(id: string, name: string, e) {
-        var newBoardlist = this.state.boardList;
         var value = parseInt(e.target.value);
 
         if (name == 'timeShown') {
-
-            this.state.boardList.map((board, index) => {
-
-                if (board.id.toString() == id) {
-                    newBoardlist[index].timeShown = value
-
-                    this.setState({
-                        boardList: newBoardlist
-                    });
-                }
-            })
+            this.handleChangeSettings(id, "timeShown", value);
         }
-        else {
-            this.state.boardList.map((board, index) => {
-
-                if (board.id.toString() == id) {
-                    newBoardlist[index].refreshRate = value
-
-                    this.setState({
-                        boardList: newBoardlist
-                    });
-                }
-            })
+        if (name == 'refreshRate') {
+            this.handleChangeSettings(id, "refreshRate", value);
         }
     }
 
@@ -151,11 +182,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
 
         let contents = this.state.loading
             ? null
-            : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardList, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
+            : (this.state.authenticated) ? CreatePresentation.renderBoardList(this.state.boardPresentation.boards.values, this.handleSubmit, this.handleChangeBoardVisibility, this.handleChangeBoardTimes) : null;
 
-        let error = this.state.authenticated
-            ? <h4>Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
-            : <h4>Nekorekts lietotājvārds un/vai parole!</h4>
+        let error = (this.state.error == "") ? null : <h4 className="Message Error">{this.state.error}</h4>
 
         return <div className="top-padding">
             <h1>Izveidot prezentāciju</h1>
@@ -172,6 +201,7 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                 </div>
                 <div className="FormButton"><button type="submit" className="btn btn-default">Apstiprināt</button></div>
             </form>
+            <h4 className="Message">Brīdinājums! Lietotājvārds un parole tiks glabāti atklātā tekstā uz servera!</h4>
             {error}
             {contents}
         </div>;
@@ -185,9 +215,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                         <tr>
                             <th>ID</th>
                             <th>Nosaukums</th>
-                            <th className="CheckBox">Iekļaut prezentācijā</th>
-                            <th>Attēlošanas laiks(s)</th>
-                            <th>Atjaunošanas laiks(s)</th>
+                            <th className="Center">Iekļaut prezentācijā</th>
+                            <th className="Center">Attēlošanas laiks(s)</th>
+                            <th className="Center">Atjaunošanas laiks(s)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -195,9 +225,9 @@ export class CreatePresentation extends React.Component<RouteComponentProps<{}>,
                             <tr key={board.id + "row"}>
                                 <td key={board.id + ""}>{board.id}</td>
                                 <td key={board.id + "name"}>{board.name}</td>
-                                <td key={board.id + "visibility"} className="CheckBox"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
-                                <td key={board.id + "timeShown"}><input name={board.id + "timeShown"} type="number" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
-                                <td key={board.id + "refreshRate"}><input name={board.id + "refreshRate"} type="number" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
+                                <td key={board.id + "visibility"} className="Center"><input name={board.id + "visibility"} type="checkbox" defaultChecked={board.visibility} onClick={() => handleChangeBoardVisibility(board.id)} /></td>
+                                <td key={board.id + "timeShown"} className="Center"><input name={board.id + "timeShown"} type="number" min="0" value={board.timeShown.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'timeShown', e)}/></td>
+                                <td key={board.id + "refreshRate"} className="Center"><input name={board.id + "refreshRate"} type="number" min="0" value={board.refreshRate.toString()} onChange={(e) => handleChangeBoardTimes(board.id, 'refreshRate', e)}/></td>
                             </tr>
                         )}
                     </tbody>

@@ -1,12 +1,12 @@
 body {
     font-size: 1em;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto",  sans-serif;
     background-color: #333;
     color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto",  sans-serif;
 }
 
 h3 {
@@ -136,7 +136,7 @@ a:link {
     text-transform: uppercase;
 }
 
-.CheckBox {
+.Center {
     text-align:center;
 }
 
@@ -175,4 +175,12 @@ a:link {
 
 .EditDeletePresButton {
     width: 2em;
+}
+
+.Error {
+    color: lightcoral;
+}
+
+.Message {
+    padding-top: 0;
 }

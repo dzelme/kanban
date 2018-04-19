@@ -159,15 +159,14 @@ interface BoardReaderFromUrlState {
 interface EditPresentationState {
     boardPresentation: BoardPresentation;
     boardList: Value[];
-    credentials: Credentials;
-    authenticated: boolean;
+    error: string;
     loading: boolean;
 }
 
 interface CreatePresentationState {
     boardPresentation: BoardPresentation;
-    boardList: Value[];
     authenticated: boolean;
+    error: string;
     loading: boolean;
 }
 

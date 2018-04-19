@@ -48,7 +48,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
                         <th>Nosaukums</th>
                         <th>Attēlošanu skaits</th>
                         <th>Pēdējā attēlošana</th>
-                        <th>Savienojums</th>
+                        <th>Pieprasījumu statistika</th>
                     </tr>
             </thead>
             <tbody>
@@ -58,7 +58,7 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
                             <td key={board.boardId + "name"}>{board.boardName}</td>
                             <td key={board.boardId + "timesShown"}>{board.timesShown.toString()}</td>
                             <td key={board.boardId + "lastShown"}>{board.lastShown}</td>
-                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Savienojums</button></Link></td>
+                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Apskatīt</button></Link></td>
                         </tr>
                     )}
                 </tbody>

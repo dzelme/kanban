@@ -31,7 +31,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
             : StatisticsConnectionList.renderStatisticsBoard(this.state.statisticsConnectionList);
 
         return <div className='top-padding'>
-            <h1>Prezentācijas #{this.props.match.params.presentationId} paneļa #{this.props.match.params.boardId} savienojumu statistika</h1>
+            <h1>Prezentācijas #{this.props.match.params.presentationId} paneļa #{this.props.match.params.boardId} pieprasījumu statistika</h1>
             {contents}
         </div>;
     }

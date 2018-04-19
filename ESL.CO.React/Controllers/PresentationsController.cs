@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ESL.CO.React.Models;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.DbConnection;
+using ESL.CO.React.LdapCredentialCheck;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ESL.CO.React.Controllers
@@ -20,14 +18,17 @@ namespace ESL.CO.React.Controllers
     {
         private readonly IJiraClient jiraClient;
         private readonly IDbClient dbClient;
+        private readonly ILdapClient ldapClient;
 
         public PresentationsController(
             IJiraClient jiraClient,
-            IDbClient dbClient
+            IDbClient dbClient,
+            ILdapClient ldapClient
         )
         {
             this.jiraClient = jiraClient;
             this.dbClient = dbClient;
+            this.ldapClient = ldapClient;
         }
 
         /// <summary>
@@ -51,8 +52,7 @@ namespace ESL.CO.React.Controllers
 
             foreach (var boardDbModel in boardPresentationDbModel.Boards)
             {
-                var credentialsString = boardPresentationDbModel.Credentials.Username + ":" + boardPresentationDbModel.Credentials.Password;
-                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, credentialsString);
+                var boardName = await jiraClient.GetBoardDataAsync<BoardName>("agile/1.0/board/" + boardDbModel.Id, boardPresentation.Credentials);
                 boardPresentation.Boards.Values.Add(new Value
                 {
                     Id = boardDbModel.Id,
@@ -82,6 +82,7 @@ namespace ESL.CO.React.Controllers
             foreach (var boardPresentationDbModel in boardPresentationDbModelList)
             {
                 var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                boardPresentation.Credentials = null;
                 boardPresentationList.Add(boardPresentation);
             }
 
@@ -107,6 +108,7 @@ namespace ESL.CO.React.Controllers
             else
             {
                 var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                boardPresentation.Credentials.Password = null;
                 return Ok(boardPresentation);
             }
         }
@@ -116,24 +118,37 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="boardPresentation">An object containing all data about the presentation.</param>
         /// <returns>
-        /// A response with status code 400 if invalid data was passed and
-        /// a response with status code 200 together with the saved presentation data excluding credentials.
+        /// A response with status code 400 if invalid data was passed,
+        /// a response with status code 401 if user's credentials are not authorized,
+        /// a response with status code 200 together with the saved presentation data excluding credentials if save is successful.
         /// </returns>
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public IActionResult SavePresentation([FromBody] BoardPresentation boardPresentation)
+        public async Task<IActionResult> SavePresentation([FromBody] BoardPresentation boardPresentation)
         {
-            if (ModelState.IsValid)
+            if(!string.IsNullOrEmpty(boardPresentation.Id) && boardPresentation.Credentials.Password == null)
             {
-                dbClient.SavePresentationsAsync(boardPresentation);
+                boardPresentation.Credentials = (await dbClient.GetPresentation(boardPresentation.Id)).Credentials;
+            }
+
+            if (ldapClient.CheckCredentials(boardPresentation.Credentials.Username, boardPresentation.Credentials.Password, false))
+            {
+                if (ModelState.IsValid)
+                {
+                    await dbClient.SavePresentationsAsync(boardPresentation);
+                }
+                else
+                {
+                    return BadRequest("Invalid user input. Check allowed range for time values.");
+                }
+
+                boardPresentation.Credentials = null;
+                return Ok(boardPresentation);
             }
             else
             {
-                return BadRequest("invalid data"); //
+                return Unauthorized();
             }
-
-            boardPresentation.Credentials = null;
-            return Ok (boardPresentation);
         }
 
         /// <summary>

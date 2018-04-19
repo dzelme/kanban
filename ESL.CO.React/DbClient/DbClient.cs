@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ESL.CO.React.Models;
@@ -47,11 +48,11 @@ namespace ESL.CO.React.DbConnection
         /// </summary>
         /// <param name="entry">An object containing presentation data to be saved.</param>
         /// <returns>The result of the save operation.</returns>
-        public Task SavePresentationsAsync(BoardPresentation entry)
+        public async Task<Task> SavePresentationsAsync(BoardPresentation entry)
         {
             if (string.IsNullOrEmpty(entry.Id))
             {
-                entry.Id = GeneratePresentationId().ToString();
+                entry.Id = (await GeneratePresentationId()).ToString();
             }
 
             var entryDbModel = new BoardPresentationDbModel
@@ -83,14 +84,13 @@ namespace ESL.CO.React.DbConnection
         /// Gets a list of all saved presentations.
         /// </summary>
         /// <returns>A list of objects containg information about all presentations saved in database.</returns>
-        public async Task<List<BoardPresentationDbModel>> GetPresentationsListAsync()
+        public async Task<IEnumerable<BoardPresentationDbModel>> GetPresentationsListAsync()
         {
             var results = await presentationCollection
                 .Find(FilterDefinition<BoardPresentationDbModel>.Empty)
-                .Sort(new BsonDocument { { "_id", 1 } })
                 .ToListAsync();
 
-            return results;
+            return results.OrderBy(board => Convert.ToInt32(board.Id));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace ESL.CO.React.DbConnection
                     { "TimesShown", new BsonDocument("$sum", 1)},
                     { "LastShown", new BsonDocument("$last", "$Time")}
                 })
-                .Sort(new BsonDocument { { "_id", 1 } })
+                .Sort(Builders<BsonDocument>.Sort.Descending("TimesShown").Descending("LastShown"))
                 .Project(new BsonDocument
                 {
                     { "_id", 0 },
@@ -219,16 +219,29 @@ namespace ESL.CO.React.DbConnection
         public Task DeletePresentation(string id)
         {
             var filter = Builders<BoardPresentationDbModel>.Filter.Eq("Id", id);
+            DeleteStatistics(id);
             return presentationCollection.DeleteOneAsync(filter);
         }
 
         /// <summary>
-        /// Generates an auto-incremented id for new presentations.
+        /// Deletes all statistics entries relating to the specified presentation.
+        /// </summary>
+        /// <param name="id">The id of the presentation whose statistics will be deleted.</param>
+        public Task DeleteStatistics(string id)
+        {
+            var statisticsFilter = Builders<StatisticsDbModel>.Filter.Eq("PresentationId", id);
+            return statisticsCollection.DeleteManyAsync(statisticsFilter);
+        }
+
+        /// <summary>
+        /// Generates an auto-incremented id (as current max id + 1) for new presentations.
         /// </summary>
         /// <returns>The id for a new presentation.</returns>
-        private int GeneratePresentationId()
+        private async Task<int> GeneratePresentationId()
         {
-            var id = (int)presentationCollection.Count(new BsonDocument());
+            var presentationList = await GetPresentationsListAsync();
+            var last = (presentationList.Any()) ? presentationList.Last() : null;
+            var id = (last == null) ? 0 : Convert.ToInt32(last.Id);
             return ++id;
         }
     }

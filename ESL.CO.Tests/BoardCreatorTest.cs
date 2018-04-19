@@ -22,14 +22,14 @@ namespace ESL.CO.Tests
         private IssueList issuePageOne;
         private IssueList issuePageTwo;
         private IssueList issueOnlyPage;
-        private string credentials;
+        private Credentials credentials;
         private string presentationId;
 
         public BoardCreatorTest()
         {
             memoryCache = new Mock<IMemoryCache>();
             jiraClient = new Mock<IJiraClient>();
-            credentials = "";
+            credentials = new Credentials();
             presentationId = "1";
 
             boardConfiguration = new BoardConfig()
@@ -377,7 +377,7 @@ namespace ESL.CO.Tests
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, string b, string i, string p) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, Credentials b, string i, string p) =>
             {
                 switch (a)
                 {
@@ -438,7 +438,7 @@ namespace ESL.CO.Tests
             jiraClient.Setup(a => a.GetBoardDataAsync<BoardConfig>("agile/1.0/board/74/configuration", credentials, "74", presentationId)).Returns(Task.FromResult(boardConfiguration));
             jiraClient.Setup(a => a.GetBoardDataAsync<ColorList>("greenhopper/1.0/cardcolors/74/strategy/priority", credentials, "74", presentationId)).Returns(Task.FromResult(colorList));
 
-            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, string b, string i, string p) =>
+            jiraClient.Setup(a => a.GetBoardDataAsync<IssueList>(It.IsAny<string>(), credentials, "74", presentationId)).Returns((string a, Credentials b, string i, string p) =>
             {
                 switch (a)
                 {

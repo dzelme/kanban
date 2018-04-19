@@ -70,11 +70,6 @@ export class ApiClient {
             });
     }
 
-    // AccountController
-    static checkCredentials(credentials: Credentials): Promise<Response> {
-        return ApiClient.unhandledPost('api/account/CheckCredentials', credentials)
-    }
-
     // AccountController: Checks if the current user has a valid JWT token
     static hasValidJwt(redirect = true ): Promise<boolean> {
         var p = fetch('api/account/hasValidJwt', {
@@ -90,9 +85,14 @@ export class ApiClient {
         return p.then(response => response.ok);
     }
 
-    // SampleDataController: Gets board list
-    static boardList(credentials: Credentials): Promise<Value[]> {
-        return ApiClient.post('api/SampleData/BoardList', credentials) as Promise<Value[]>;
+    // SampleDataController: Gets board list using credentials
+    static boardListFromCredentials(credentials: Credentials): Promise<Value[]> {
+        return ApiClient.post('api/SampleData/BoardListFromCredentials', credentials) as Promise<Value[]>;
+    }
+
+    // SampleDataController: Gets board list using presentation id
+    static boardListFromId(id: string): Promise<Value[]> {
+        return ApiClient.post('api/SampleData/BoardListFromId', id) as Promise<Value[]>;
     }
 
     // SampleDataController: Gets board data
@@ -111,8 +111,8 @@ export class ApiClient {
     }
 
     // PresentationsController
-    static savePresentation(boardPresentation: BoardPresentation): Promise<BoardPresentation> {
-        return ApiClient.post('api/admin/presentations/', boardPresentation) as Promise<BoardPresentation>;
+    static savePresentation(boardPresentation: BoardPresentation): Promise<any> {
+        return ApiClient.unhandledPost('api/admin/presentations/', boardPresentation) as Promise<any>;
     }
 
     // PresentationsController

@@ -78,23 +78,5 @@ namespace ESL.CO.React.Controllers
         {
             return Ok();
         }
-
-        /// <summary>
-        /// Checks user's Jira credentials.
-        /// </summary>
-        /// <param name="credentials"></param>
-        /// <returns></returns>
-        [HttpPost("[action]")]
-        public IActionResult CheckCredentials([FromBody] Credentials credentials)
-        {
-            if (ldapClient.CheckCredentials(credentials.Username, credentials.Password, false))
-            {
-                return Ok();
-            }
-            else
-            {
-                return Unauthorized();
-            }
-        }
     }
 }

@@ -61,35 +61,11 @@ namespace ESL.CO.Tests
         }
 
         [Fact]
-        public void BoardList_Should_Retrieve_Values_From_Jira()
-        {
-            // Arrange
-            var boardList = new BoardList()
-            {
-                IsLast = true,
-                Values = new List<Value>() {
-                    new Value {  Id = "74" },
-                    new Value {  Id = "75" },
-                }
-            };
-
-            jiraClient.Setup(a => a.GetFullBoardList(credentials)).Returns(Task.FromResult<IEnumerable<Value>>(boardList.Values));
-
-            // Act
-            var actual = controller.BoardList(credentials).Result;
-
-            // Assert
-            Assert.Equal(2, actual.Count());
-            Assert.Contains(actual, x => x.Id == "74");
-            Assert.Contains(actual, x => x.Id == "75");
-        }
-
-        [Fact]
         public void BoardData_Should_Return_Board_With_HasChanged_True()
         {
             // Arrange
             dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue(74, out board)).Returns(false);
@@ -106,7 +82,7 @@ namespace ESL.CO.Tests
         {
             // Arrange
             dbClient.Setup(a => a.GetPresentation(presentationId)).Returns(Task.FromResult(presentationDbModel));
-            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentialsString, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
+            boardCreator.Setup(a => a.CreateBoardModel("74", presentationId, credentials, memoryCache.Object)).Returns(Task.FromResult(testBoard1));
 
             object board = cachedBoard;
             memoryCache.Setup(s => s.TryGetValue("74", out board)).Returns(true);
