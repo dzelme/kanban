@@ -18,12 +18,10 @@ namespace ESL.CO.React.JiraIntegration
     public class JiraClient : IJiraClient
     {
         private HttpClient client = new HttpClient();
-        private readonly IOptions<Paths> paths;
         private readonly IDbClient dbClient;
 
-        public JiraClient(IOptions<Paths> paths, IDbClient dbClient)
+        public JiraClient(IDbClient dbClient)
         {
-            this.paths = paths;
             this.dbClient = dbClient;
         }
 
@@ -36,7 +34,7 @@ namespace ESL.CO.React.JiraIntegration
         /// <param name="boardId">Board id required for saving board specific statistics.</param>
         /// <param name="presentationId">Presentation id required for saving presentation specific statistics.</param>
         /// <returns>A type specific object corresponding to the JSON response from Jira REST API.</returns>
-        public async Task<T> GetBoardDataAsync<T>(string url, Credentials credentials, string boardId = "", string presentationId = "")
+        public virtual async Task<T> GetBoardDataAsync<T>(string url, Credentials credentials, string boardId = "", string presentationId = "")
         {
             var baseUri = new Uri("https://jira.returnonintelligence.com/rest/");
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUri, url));
@@ -93,7 +91,7 @@ namespace ESL.CO.React.JiraIntegration
             while (!boardList.IsLast)
             {
                 boardList.StartAt += boardList.MaxResults;
-                boardList = await GetBoardDataAsync<BoardList>("board?startAt=" + boardList.StartAt.ToString(), credentials);
+                boardList = await GetBoardDataAsync<BoardList>("agile/1.0/board?startAt=" + boardList.StartAt.ToString(), credentials);
                 if (boardList == null) { return fullBoardList.Values; }
                 fullBoardList.Values.AddRange(boardList.Values);
             }

@@ -36,7 +36,7 @@ namespace ESL.CO.React.Controllers
         /// </summary>
         /// <param name="boardPresentationDbModel">An object containing presentation data stored in db, which will be supplemented with board names from Jira.</param>
         /// <returns>An object containing all necessary information about a presentation.</returns>
-        private async Task<BoardPresentation> AddNameToPresentationBoards(BoardPresentationDbModel boardPresentationDbModel)
+        public async Task<BoardPresentation> MakeViewable(BoardPresentationDbModel boardPresentationDbModel)
         {
             var boardPresentation = new BoardPresentation
             {
@@ -81,12 +81,12 @@ namespace ESL.CO.React.Controllers
 
             foreach (var boardPresentationDbModel in boardPresentationDbModelList)
             {
-                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                var boardPresentation = await MakeViewable(boardPresentationDbModel);
                 boardPresentation.Credentials = null;
                 boardPresentationList.Add(boardPresentation);
             }
 
-           return Ok(boardPresentationList);
+            return Ok(boardPresentationList);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace ESL.CO.React.Controllers
             }
             else
             {
-                var boardPresentation = await AddNameToPresentationBoards(boardPresentationDbModel);
+                var boardPresentation = await MakeViewable(boardPresentationDbModel);
                 boardPresentation.Credentials.Password = null;
                 return Ok(boardPresentation);
             }
