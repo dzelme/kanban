@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
 import { StatisticsConnectionListState, StatisticsConnectionModel } from './Interfaces';
 import { ApiClient } from './ApiClient';
+import { HelperFunctions } from './HelperFunctions';
 
 //netiek sanemti props (undefined) no routes.tsx
 export class StatisticsConnectionList extends React.Component<RouteComponentProps<{ presentationId: string, boardId: string }>, StatisticsConnectionListState> {
@@ -36,7 +37,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
         </div>;
     }
 
-    private static renderStatisticsBoard(statisticsConnectionList: StatisticsConnectionModel[]) {  //
+    private static renderStatisticsBoard(statisticsConnectionList: StatisticsConnectionModel[]) {
         
         return <table className='table'>
             <thead>
@@ -50,7 +51,7 @@ export class StatisticsConnectionList extends React.Component<RouteComponentProp
             <tbody>
                     {statisticsConnectionList.map(entry =>
                         <tr key={entry.time + entry.link + "row"}>
-                            <td key={entry.time + "time"}>{entry.time}</td>
+                            <td key={entry.time + "time"}>{HelperFunctions.formatDate(entry.time)}</td>
                             <td key={entry.time + "link"}>{entry.link}</td>
                             <td key={entry.time + "responseStatus"}>{entry.responseStatus}</td>
                             <td key={entry.time + "exception"}>{entry.exception}</td>

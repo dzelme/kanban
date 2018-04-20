@@ -33,7 +33,7 @@ namespace ESL.CO.React.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> SaveViewStatistics([FromBody] StatisticsDbModel entry)
         {
-            entry.Time = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
+            entry.Time = DateTime.Now;
             await dbClient.SaveStatisticsAsync(entry);
             return Ok();
         }

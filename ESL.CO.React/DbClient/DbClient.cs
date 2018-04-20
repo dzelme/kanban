@@ -21,6 +21,7 @@ namespace ESL.CO.React.DbConnection
         private IMongoCollection<StatisticsDbModel> statisticsCollection;
         private IMongoCollection<BoardPresentationDbModel> presentationCollection;
         private readonly IOptions<DbSettings> dbSettings;
+        private IMongoCollection<StatisticsDbModel> hamsterCollection;
 
         public DbClient(IOptions<DbSettings> dbSettings)
         {
@@ -29,6 +30,12 @@ namespace ESL.CO.React.DbConnection
             database = client.GetDatabase(dbSettings.Value.DatabaseName);
             statisticsCollection = database.GetCollection<StatisticsDbModel>(dbSettings.Value.StatisticsCollectionName);
             presentationCollection = database.GetCollection<BoardPresentationDbModel>(dbSettings.Value.PresentationsCollectionName);
+
+            var index = statisticsCollection.Indexes.CreateOne
+            (
+                Builders<StatisticsDbModel>.IndexKeys.Ascending("Time"),
+                new CreateIndexOptions { ExpireAfter = new TimeSpan(168, 0, 0) }
+            );
         }
 
         /// <summary>

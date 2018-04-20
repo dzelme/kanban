@@ -4,6 +4,7 @@ import { RouteComponentProps} from 'react-router';
 import { Link } from 'react-router-dom';
 import { StatisticsPresentationListState, StatisticsPresentationModel } from './Interfaces';
 import { ApiClient } from './ApiClient';
+import { HelperFunctions } from './HelperFunctions';
 
 
 export class StatisticsPresentationList extends React.Component<RouteComponentProps<{}>, StatisticsPresentationListState> {
@@ -40,7 +41,7 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
         </div>;
     }
 
-    private static renderStatisticsPresentationList(statisticsPresentationList: StatisticsPresentationModel[]) {  //
+    private static renderStatisticsPresentationList(statisticsPresentationList: StatisticsPresentationModel[]) {
         return <table className='table'>
             <thead>
                     <tr>
@@ -63,8 +64,8 @@ export class StatisticsPresentationList extends React.Component<RouteComponentPr
                                 )}
                             </td>
                             <td key={presentation.presentationId + "timesShown"}>{presentation.timesShown.toString()}</td>
-                            <td key={presentation.presentationId + "lastShown"}>{presentation.lastShown}</td>
-                            <td><Link to={'/admin/statistics/' + presentation.presentationId}><button className="btn btn-default">Apskatīt</button></Link></td>
+                            <td key={presentation.presentationId + "lastShown"}>{HelperFunctions.formatDate(presentation.lastShown)}</td>
+                            <td><Link className="LinkText" to={'/admin/statistics/' + presentation.presentationId}>Apskatīt</Link></td>
                         </tr>
                     )}
                 </tbody>

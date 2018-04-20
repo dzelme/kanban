@@ -4,7 +4,7 @@ import { RouteComponentProps} from 'react-router';
 import { Link } from 'react-router-dom';
 import { StatisticsBoardListState, StatisticsBoardModel } from './Interfaces';
 import { ApiClient } from './ApiClient';
-
+import { HelperFunctions } from './HelperFunctions';
 
 export class StatisticsBoardList extends React.Component<RouteComponentProps<{ presentationId: string }>, StatisticsBoardListState> {
     constructor(props: RouteComponentProps<{ presentationId: string }>) {
@@ -57,8 +57,8 @@ export class StatisticsBoardList extends React.Component<RouteComponentProps<{ p
                             <td key={board.boardId + ""}>{board.boardId}</td>
                             <td key={board.boardId + "name"}>{board.boardName}</td>
                             <td key={board.boardId + "timesShown"}>{board.timesShown.toString()}</td>
-                            <td key={board.boardId + "lastShown"}>{board.lastShown}</td>
-                            <td><Link to={'/admin/statistics/' + presentationId + '/' + board.boardId}><button className="btn btn-default">Apskatīt</button></Link></td>
+                            <td key={board.boardId + "lastShown"}>{HelperFunctions.formatDate(board.lastShown)}</td>
+                            <td><Link className="LinkText" to={'/admin/statistics/' + presentationId + '/' + board.boardId}>Apskatīt</Link></td>
                         </tr>
                     )}
                 </tbody>
