@@ -1,15 +1,11 @@
 ﻿using Xunit;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using ESL.CO.React.Models;
 using ESL.CO.React.JiraIntegration;
 using ESL.CO.React.DbConnection;
-using System.Net;
-using System.Net.Http;
 using System.Linq;
 using Moq;
-using Moq.Protected;
 
 namespace ESL.CO.Tests
 {
@@ -17,28 +13,17 @@ namespace ESL.CO.Tests
     {
         private Mock<IDbClient> dbClient;
         private Mock<JiraClient> jiraClient;
-        private Mock<HttpMessageHandler> messageHandler;  //
         private Credentials credentials;
         private string presentationId;
         private BoardPresentationDbModel presentationDbModel;
         private BoardList firstPage, secondPage;
 
-        private HttpClient client;
-
         public JiraClientTests()
         {
             dbClient = new Mock<IDbClient>();
             jiraClient = new Mock<JiraClient>(dbClient.Object) { CallBase = true };
-            messageHandler = new Mock<HttpMessageHandler>();  //
             credentials = new Credentials { Username = "", Password = "" };
             presentationId = "1";
-
-
-
-            var handler = new FakeHttpMessageHandler();
-            client = new HttpClient(handler);
-
-
 
             presentationDbModel = new BoardPresentationDbModel
             {
@@ -68,38 +53,6 @@ namespace ESL.CO.Tests
                 MaxResults = 2
             };
         }
-
-        //[Fact]  /////////////////////
-        //public void GetBoardDataAsync_Should_Return_xxxxxxxx_If_Request_Successful()
-        //{
-        //    //// Arrange
-        //    //const string testContent = "test content";
-        //    ////messageHandler.Protected()
-        //    ////    .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-        //    ////    .Returns(Task.FromResult(new HttpResponseMessage
-        //    ////    {
-        //    ////        StatusCode = HttpStatusCode.OK,
-        //    ////        Content = new StringContent(testContent)
-        //    ////    }));
-        //    ////var client = new HttpClient(messageHandler.Object);
-
-        //    // does not work cause sendasync not virtual
-        //    var ok = new HttpResponseMessage
-        //    {
-        //        StatusCode = HttpStatusCode.OK,
-        //        Content = new StringContent(@"{""maxResults"":2,""startAt"":0,""isLast"":true,""values"":null}")
-        //    };
-        //    jiraClient.Setup(a => a.client.SendAsync(It.IsAny<HttpRequestMessage>())).Returns(Task.FromResult(ok)).Verifiable();
-
-        //    // Act
-        //    var actual = jiraClient.Object.GetBoardDataAsync<BoardList>("agile/1.0/board/", credentials, "", "").Result;
-
-        //    // Assert
-        //    jiraClient.Verify();
-        //    Assert.NotNull(actual);
-        //    Assert.True(actual.IsLast);
-        //}
-
 
         [Fact]
         public void GetFullBoardList_Should_Return_Empty_List_If_Presentation_Id_Provided_And_No_BoardList_Recieved()
